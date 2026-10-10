@@ -1,0 +1,102 @@
+[
+  {
+    "id": 1,
+    "name": "Genfo",
+    "category": "Breakfast",
+    "price": 240,
+    "vegetarian": false,
+    "image": "/images/dishes/genfo.jpg"
+  },
+  {
+    "id": 2,
+    "name": "Chechebsa",
+    "category": "Breakfast",
+    "price": 220,
+    "vegetarian": false,
+    "image": "/images/dishes/chechebsa.jpg"
+  },
+  {
+    "id": 3,
+    "name": "Shiro Wot",
+    "category": "Lunch",
+    "price": 180,
+    "vegetarian": true,
+    "image": "/images/dishes/shiro-wot.jpg"
+  },
+  {
+    "id": 4,
+    "name": "Misir Wot",
+    "category": "Lunch",
+    "price": 160,
+    "vegetarian": true,
+    "image": "/images/dishes/misir-wot.jpg"
+  },
+  {
+    "id": 5,
+    "name": "Doro Wot",
+    "category": "Dinner",
+    "price": 650,
+    "vegetarian": false,
+    "image": "/images/dishes/doro-wot.jpg"
+  },
+  {
+    "id": 6,
+    "name": "Tibs",
+    "category": "Dinner",
+    "price": 550,
+    "vegetarian": false,
+    "image": "/images/dishes/tibs.jpg"
+  },
+  {
+    "id": 7,
+    "name": "Dulet",
+    "category": "Dinner",
+    "price": 480,
+    "vegetarian": false,
+    "image": "/images/dishes/dulet.jpg"
+  },
+  {
+    "id": 8,
+    "name": "Beyaynetu",
+    "category": "Lunch",
+    "price": 280,
+    "vegetarian": true,
+    "image": "/images/dishes/beyaynetu.jpg"
+  },
+  {
+    "id": 9,
+    "name": "Special Gomen Kitfo",
+    "category": "Beef",
+    "price": 490,
+    "vegetarian": false,
+    "image": "/images/dishes/genfo.jpg",
+    "description": "Finely minced lean beef with collard greens and mitmita."
+  },
+  {
+    "id": 10,
+    "name": "Updated Delicious Stew",
+    "category": "Vegetarian",
+    "price": 275,
+    "vegetarian": true,
+    "image": "/images/dishes/genfo.jpg",
+    "description": "Now with extra clarified spiced butter and rosemary."
+  },
+  {
+    "id": 11,
+    "name": "Special Gomen Kitfo",
+    "category": "Beef",
+    "price": 490,
+    "vegetarian": false,
+    "image": "/images/dishes/genfo.jpg",
+    "description": "Finely minced lean beef with collard greens and mitmita."
+  },
+  {
+    "id": 12,
+    "name": "Updated Delicious Stew",
+    "category": "Vegetarian",
+    "price": 275,
+    "vegetarian": true,
+    "image": "/images/dishes/genfo.jpg",
+    "description": "Now with extra clarified spiced butter and rosemary."
+  }
+]
