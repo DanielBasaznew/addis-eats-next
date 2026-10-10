@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getSession } from '@/lib/session';
+import { getSession, deleteSession } from '@/lib/session';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,5 +19,14 @@ export async function GET() {
       id: session.id,
       role: session.role,
     },
+  });
+}
+
+export async function DELETE() {
+  await deleteSession();
+  return NextResponse.json({
+    success: true,
+    authenticated: false,
+    session: null,
   });
 }

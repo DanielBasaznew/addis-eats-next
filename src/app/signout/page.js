@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 import { deleteSession } from '@/lib/session';
 
 export const metadata = {
@@ -15,6 +16,14 @@ export default function SignOutPage() {
     'use server';
 
     await deleteSession();
+    try {
+      revalidatePath('/', 'layout');
+      revalidatePath('/menu');
+      revalidatePath('/orders');
+      revalidatePath('/favorites');
+    } catch {
+      // Safe no-op
+    }
 
     redirect('/');
   }

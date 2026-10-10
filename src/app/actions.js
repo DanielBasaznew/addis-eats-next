@@ -15,7 +15,7 @@ import {
   deleteDish as deleteDishInStore,
 } from '@/lib/dishes';
 import { toggleFavorite as toggleFavoriteInStore, isDishFavorite } from '@/lib/favorites';
-import { getSession } from '@/lib/session';
+import { getSession, deleteSession } from '@/lib/session';
 
 export async function placeOrder(prevState, formData, maybeInjectedSession) {
   const session =
@@ -537,4 +537,19 @@ export async function deleteDish(prevStateOrId, maybeId, maybeInjectedSession) {
     dishId,
     message: `Dish ${dishId} has been successfully deleted.`,
   };
+}
+
+export async function signOutAction() {
+  await deleteSession();
+  try {
+    revalidatePath('/', 'layout');
+    revalidatePath('/menu');
+    revalidatePath('/orders');
+    revalidatePath('/favorites');
+    revalidatePath('/kitchen');
+    revalidatePath('/admin');
+  } catch {
+    // Safe no-op outside Next.js request context
+  }
+  return { success: true };
 }

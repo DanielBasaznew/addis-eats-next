@@ -1,10 +1,17 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
-import useSWR from 'swr';
+import { useRouter } from 'next/navigation';
+import useSWR, { useSWRConfig } from 'swr';
 import { fetcher } from '@/lib/fetcher';
+import { signOutAction } from '@/app/actions';
 
 export default function Navbar() {
+  const router = useRouter();
+  const { mutate } = useSWRConfig();
+  const [isSigningOut, setIsSigningOut] = useState(false);
+
   const { data } = useSWR('/api/session', fetcher, {
     revalidateOnFocus: true,
   });
@@ -13,6 +20,31 @@ export default function Navbar() {
   const isStaff = isAuthenticated && data.session.role === 'staff';
   const username = data?.session?.id;
   const role = data?.session?.role;
+
+  const handleSignOut = async (e) => {
+    e.preventDefault();
+    if (isSigningOut) return;
+    setIsSigningOut(true);
+
+    try {
+      // 1. Instantly clear SWR cache optimistically
+      mutate('/api/session', { authenticated: false, session: null }, false);
+      mutate('/api/favorites', { success: true, favoriteIds: [] }, false);
+
+      // 2. Clear cookie server-side via both Server Action and DELETE route
+      await Promise.all([
+        signOutAction().catch(() => {}),
+        fetch('/api/session', { method: 'DELETE' }).catch(() => {}),
+      ]);
+
+      // 3. Invalidate caches and refresh page
+      await mutate('/api/session');
+      router.refresh();
+      router.push('/');
+    } finally {
+      setIsSigningOut(false);
+    }
+  };
 
   return (
     <nav className="flex items-center gap-1.5 sm:gap-2">
@@ -77,13 +109,15 @@ export default function Navbar() {
             </span>
           </div>
 
-          {/* Sign Out Button */}
-          <Link
-            href="/signout"
-            className="px-3.5 py-1.5 rounded-full text-xs font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-100 transition-colors no-underline border border-stone-200"
+          {/* Instant Sign Out Button */}
+          <button
+            type="button"
+            onClick={handleSignOut}
+            disabled={isSigningOut}
+            className="px-3.5 py-1.5 rounded-full text-xs font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-100 transition-colors border border-stone-200 cursor-pointer disabled:opacity-50"
           >
-            Sign Out
-          </Link>
+            {isSigningOut ? 'Signing out...' : 'Sign Out'}
+          </button>
         </div>
       ) : (
         /* Sign In Button */
