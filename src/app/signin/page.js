@@ -102,6 +102,9 @@ export default async function SignInPage({ searchParams }) {
             placeholder="Required for staff role"
             className="w-full border border-stone-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-900/20 focus:border-amber-900"
           />
+          <p className="mt-1.5 text-[11px] text-stone-500">
+            For kitchen & admin dashboard access, enter: <code className="bg-stone-100 text-stone-800 px-1 py-0.5 rounded font-mono font-medium">addis-kitchen-2026</code>
+          </p>
         </div>
 
         <button

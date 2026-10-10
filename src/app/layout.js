@@ -2,6 +2,7 @@ import './globals.css';
 import Link from 'next/link';
 import { Inter } from 'next/font/google';
 import { CartProvider } from '@/components/CartProvider';
+import Navbar from '@/components/Navbar';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -67,47 +68,7 @@ export default function RootLayout({ children }) {
                 </span>
               </Link>
 
-              <nav className="flex items-center gap-1.5 sm:gap-2">
-                <Link
-                  href="/menu"
-                  className="px-3 sm:px-4 py-2 rounded-full text-sm font-medium text-stone-700 hover:text-stone-900 hover:bg-stone-100 transition-colors no-underline"
-                >
-                  Menu
-                </Link>
-                <Link
-                  href="/favorites"
-                  className="px-3 sm:px-4 py-2 rounded-full text-sm font-medium text-stone-700 hover:text-stone-900 hover:bg-stone-100 transition-colors no-underline"
-                >
-                  Favorites
-                </Link>
-                <Link
-                  href="/orders"
-                  className="px-3 sm:px-4 py-2 rounded-full text-sm font-medium text-stone-700 hover:text-stone-900 hover:bg-stone-100 transition-colors no-underline"
-                >
-                  Orders
-                </Link>
-                <Link
-                  href="/cart"
-                  className="px-3 sm:px-4 py-2 rounded-full text-sm font-medium bg-amber-50 text-amber-900 hover:bg-amber-100 transition-colors no-underline flex items-center gap-1.5"
-                >
-                  <span>Cart</span>
-                </Link>
-
-                <div className="h-4 w-px bg-stone-200 mx-1 hidden sm:block" />
-
-                <Link
-                  href="/signin"
-                  className="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-stone-900 text-white hover:bg-stone-800 transition-colors no-underline"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  href="/signout"
-                  className="px-3 py-1.5 rounded-full text-xs font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-100 transition-colors no-underline"
-                >
-                  Sign Out
-                </Link>
-              </nav>
+              <Navbar />
             </div>
           </header>
 
