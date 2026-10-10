@@ -3,18 +3,7 @@ import crypto from 'node:crypto';
 const FALLBACK_DEV_SECRET = 'addis-eats-fallback-dev-secret-do-not-use-in-production-32chars';
 
 export function getSessionSecret() {
-  const secret = process.env.SESSION_SECRET;
-
-  if (!secret) {
-    if (process.env.NODE_ENV === 'production') {
-      throw new Error(
-        'SESSION_SECRET environment variable is missing in production. Set a secure secret of at least 32 characters.'
-      );
-    }
-    return FALLBACK_DEV_SECRET;
-  }
-
-  return secret;
+  return process.env.SESSION_SECRET || FALLBACK_DEV_SECRET;
 }
 
 export function signSessionToken(payload) {

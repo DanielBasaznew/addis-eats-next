@@ -32,8 +32,9 @@ export async function generateMetadata({ params }) {
   const description =
     dish.description ||
     `${dish.name} — ${dish.price} ETB at Addis Eats. Handcrafted Ethiopian culinary specialty served with sourdough teff injera.`;
-  const url = `https://addiseats.et/menu/${dish.id}`;
-  const ogImageUrl = `https://addiseats.et/menu/${dish.id}/opengraph-image`;
+  const url = `/menu/${dish.id}`;
+  const foodImage = dish.image || `/menu/${dish.id}/opengraph-image`;
+  const ogDynamicImage = `/menu/${dish.id}/opengraph-image`;
 
   return {
     title,
@@ -50,7 +51,13 @@ export async function generateMetadata({ params }) {
       type: 'article',
       images: [
         {
-          url: ogImageUrl,
+          url: foodImage,
+          width: 800,
+          height: 600,
+          alt: `${dish.name} — Addis Eats`,
+        },
+        {
+          url: ogDynamicImage,
           width: 1200,
           height: 630,
           alt: `${dish.name} — Addis Eats`,
@@ -61,7 +68,7 @@ export async function generateMetadata({ params }) {
       card: 'summary_large_image',
       title: `${title} · Addis Eats`,
       description,
-      images: [ogImageUrl],
+      images: [foodImage],
     },
   };
 }
@@ -74,13 +81,13 @@ function createMenuItemJsonLd(dish) {
     description:
       dish.description ||
       `${dish.name} — authentic Ethiopian ${dish.category?.toLowerCase() || 'traditional'} dish served with fresh injera.`,
-    image: dish.image ? `https://addiseats.et${dish.image}` : undefined,
+    image: dish.image ? dish.image : undefined,
     offers: {
       '@type': 'Offer',
       price: dish.price,
       priceCurrency: 'ETB',
       availability: 'https://schema.org/InStock',
-      url: `https://addiseats.et/menu/${dish.id}`,
+      url: `/menu/${dish.id}`,
     },
     menuAddOn: {
       '@type': 'MenuItem',

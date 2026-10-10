@@ -9,13 +9,13 @@ export const metadata = {
   description:
     'Explore our handcrafted Ethiopian dishes, traditional slow-cooked wots, and vegetarian options served with fresh teff injera.',
   alternates: {
-    canonical: 'https://addiseats.et/menu',
+    canonical: '/menu',
   },
   openGraph: {
     title: 'Our Handcrafted Menu · Addis Eats',
     description:
       'Explore our handcrafted Ethiopian dishes, traditional slow-cooked wots, and vegetarian options served with fresh teff injera.',
-    url: 'https://addiseats.et/menu',
+    url: '/menu',
     siteName: 'Addis Eats',
     locale: 'en_ET',
     type: 'website',

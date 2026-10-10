@@ -8,8 +8,18 @@ const inter = Inter({
   display: 'swap',
 });
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : 'https://addiseats.et');
+
+const baseUrl = siteUrl.startsWith('http') ? siteUrl : `https://${siteUrl}`;
+
 export const metadata = {
-  metadataBase: new URL('https://addiseats.et'),
+  metadataBase: new URL(baseUrl),
   title: {
     template: '%s · Addis Eats',
     default: 'Addis Eats — Authentic Ethiopian Kitchen',
@@ -17,13 +27,13 @@ export const metadata = {
   description:
     'Handcrafted Ethiopian dishes, slow-simmered wots, and fresh daily teff injera delivered across Addis Ababa.',
   alternates: {
-    canonical: 'https://addiseats.et',
+    canonical: '/',
   },
   openGraph: {
     title: 'Addis Eats — Authentic Ethiopian Kitchen',
     description:
       'Handcrafted Ethiopian dishes, slow-simmered wots, and fresh daily teff injera delivered across Addis Ababa.',
-    url: 'https://addiseats.et',
+    url: '/',
     siteName: 'Addis Eats',
     locale: 'en_ET',
     type: 'website',

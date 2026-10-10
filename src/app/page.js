@@ -5,13 +5,13 @@ export const metadata = {
   description:
     'Order authentic Ethiopian dishes, fresh teff injera, and traditional wots delivered across Addis Ababa.',
   alternates: {
-    canonical: 'https://addiseats.et',
+    canonical: '/',
   },
   openGraph: {
     title: 'Ethiopian Food Delivery in Addis Ababa · Addis Eats',
     description:
       'Order authentic Ethiopian dishes, fresh teff injera, and traditional wots delivered across Addis Ababa.',
-    url: 'https://addiseats.et',
+    url: '/',
     siteName: 'Addis Eats',
     locale: 'en_ET',
     type: 'website',
