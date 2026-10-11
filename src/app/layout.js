@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { Inter } from 'next/font/google';
 import { CartProvider } from '@/components/CartProvider';
 import Navbar from '@/components/Navbar';
+import { getSession } from '@/lib/session';
+
 
 const inter = Inter({
   subsets: ['latin'],
@@ -47,7 +49,9 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const session = await getSession();
+
   return (
     <html lang="en" className={inter.className}>
       <body className="min-h-screen flex flex-col bg-stone-50 text-stone-900 font-sans antialiased">
@@ -68,7 +72,7 @@ export default function RootLayout({ children }) {
                 </span>
               </Link>
 
-              <Navbar />
+              <Navbar initialSession={session} />
             </div>
           </header>
 

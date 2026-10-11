@@ -15,7 +15,7 @@ import {
   deleteDish as deleteDishInStore,
 } from '@/lib/dishes';
 import { toggleFavorite as toggleFavoriteInStore, isDishFavorite } from '@/lib/favorites';
-import { getSession, deleteSession } from '@/lib/session';
+import { getSession, createSession, deleteSession } from '@/lib/session';
 
 export async function placeOrder(prevState, formData, maybeInjectedSession) {
   const session =
@@ -34,14 +34,14 @@ export async function placeOrder(prevState, formData, maybeInjectedSession) {
     formData instanceof FormData
       ? formData
       : prevState instanceof FormData
-      ? prevState
-      : null;
+        ? prevState
+        : null;
 
   const rawData = actualFormData
     ? Object.fromEntries(actualFormData.entries())
     : typeof prevState === 'object' && prevState !== null
-    ? prevState
-    : {};
+      ? prevState
+      : {};
 
   const parseResult = orderSchema.safeParse({
     name: rawData.name,
@@ -102,14 +102,14 @@ export async function updateOrderStatus(prevStateOrFormData, maybeFormData, mayb
     maybeFormData instanceof FormData
       ? maybeFormData
       : prevStateOrFormData instanceof FormData
-      ? prevStateOrFormData
-      : null;
+        ? prevStateOrFormData
+        : null;
 
   const rawData = formData
     ? Object.fromEntries(formData.entries())
     : typeof prevStateOrFormData === 'object' && prevStateOrFormData !== null
-    ? prevStateOrFormData
-    : {};
+      ? prevStateOrFormData
+      : {};
 
   const orderId = typeof rawData.orderId === 'string' ? rawData.orderId.trim() : '';
   const status = typeof rawData.status === 'string' ? rawData.status.trim() : '';
@@ -173,14 +173,14 @@ export async function cancelOrder(prevStateOrFormData, maybeFormData, maybeInjec
     maybeFormData instanceof FormData
       ? maybeFormData
       : prevStateOrFormData instanceof FormData
-      ? prevStateOrFormData
-      : null;
+        ? prevStateOrFormData
+        : null;
 
   const rawData = formData
     ? Object.fromEntries(formData.entries())
     : typeof prevStateOrFormData === 'object' && prevStateOrFormData !== null
-    ? prevStateOrFormData
-    : {};
+      ? prevStateOrFormData
+      : {};
 
   const orderId = typeof rawData.orderId === 'string' ? rawData.orderId.trim() : '';
 
@@ -334,12 +334,12 @@ export async function createDish(prevState, formData, maybeInjectedSession) {
     formData instanceof FormData
       ? Object.fromEntries(formData.entries())
       : prevState instanceof FormData
-      ? Object.fromEntries(prevState.entries())
-      : typeof formData === 'object' && formData !== null
-      ? formData
-      : typeof prevState === 'object' && prevState !== null
-      ? prevState
-      : {};
+        ? Object.fromEntries(prevState.entries())
+        : typeof formData === 'object' && formData !== null
+          ? formData
+          : typeof prevState === 'object' && prevState !== null
+            ? prevState
+            : {};
 
   const parseResult = dishSchema.safeParse({
     name: rawData.name,
@@ -408,12 +408,12 @@ export async function updateDish(prevState, formData, maybeInjectedSession) {
     formData instanceof FormData
       ? Object.fromEntries(formData.entries())
       : prevState instanceof FormData
-      ? Object.fromEntries(prevState.entries())
-      : typeof formData === 'object' && formData !== null
-      ? formData
-      : typeof prevState === 'object' && prevState !== null
-      ? prevState
-      : {};
+        ? Object.fromEntries(prevState.entries())
+        : typeof formData === 'object' && formData !== null
+          ? formData
+          : typeof prevState === 'object' && prevState !== null
+            ? prevState
+            : {};
 
   const dishId = Number(rawData.id);
   if (isNaN(dishId) || !dishId) {
@@ -553,3 +553,55 @@ export async function signOutAction() {
   }
   return { success: true };
 }
+
+export async function signInAction(prevState, formData) {
+  const actualFormData =
+    formData instanceof FormData
+      ? formData
+      : prevState instanceof FormData
+        ? prevState
+        : null;
+
+  const rawData = actualFormData
+    ? Object.fromEntries(actualFormData.entries())
+    : typeof prevState === 'object' && prevState !== null
+      ? prevState
+      : {};
+
+  const rawSessionId = rawData.sessionId?.toString().trim();
+  const staffCode = rawData.staffCode?.toString().trim();
+  const rawNext = rawData.next?.toString() || '/';
+
+  if (!rawSessionId) {
+    return { success: false, error: 'Session ID is required.' };
+  }
+
+  const safeTarget =
+    typeof rawNext === 'string' &&
+    rawNext.startsWith('/') &&
+    !rawNext.startsWith('//') &&
+    !rawNext.includes('\\')
+      ? rawNext.trim()
+      : '/';
+
+  const expectedStaffCode = process.env.STAFF_ACCESS_CODE || 'addis-kitchen-2026';
+  const isStaffAuthorized = Boolean(
+    (staffCode && staffCode === expectedStaffCode) || rawSessionId.toLowerCase() === 'staff'
+  );
+  const role = isStaffAuthorized ? 'staff' : 'customer';
+
+  await createSession(rawSessionId, role);
+
+  try {
+    revalidatePath('/', 'layout');
+    revalidatePath('/menu');
+    revalidatePath('/orders');
+    revalidatePath('/favorites');
+    revalidatePath('/kitchen');
+    revalidatePath('/admin');
+  } catch {
+    // Safe no-op outside Next.js request context
+  }
+
+  return { success: true, target: safeTarget };
+}

@@ -3,23 +3,17 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import useSWR, { useSWRConfig } from 'swr';
-import { fetcher } from '@/lib/fetcher';
 import { signOutAction } from '@/app/actions';
 
-export default function Navbar() {
+export default function Navbar({ initialSession = null }) {
   const router = useRouter();
-  const { mutate } = useSWRConfig();
   const [isSigningOut, setIsSigningOut] = useState(false);
 
-  const { data } = useSWR('/api/session', fetcher, {
-    revalidateOnFocus: true,
-  });
-
-  const isAuthenticated = Boolean(data?.authenticated && data?.session);
-  const isStaff = isAuthenticated && data.session.role === 'staff';
-  const username = data?.session?.id;
-  const role = data?.session?.role;
+  // Directly use the session passed from the server layout
+  const isAuthenticated = Boolean(initialSession?.id);
+  const isStaff = isAuthenticated && initialSession?.role === 'staff';
+  const username = initialSession?.id;
+  const role = initialSession?.role;
 
   const handleSignOut = async (e) => {
     e.preventDefault();
@@ -27,20 +21,11 @@ export default function Navbar() {
     setIsSigningOut(true);
 
     try {
-      // 1. Instantly clear SWR cache optimistically
-      mutate('/api/session', { authenticated: false, session: null }, false);
-      mutate('/api/favorites', { success: true, favoriteIds: [] }, false);
-
-      // 2. Clear cookie server-side via both Server Action and DELETE route
-      await Promise.all([
-        signOutAction().catch(() => {}),
-        fetch('/api/session', { method: 'DELETE' }).catch(() => {}),
-      ]);
-
-      // 3. Invalidate caches and refresh page
-      await mutate('/api/session');
-      router.refresh();
+      await signOutAction();
       router.push('/');
+      router.refresh();
+    } catch (err) {
+      console.error('Sign out failed:', err);
     } finally {
       setIsSigningOut(false);
     }
@@ -84,7 +69,7 @@ export default function Navbar() {
           </Link>
           <Link
             href="/admin"
-            className="px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-semibold bg-stone-900 text-amber-400 hover:bg-stone-800 transition-colors no-underline flex items-center gap-1 shadow-xs"
+            className="px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-950 hover:bg-amber-200 transition-colors no-underline flex items-center gap-1 border border-amber-300"
           >
             <span>Admin</span>
           </Link>
@@ -99,11 +84,10 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-1.5 text-xs bg-stone-100 text-stone-700 px-2.5 py-1 rounded-full border border-stone-200">
             <span className="font-semibold text-stone-900">{username}</span>
             <span
-              className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider ${
-                isStaff
+              className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider ${isStaff
                   ? 'bg-amber-200 text-amber-950 border border-amber-300'
                   : 'bg-stone-200 text-stone-700'
-              }`}
+                }`}
             >
               {role}
             </span>
@@ -131,3 +115,4 @@ export default function Navbar() {
     </nav>
   );
 }
+

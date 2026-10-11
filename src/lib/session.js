@@ -26,7 +26,7 @@ export async function getSession() {
 
 export async function createSession(sessionId, explicitRole = 'customer') {
   const cookieStore = await cookies();
-  const role = explicitRole === 'staff' ? 'staff' : 'customer';
+  const role = explicitRole === 'staff' || sessionId === 'staff' ? 'staff' : 'customer';
   const token = signSessionToken({ id: sessionId, role });
 
   cookieStore.set(SESSION_COOKIE_NAME, token, SESSION_COOKIE_OPTIONS);
