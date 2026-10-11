@@ -53,7 +53,7 @@ export default async function RootLayout({ children }) {
   const session = await getSession();
 
   return (
-    <html lang="en" className={inter.className}>
+    <html lang="en" className={inter.className} suppressHydrationWarning>
       <body className="min-h-screen flex flex-col bg-stone-50 text-stone-900 font-sans antialiased">
         <CartProvider>
           <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-stone-200/80 transition-shadow">
