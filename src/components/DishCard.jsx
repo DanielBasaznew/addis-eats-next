@@ -18,11 +18,10 @@ export default function DishCard({ dish, priority = false, isFavorite = false })
             <Image
               src={dish.image}
               alt={dish.name}
-              width={400}
-              height={176}
+              fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 384px"
               priority={priority}
-              className="w-full h-44 object-cover rounded-xl group-hover:scale-102 transition-transform duration-300"
+              className="object-cover rounded-xl group-hover:scale-102 transition-transform duration-300"
             />
           ) : (
             <div className="w-full h-full flex flex-col items-center justify-center bg-stone-100 text-stone-400">
@@ -45,11 +44,10 @@ export default function DishCard({ dish, priority = false, isFavorite = false })
           </span>
 
           <span
-            className={`text-xs px-2.5 py-1 rounded-full font-semibold border ${
-              dish.vegetarian
+            className={`text-xs px-2.5 py-1 rounded-full font-semibold border ${dish.vegetarian
                 ? 'bg-emerald-50 text-emerald-800 border-emerald-200/80'
                 : 'bg-amber-50 text-amber-900 border-amber-200/80'
-            }`}
+              }`}
           >
             {dish.vegetarian ? 'Vegetarian' : 'Traditional Stew'}
           </span>
