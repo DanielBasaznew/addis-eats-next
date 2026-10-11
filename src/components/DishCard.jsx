@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import FavoriteButton from '@/components/FavoriteButton';
+import AddToCartButton from '@/components/AddToCartButton';
 
 export default function DishCard({ dish, priority = false, isFavorite = false }) {
   if (!dish) return null;
@@ -12,8 +13,8 @@ export default function DishCard({ dish, priority = false, isFavorite = false })
       data-dish-id={dish.id}
     >
       <div>
-        <div className="relative mb-4">
-          {dish.image && (
+        <div className="relative mb-4 w-full h-44 bg-stone-100 rounded-xl overflow-hidden">
+          {dish.image ? (
             <Image
               src={dish.image}
               alt={dish.name}
@@ -21,8 +22,13 @@ export default function DishCard({ dish, priority = false, isFavorite = false })
               height={176}
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 384px"
               priority={priority}
-              className="w-full h-44 object-cover rounded-xl"
+              className="w-full h-44 object-cover rounded-xl group-hover:scale-102 transition-transform duration-300"
             />
+          ) : (
+            <div className="w-full h-full flex flex-col items-center justify-center bg-stone-100 text-stone-400">
+              <span className="text-3xl mb-1">🍲</span>
+              <span className="text-xs font-medium">Addis Eats Kitchen</span>
+            </div>
           )}
           <div className="absolute top-2.5 right-2.5 z-10">
             <FavoriteButton
@@ -72,19 +78,18 @@ export default function DishCard({ dish, priority = false, isFavorite = false })
         </p>
       </div>
 
-      <div className="mt-4 pt-3.5 border-t border-stone-100 flex items-center justify-between">
+      <div className="mt-5 pt-3.5 border-t border-stone-100 flex items-center justify-between gap-2">
         <Link
           href={`/menu/${dish.id}`}
-          className="text-xs font-semibold text-amber-900 group-hover:text-amber-700 flex items-center gap-1 transition-colors no-underline"
+          className="inline-flex items-center justify-center px-3.5 py-2 rounded-xl text-xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200 hover:text-stone-950 transition-all duration-200 no-underline shadow-xs"
         >
-          <span>View Details & Order</span>
-          <span
-            aria-hidden="true"
-            className="group-hover:translate-x-0.5 transition-transform"
-          >
+          <span>View Details</span>
+          <span aria-hidden="true" className="ml-1 text-stone-400 group-hover:translate-x-0.5 transition-transform">
             &rarr;
           </span>
         </Link>
+
+        <AddToCartButton dish={dish} compact />
       </div>
     </article>
   );

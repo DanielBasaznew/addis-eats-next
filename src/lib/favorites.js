@@ -4,10 +4,16 @@ if (!globalForFavorites.__addis_favorites__) {
   globalForFavorites.__addis_favorites__ = favorites;
 }
 
+export function syncFavoritesFromList(userId, ids) {
+  if (!userId || !Array.isArray(ids)) return;
+  const validIds = ids.map(Number).filter((n) => !isNaN(n) && n > 0);
+  favorites.set(userId, new Set(validIds));
+}
+
 /**
  * Get all favorited dish IDs for a specific user.
  * @param {string} userId - The authenticated user's session ID.
- * @returns {number[]} Array of dish IDs.
+ * @returns {Set<number>} Set of dish IDs.
  */
 export function getFavoriteIds(userId) {
   if (!userId || typeof userId !== 'string') return new Set();

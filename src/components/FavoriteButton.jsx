@@ -56,6 +56,14 @@ export default function FavoriteButton({
         if (!result?.success) {
           // Revert optimistic state
           setOptimisticState(!nextState);
+          if (result?.authorized === false) {
+            const currentPath =
+              typeof window !== 'undefined' && window.location.pathname
+                ? window.location.pathname
+                : '/menu';
+            window.location.href = `/signin?next=${encodeURIComponent(currentPath)}`;
+            return;
+          }
           setError(result?.error || 'Failed to update favorites.');
         } else {
           setOptimisticState(Boolean(result.isFavorite));
@@ -76,10 +84,13 @@ export default function FavoriteButton({
 
   const sizeClasses =
     size === 'sm'
-      ? 'w-7 h-7 text-xs'
+      ? 'w-8 h-8 text-xs'
       : size === 'lg'
-      ? 'w-10 h-10 text-base'
-      : 'w-8 h-8 text-sm';
+      ? 'w-11 h-11 text-base'
+      : 'w-9 h-9 text-sm';
+
+  const iconClasses =
+    size === 'sm' ? 'w-4 h-4' : size === 'lg' ? 'w-5 h-5' : 'w-4 h-4';
 
   return (
     <div className="relative inline-flex items-center gap-1.5">
@@ -99,19 +110,19 @@ export default function FavoriteButton({
         }
         className={`rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer ${sizeClasses} ${
           isFavorite
-            ? 'bg-rose-50 text-rose-600 border border-rose-200 hover:bg-rose-100 shadow-xs'
-            : 'bg-white/90 text-stone-400 border border-stone-200 hover:text-rose-500 hover:border-rose-200 hover:bg-white shadow-xs'
-        } ${isPending ? 'opacity-70 scale-95' : 'hover:scale-105 active:scale-95'} ${className}`}
+            ? 'bg-rose-50 text-rose-600 border border-rose-300 shadow-sm hover:bg-rose-100'
+            : 'bg-white/95 text-stone-400 border border-stone-200/90 hover:text-rose-500 hover:border-rose-300 hover:bg-white shadow-sm backdrop-blur-xs'
+        } ${isPending ? 'opacity-70 scale-95' : 'hover:scale-108 active:scale-95'} ${className}`}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           fill={isFavorite ? 'currentColor' : 'none'}
           stroke="currentColor"
-          strokeWidth="2"
+          strokeWidth="2.2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="w-4 h-4 transition-transform"
+          className={`${iconClasses} transition-transform`}
         >
           <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
         </svg>

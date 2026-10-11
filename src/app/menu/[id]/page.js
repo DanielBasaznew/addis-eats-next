@@ -1,9 +1,12 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
+import { cookies } from 'next/headers';
 import AddToCartButton from '@/components/AddToCartButton';
 import FavoriteButton from '@/components/FavoriteButton';
 import { getDishes } from '@/lib/dishes';
+import { getSession } from '@/lib/session';
+import { isDishFavorite, syncFavoritesFromList } from '@/lib/favorites';
 
 export async function generateStaticParams() {
   const dishes = await getDishes();
@@ -104,6 +107,22 @@ export default async function DishDetailPage({ params }) {
     notFound();
   }
 
+  const session = await getSession();
+  let isFavorite = false;
+  if (session) {
+    const cookieStore = await cookies();
+    const cookieVal = cookieStore.get(`favorites_${session.id}`)?.value;
+    if (cookieVal) {
+      try {
+        const parsed = JSON.parse(cookieVal);
+        syncFavoritesFromList(session.id, parsed);
+      } catch {
+        // Ignore parse error
+      }
+    }
+    isFavorite = isDishFavorite(session.id, dish.id);
+  }
+
   return (
     <main className="max-w-4xl mx-auto px-4 sm:px-6 py-10 md:py-14">
       <script
@@ -121,7 +140,7 @@ export default async function DishDetailPage({ params }) {
       </Link>
 
       <article className="bg-white rounded-3xl border border-stone-200/90 shadow-sm p-6 sm:p-10 relative overflow-hidden">
-        <div className="relative mb-8">
+        <div className="relative mb-8 w-full h-72 sm:h-96 bg-stone-100 rounded-2xl overflow-hidden">
           {dish.image && (
             <Image
               src={dish.image}
@@ -133,8 +152,12 @@ export default async function DishDetailPage({ params }) {
               className="w-full h-72 sm:h-96 object-cover rounded-2xl"
             />
           )}
-          <div className="absolute top-4 right-4 z-10 bg-white/80 backdrop-blur-xs rounded-full p-1 shadow-md">
-            <FavoriteButton dishId={dish.id} size="lg" />
+          <div className="absolute top-4 right-4 z-10">
+            <FavoriteButton
+              dishId={dish.id}
+              initialIsFavorite={isFavorite}
+              size="lg"
+            />
           </div>
         </div>
 
@@ -183,7 +206,12 @@ export default async function DishDetailPage({ params }) {
 
         <div className="mt-8 pt-6 border-t border-stone-200 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex flex-col sm:flex-row items-center gap-3">
-            <FavoriteButton dishId={dish.id} size="md" showText />
+            <FavoriteButton
+              dishId={dish.id}
+              initialIsFavorite={isFavorite}
+              size="md"
+              showText
+            />
             <span className="text-stone-300 hidden sm:inline">•</span>
             <div className="text-xs text-stone-500 text-center sm:text-left">
               <span>Prepared fresh upon order</span>

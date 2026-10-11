@@ -1,8 +1,10 @@
 import { revalidatePath } from 'next/cache';
+import { cookies } from 'next/headers';
 import { getSession } from '@/lib/session';
 import {
   getFavoriteIds,
   toggleFavorite as toggleFavoriteInStore,
+  syncFavoritesFromList,
 } from '@/lib/favorites';
 import { getDishById } from '@/lib/dishes';
 
@@ -13,6 +15,17 @@ export async function GET() {
       { success: false, error: 'Unauthorized: Authentication required.' },
       { status: 401 }
     );
+  }
+
+  const cookieStore = await cookies();
+  const cookieVal = cookieStore.get(`favorites_${session.id}`)?.value;
+  if (cookieVal) {
+    try {
+      const parsed = JSON.parse(cookieVal);
+      syncFavoritesFromList(session.id, parsed);
+    } catch {
+      // Ignore JSON parse errors on invalid cookie values
+    }
   }
 
   const ids = Array.from(getFavoriteIds(session.id));
@@ -52,6 +65,19 @@ export async function POST(request) {
     }
 
     const isFavorite = toggleFavoriteInStore(session.id, dishId);
+
+    const updatedIds = Array.from(getFavoriteIds(session.id));
+    try {
+      const cookieStore = await cookies();
+      cookieStore.set(`favorites_${session.id}`, JSON.stringify(updatedIds), {
+        path: '/',
+        httpOnly: false,
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24 * 30,
+      });
+    } catch {
+      // Ignore if cookies cannot be modified
+    }
 
     try {
       revalidatePath('/favorites');

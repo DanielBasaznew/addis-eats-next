@@ -1,6 +1,9 @@
 import DishCard from '@/components/DishCard';
 import FilterShell from '@/components/FilterShell';
 import { getDishes } from '@/lib/dishes';
+import { getSession } from '@/lib/session';
+import { cookies } from 'next/headers';
+import { getFavoriteIds, syncFavoritesFromList } from '@/lib/favorites';
 
 export const revalidate = 3600;
 
@@ -29,6 +32,22 @@ export const metadata = {
 };
 
 export default async function MenuPage() {
+  const session = await getSession();
+  let userFavoriteIds = new Set();
+  if (session) {
+    const cookieStore = await cookies();
+    const cookieVal = cookieStore.get(`favorites_${session.id}`)?.value;
+    if (cookieVal) {
+      try {
+        const parsed = JSON.parse(cookieVal);
+        syncFavoritesFromList(session.id, parsed);
+      } catch {
+        // Ignore JSON parse error
+      }
+    }
+    userFavoriteIds = getFavoriteIds(session.id);
+  }
+
   const dishes = await getDishes();
   const categories = ['All', ...new Set(dishes.map((dish) => dish.category))];
 
@@ -62,6 +81,7 @@ export default async function MenuPage() {
           <DishCard
             key={dish.id}
             dish={dish}
+            isFavorite={userFavoriteIds.has(Number(dish.id))}
             data-category={dish.category}
             data-dish-id={dish.id}
             priority={index === 0}

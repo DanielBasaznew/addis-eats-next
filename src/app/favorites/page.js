@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import { cookies } from 'next/headers';
 import { getSession } from '@/lib/session';
-import { getFavoriteIds } from '@/lib/favorites';
+import { getFavoriteIds, syncFavoritesFromList } from '@/lib/favorites';
 import { getDishes } from '@/lib/dishes';
 import DishCard from '@/components/DishCard';
 
@@ -21,6 +22,17 @@ export default async function FavoritesPage() {
 
   if (!session) {
     redirect('/signin?next=/favorites');
+  }
+
+  const cookieStore = await cookies();
+  const cookieVal = cookieStore.get(`favorites_${session.id}`)?.value;
+  if (cookieVal) {
+    try {
+      const parsed = JSON.parse(cookieVal);
+      syncFavoritesFromList(session.id, parsed);
+    } catch {
+      // Ignore JSON parse errors on invalid cookie values
+    }
   }
 
   const favoriteSet = getFavoriteIds(session.id);

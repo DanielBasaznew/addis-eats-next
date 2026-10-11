@@ -14,8 +14,14 @@ import {
   updateDish as updateDishInStore,
   deleteDish as deleteDishInStore,
 } from '@/lib/dishes';
-import { toggleFavorite as toggleFavoriteInStore, isDishFavorite } from '@/lib/favorites';
+import {
+  toggleFavorite as toggleFavoriteInStore,
+  isDishFavorite,
+  getFavoriteIds,
+  syncFavoritesFromList,
+} from '@/lib/favorites';
 import { getSession, createSession, deleteSession } from '@/lib/session';
+import { cookies } from 'next/headers';
 
 export async function placeOrder(prevState, formData, maybeInjectedSession) {
   const session =
@@ -284,7 +290,32 @@ export async function toggleFavorite(prevStateOrDishId, maybeDishId, maybeInject
     };
   }
 
+  // Hydrate memory from cookie if cold start occurred on Vercel
+  const cookieStore = await cookies();
+  const cookieVal = cookieStore.get(`favorites_${session.id}`)?.value;
+  if (cookieVal) {
+    try {
+      const parsed = JSON.parse(cookieVal);
+      syncFavoritesFromList(session.id, parsed);
+    } catch {
+      // Ignore JSON parse errors on invalid cookie values
+    }
+  }
+
   const isFavorite = toggleFavoriteInStore(session.id, dishId);
+
+  // Persist updated favorite IDs in user's cookie to survive serverless instance changes
+  const updatedIds = Array.from(getFavoriteIds(session.id));
+  try {
+    cookieStore.set(`favorites_${session.id}`, JSON.stringify(updatedIds), {
+      path: '/',
+      httpOnly: false,
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 30, // 30 days
+    });
+  } catch {
+    // Safe no-op if cookies cannot be modified
+  }
 
   try {
     revalidatePath('/favorites');
