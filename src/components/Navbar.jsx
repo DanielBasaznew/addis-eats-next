@@ -14,6 +14,8 @@ export default function Navbar({ initialSession = null }) {
   const isStaff = isAuthenticated && initialSession?.role === 'staff';
   const username = initialSession?.id;
   const role = initialSession?.role;
+  const initial = (username?.trim()?.charAt(0) || 'U').toUpperCase();
+  const roleDisplay = role === 'staff' ? 'Staff' : 'Customer';
 
   const handleSignOut = async (e) => {
     e.preventDefault();
@@ -80,16 +82,29 @@ export default function Navbar({ initialSession = null }) {
 
       {isAuthenticated ? (
         <div className="flex items-center gap-2">
-          {/* User Status Badge */}
-          <div className="hidden md:flex items-center gap-1.5 text-xs bg-stone-100 text-stone-700 px-2.5 py-1 rounded-full border border-stone-200">
-            <span className="font-semibold text-stone-900">{username}</span>
+          {/* User Status Badge: e.g. D Customer or D Staff */}
+          <div
+            title={`Signed in as ${username} (${roleDisplay})`}
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs border transition-colors ${
+              isStaff
+                ? 'bg-amber-50 text-amber-950 border-amber-300'
+                : 'bg-stone-100 text-stone-800 border-stone-200'
+            }`}
+          >
             <span
-              className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider ${isStaff
-                  ? 'bg-amber-200 text-amber-950 border border-amber-300'
-                  : 'bg-stone-200 text-stone-700'
-                }`}
+              className={`w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0 ${
+                isStaff
+                  ? 'bg-amber-600 text-white'
+                  : 'bg-stone-800 text-white'
+              }`}
             >
-              {role}
+              {initial}
+            </span>
+            <span className="font-semibold text-xs whitespace-nowrap">
+              {roleDisplay}
+            </span>
+            <span className="hidden lg:inline text-stone-500 font-normal">
+              · {username}
             </span>
           </div>
 
