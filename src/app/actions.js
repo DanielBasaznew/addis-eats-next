@@ -585,10 +585,15 @@ export async function signInAction(prevState, formData) {
       : '/';
 
   const expectedStaffCode = process.env.STAFF_ACCESS_CODE || 'addis-kitchen-2026';
-  const isStaffAuthorized = Boolean(
-    (staffCode && staffCode === expectedStaffCode) || rawSessionId.toLowerCase() === 'staff'
-  );
-  const role = isStaffAuthorized ? 'staff' : 'customer';
+
+  let role = 'customer';
+  if (staffCode) {
+    if (staffCode === expectedStaffCode) {
+      role = 'staff';
+    } else {
+      return { success: false, error: 'Invalid staff passcode. Please check and try again.' };
+    }
+  }
 
   await createSession(rawSessionId, role);
 

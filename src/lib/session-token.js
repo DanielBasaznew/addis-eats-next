@@ -18,41 +18,13 @@ export function verifySessionToken(token) {
   }
 
   try {
-    // 1. Direct plain session ID check
-    if (token.toLowerCase() === 'staff') {
-      return { id: token, role: 'staff' };
-    }
+    const decoded = Buffer.from(token, 'base64').toString('utf-8');
+    const data = JSON.parse(decoded);
+    if (!data?.id) return null;
 
-    // 2. Legacy token with dot or standard base64
-    let rawStr = token;
-    if (token.includes('.')) {
-      const [payloadPart] = token.split('.');
-      rawStr = Buffer.from(payloadPart, 'base64url').toString('utf-8');
-    } else {
-      try {
-        const decoded = Buffer.from(token, 'base64').toString('utf-8');
-        if (decoded.startsWith('{')) {
-          rawStr = decoded;
-        }
-      } catch {
-        rawStr = token;
-      }
-    }
-
-    // 3. Parse JSON claims
-    if (rawStr.startsWith('{')) {
-      const data = JSON.parse(rawStr);
-      if (!data?.id) return null;
-      return {
-        id: String(data.id).trim(),
-        role: data.role === 'staff' ? 'staff' : 'customer',
-      };
-    }
-
-    // 4. Plain session string fallback
     return {
-      id: rawStr.trim(),
-      role: rawStr.trim().toLowerCase() === 'staff' ? 'staff' : 'customer',
+      id: String(data.id).trim(),
+      role: data.role === 'staff' ? 'staff' : 'customer',
     };
   } catch {
     return null;

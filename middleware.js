@@ -3,23 +3,11 @@ import { NextResponse } from 'next/server';
 function getSessionRole(token) {
   if (!token) return null;
   try {
-    if (token === 'staff') return 'staff';
-
-    let jsonStr = '';
-    if (token.includes('.')) {
-      const parts = token.split('.');
-      jsonStr = atob(parts[0].replace(/-/g, '+').replace(/_/g, '/'));
-    } else {
-      try {
-        jsonStr = atob(token);
-      } catch {
-        jsonStr = token;
-      }
-    }
+    const jsonStr = atob(token);
     const data = JSON.parse(jsonStr);
     return data?.role === 'staff' ? 'staff' : 'customer';
   } catch {
-    return token === 'staff' ? 'staff' : 'customer';
+    return null;
   }
 }
 

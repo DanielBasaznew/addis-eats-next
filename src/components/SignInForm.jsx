@@ -33,12 +33,12 @@ export default function SignInForm({ next = '/' }) {
           htmlFor="sessionId"
           className="block text-xs font-semibold text-stone-700 uppercase tracking-wide mb-1"
         >
-          Session ID <span className="text-rose-600">*</span>
+          Session ID / Name <span className="text-rose-600">*</span>
         </label>
         <input
           id="sessionId"
           name="sessionId"
-          placeholder="e.g. daniel or staff"
+          placeholder="e.g. Daniel or Selam"
           required
           disabled={isPending}
           className="w-full border border-stone-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-900/20 focus:border-amber-900 disabled:opacity-60"
@@ -50,18 +50,18 @@ export default function SignInForm({ next = '/' }) {
           htmlFor="staffCode"
           className="block text-xs font-semibold text-stone-700 uppercase tracking-wide mb-1"
         >
-          Staff Passcode <span className="text-stone-400 font-normal">(Kitchen staff only)</span>
+          Staff Passcode <span className="text-stone-400 font-normal">(Kitchen & Admin staff only)</span>
         </label>
         <input
           id="staffCode"
           name="staffCode"
           type="password"
-          placeholder="Required for staff role"
+          placeholder="Leave blank for regular customer"
           disabled={isPending}
           className="w-full border border-stone-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-900/20 focus:border-amber-900 disabled:opacity-60"
         />
         <p className="mt-1.5 text-[11px] text-stone-500">
-          For kitchen & admin dashboard access, enter: <code className="bg-stone-100 text-stone-800 px-1 py-0.5 rounded font-mono font-medium">addis-kitchen-2026</code>
+          Leave blank to sign in as a customer. For kitchen & admin access, enter: <code className="bg-stone-100 text-stone-800 px-1 py-0.5 rounded font-mono font-medium">addis-kitchen-2026</code>
         </p>
       </div>
 

@@ -2,7 +2,7 @@
 
 ## Session Security & Authorization
 - **Cookie**: Flagged `session` cookie (`httpOnly`, `secure` in production, `sameSite: 'lax'`, and 7-day TTL).
-- **Roles & Ownership**: Default role is `customer`. Staff role requires server validation of `STAFF_ACCESS_CODE` (or `staff` ID) at sign-in. Orders and favorites strictly scope to `session.id`. Staff can view all orders and manage dishes.
+- **Roles & Ownership**: Default role is `customer`. Staff role requires server validation of `STAFF_ACCESS_CODE` (`addis-kitchen-2026`) at sign-in. Orders and favorites strictly scope to `session.id`. Staff can view all orders and manage dishes.
 
 ## Three-Layer Defense
 1. **Edge Middleware (`middleware.js`)**: Perimeter check for session cookie existence; redirects unauthenticated visitors to `/signin`; restricts `/kitchen` and `/admin` to `staff`.
