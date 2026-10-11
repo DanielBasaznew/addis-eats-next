@@ -6,3 +6,13 @@
     color: #1c1917;
   }
 }
+
+.avatar-badge-customer {
+  background-color: #1c1917 !important;
+  color: #ffffff !important;
+}
+
+.avatar-badge-staff {
+  background-color: #78350f !important;
+  color: #ffffff !important;
+}

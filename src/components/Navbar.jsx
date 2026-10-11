@@ -92,11 +92,9 @@ export default function Navbar({ initialSession = null }) {
             }`}
           >
             <span
-              style={{
-                backgroundColor: isStaff ? '#78350f' : '#1c1917',
-                color: '#ffffff',
-              }}
-              className="w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0 shadow-sm"
+              className={`w-5 h-5 rounded-full inline-flex items-center justify-center text-[11px] font-bold shrink-0 ${
+                isStaff ? 'avatar-badge-staff' : 'avatar-badge-customer'
+              }`}
             >
               {initial}
             </span>
