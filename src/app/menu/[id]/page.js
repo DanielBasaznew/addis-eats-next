@@ -34,7 +34,6 @@ export async function generateMetadata({ params }) {
     `${dish.name} — ${dish.price} ETB at Addis Eats. Handcrafted Ethiopian culinary specialty served with sourdough teff injera.`;
   const url = `/menu/${dish.id}`;
   const foodImage = dish.image || `/menu/${dish.id}/opengraph-image`;
-  const ogDynamicImage = `/menu/${dish.id}/opengraph-image`;
 
   return {
     title,
@@ -52,12 +51,6 @@ export async function generateMetadata({ params }) {
       images: [
         {
           url: foodImage,
-          width: 800,
-          height: 600,
-          alt: `${dish.name} — Addis Eats`,
-        },
-        {
-          url: ogDynamicImage,
           width: 1200,
           height: 630,
           alt: `${dish.name} — Addis Eats`,
