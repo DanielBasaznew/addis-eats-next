@@ -16,12 +16,21 @@ export const metadata = {
     siteName: 'Addis Eats',
     locale: 'en_ET',
     type: 'website',
+    images: [
+      {
+        url: '/images/hero-feast.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Addis Eats — Authentic Ethiopian Feast',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Ethiopian Food Delivery in Addis Ababa · Addis Eats',
     description:
       'Order authentic Ethiopian dishes, fresh teff injera, and traditional wots delivered across Addis Ababa.',
+    images: ['/images/hero-feast.jpg'],
   },
 };
 

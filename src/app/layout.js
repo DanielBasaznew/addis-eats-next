@@ -40,12 +40,21 @@ export const metadata = {
     siteName: 'Addis Eats',
     locale: 'en_ET',
     type: 'website',
+    images: [
+      {
+        url: '/images/hero-feast.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Addis Eats — Authentic Ethiopian Feast',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Addis Eats — Authentic Ethiopian Kitchen',
     description:
       'Handcrafted Ethiopian dishes, slow-simmered wots, and fresh daily teff injera delivered across Addis Ababa.',
+    images: ['/images/hero-feast.jpg'],
   },
 };
 
