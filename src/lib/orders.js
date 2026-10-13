@@ -69,6 +69,8 @@ function loadOrdersFromDisk() {
   return new Map();
 }
 
+let lastTmpMtime = 0;
+
 /**
  * Persist current orders map to /tmp (writable on Vercel) and public/orders.json (local).
  */
@@ -79,6 +81,8 @@ function saveOrdersToDisk(ordersMap) {
   // 1. Write to /tmp (always writable in Vercel Serverless environment)
   try {
     fs.writeFileSync(TMP_ORDERS_FILE, serialized, 'utf-8');
+    const stat = fs.statSync(TMP_ORDERS_FILE);
+    lastTmpMtime = stat.mtimeMs;
   } catch (error) {
     console.error('Error saving orders to tmp:', error);
   }
@@ -97,7 +101,21 @@ function saveOrdersToDisk(ordersMap) {
  * Ensure in-memory cache is populated from disk and up to date.
  */
 function getOrdersMap() {
-  if (!globalForOrders.__addis_orders__) {
+  let needsReload = !globalForOrders.__addis_orders__;
+
+  if (fs.existsSync(TMP_ORDERS_FILE)) {
+    try {
+      const stat = fs.statSync(TMP_ORDERS_FILE);
+      if (stat.mtimeMs > lastTmpMtime) {
+        lastTmpMtime = stat.mtimeMs;
+        needsReload = true;
+      }
+    } catch {
+      // Ignore stat error
+    }
+  }
+
+  if (needsReload) {
     globalForOrders.__addis_orders__ = loadOrdersFromDisk();
   }
   return globalForOrders.__addis_orders__;

@@ -5,7 +5,14 @@ import useSWR from 'swr';
 import { cancelOrder } from '@/app/actions';
 import { when } from '@/lib/format';
 
-const fetcher = (url) => fetch(url).then((res) => res.json());
+const fetcher = async (url) => {
+  const res = await fetch(url);
+  const json = await res.json();
+  if (!res.ok || !json?.success) {
+    throw new Error(json?.error || `HTTP ${res.status}`);
+  }
+  return json;
+};
 
 const STATUS_STEPS = [
   {
@@ -50,14 +57,14 @@ export default function OrderStatus({ initialOrder, onStatusChange }) {
   const isTerminal = order.status === 'Delivered' || order.status === 'Cancelled';
 
   // Day 41 SWR Real-Time Polling: Works reliably on both local dev and Vercel serverless.
-  // Polling stops immediately when the order is Delivered or Cancelled.
+  // Polling stops immediately and permanently when the order is Delivered or Cancelled.
   const { data, error } = useSWR(
     !isTerminal ? `/api/orders/${encodeURIComponent(initialOrder.id)}` : null,
     fetcher,
     {
       refreshInterval: 5000,
       revalidateOnFocus: true,
-      fallbackData: { success: true, order: initialOrder },
+      dedupingInterval: 2000,
     }
   );
 
@@ -68,20 +75,13 @@ export default function OrderStatus({ initialOrder, onStatusChange }) {
 
   // Keep state updated when SWR receives a status update from the server
   useEffect(() => {
-    if (data?.order && data.order.status !== order.status) {
+    if (data?.order?.status && !isTerminal && data.order.status !== order.status) {
       setOrder(data.order);
       if (onStatusChangeRef.current) {
         onStatusChangeRef.current(data.order);
       }
     }
-  }, [data?.order, order.status]);
-
-  // Sync state if server passes updated initialOrder (e.g. upon full page refresh)
-  useEffect(() => {
-    if (initialOrder) {
-      setOrder(initialOrder);
-    }
-  }, [initialOrder]);
+  }, [data?.order, isTerminal, order.status]);
 
   const connectionState = isTerminal
     ? 'Terminal'

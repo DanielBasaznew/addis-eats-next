@@ -11,12 +11,6 @@ import MapPanel from './MapPanel';
 export default function TrackInteractiveView({ initialOrder, children }) {
   const [currentOrder, setCurrentOrder] = useState(initialOrder);
 
-  useEffect(() => {
-    if (initialOrder) {
-      setCurrentOrder(initialOrder);
-    }
-  }, [initialOrder]);
-
   const handleStatusChange = useCallback((updated) => {
     setCurrentOrder((prev) => ({
       ...prev,
