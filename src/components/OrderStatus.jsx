@@ -66,7 +66,9 @@ export default function OrderStatus({ initialOrder }) {
 
       <div
         className={`rounded-2xl border p-6 ${
-          isCancelled ? 'border-rose-200 bg-rose-50/40' : 'border-stone-200 bg-white'
+          isCancelled
+            ? 'border-rose-200 dark:border-rose-900/60 bg-rose-50/40 dark:bg-rose-950/40'
+            : 'border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900'
         }`}
       >
         <p className="text-sm opacity-60">Current status</p>
@@ -74,14 +76,14 @@ export default function OrderStatus({ initialOrder }) {
         <div className="mt-2 flex items-center justify-between">
           <p
             className={`text-2xl font-semibold ${
-              isCancelled ? 'text-rose-700' : 'text-stone-900'
+              isCancelled ? 'text-rose-700 dark:text-rose-400' : 'text-stone-900 dark:text-stone-100'
             }`}
           >
             {order.status}
           </p>
 
           {isCancelled && (
-            <span className="text-xs px-3 py-1 rounded-full font-semibold bg-rose-100 text-rose-800 border border-rose-200">
+            <span className="text-xs px-3 py-1 rounded-full font-semibold bg-rose-100 dark:bg-rose-950/80 text-rose-800 dark:text-rose-300 border border-rose-200 dark:border-rose-800">
               Cancelled
             </span>
           )}
@@ -96,12 +98,12 @@ export default function OrderStatus({ initialOrder }) {
         </p>
 
         {isPreparing && (
-          <div className="mt-6 pt-5 border-t border-stone-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="mt-6 pt-5 border-t border-stone-100 dark:border-stone-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <p className="text-xs font-semibold text-stone-800 m-0">
+              <p className="text-xs font-semibold text-stone-800 dark:text-stone-200 m-0">
                 Need to cancel?
               </p>
-              <p className="text-xs text-stone-500 m-0">
+              <p className="text-xs text-stone-500 dark:text-stone-400 m-0">
                 You can cancel while the order is still in the preparing stage.
               </p>
             </div>
@@ -111,7 +113,7 @@ export default function OrderStatus({ initialOrder }) {
               <button
                 type="submit"
                 disabled={isPending}
-                className="px-4 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-xl text-xs font-semibold transition-colors disabled:opacity-50 cursor-pointer"
+                className="px-4 py-2 bg-rose-50 dark:bg-rose-950/60 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800 rounded-xl text-xs font-semibold transition-colors disabled:opacity-50 cursor-pointer"
               >
                 {isPending ? 'Cancelling...' : 'Cancel Order'}
               </button>

@@ -30,14 +30,14 @@ export default function SignOutPage() {
 
   return (
     <main className="max-w-md mx-auto px-4 py-16">
-      <h1 className="text-2xl font-bold text-stone-900 mb-4">
+      <h1 className="text-2xl font-bold text-stone-900 dark:text-stone-100 mb-4">
         Sign Out
       </h1>
 
       <form action={signOut}>
         <button
           type="submit"
-          className="bg-stone-900 text-white rounded-lg px-5 py-3 hover:bg-stone-800 transition-colors cursor-pointer"
+          className="bg-stone-900 hover:bg-stone-800 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-stone-950 font-bold rounded-lg px-5 py-3 transition-colors cursor-pointer"
         >
           Sign Out
         </button>

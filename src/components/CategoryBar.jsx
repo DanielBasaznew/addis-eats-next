@@ -84,7 +84,7 @@ export default function CategoryBar({
             type="button"
             onClick={() => slide('left')}
             aria-label="Slide categories left"
-            className="absolute -left-2 z-20 w-8 h-8 rounded-full bg-white/95 border border-stone-200/90 text-stone-700 hover:text-stone-950 hover:bg-stone-50 shadow-md flex items-center justify-center cursor-pointer transition-transform active:scale-90"
+            className="absolute -left-2 z-20 w-8 h-8 rounded-full bg-white/95 dark:bg-stone-800/95 border border-stone-200/90 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:text-stone-950 dark:hover:text-white hover:bg-stone-50 dark:hover:bg-stone-700 shadow-md flex items-center justify-center cursor-pointer transition-transform active:scale-90"
           >
             <svg
               className="w-4 h-4"
@@ -102,7 +102,7 @@ export default function CategoryBar({
         {hasOverflow && canScrollLeft && (
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-stone-50 to-transparent z-10"
+            className="pointer-events-none absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-stone-50 dark:from-stone-950 to-transparent z-10"
           />
         )}
 
@@ -123,8 +123,8 @@ export default function CategoryBar({
                 onClick={() => handleSelect?.(category)}
                 className={`h-10 px-4.5 rounded-xl text-sm font-semibold border transition-all duration-200 cursor-pointer shrink-0 whitespace-nowrap inline-flex items-center justify-center active:scale-95 ${
                   isSelected
-                    ? 'border-amber-900 bg-amber-900 text-amber-50 shadow-sm shadow-amber-900/20'
-                    : 'border-stone-200 bg-white text-stone-700 hover:bg-stone-100 hover:text-stone-900 hover:border-stone-300'
+                    ? 'border-amber-900 bg-amber-900 text-amber-50 dark:border-amber-500 dark:bg-amber-500 dark:text-stone-950 shadow-sm shadow-amber-900/20 dark:shadow-amber-500/20 font-bold'
+                    : 'border-stone-200 bg-white text-stone-700 hover:bg-stone-100 hover:text-stone-900 hover:border-stone-300 dark:border-stone-800 dark:bg-stone-900 dark:text-stone-300 dark:hover:bg-stone-800 dark:hover:text-stone-100 dark:hover:border-stone-700'
                 }`}
               >
                 {category}
@@ -137,7 +137,7 @@ export default function CategoryBar({
         {hasOverflow && canScrollRight && (
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-stone-50 to-transparent z-10"
+            className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-stone-50 dark:from-stone-950 to-transparent z-10"
           />
         )}
 
@@ -147,7 +147,7 @@ export default function CategoryBar({
             type="button"
             onClick={() => slide('right')}
             aria-label="Slide categories right"
-            className="absolute -right-2 z-20 w-8 h-8 rounded-full bg-white/95 border border-stone-200/90 text-stone-700 hover:text-stone-950 hover:bg-stone-50 shadow-md flex items-center justify-center cursor-pointer transition-transform active:scale-90"
+            className="absolute -right-2 z-20 w-8 h-8 rounded-full bg-white/95 dark:bg-stone-800/95 border border-stone-200/90 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:text-stone-950 dark:hover:text-white hover:bg-stone-50 dark:hover:bg-stone-700 shadow-md flex items-center justify-center cursor-pointer transition-transform active:scale-90"
           >
             <svg
               className="w-4 h-4"
@@ -168,9 +168,9 @@ export default function CategoryBar({
           className="flex items-center justify-center pt-1.5"
           aria-hidden="true"
         >
-          <div className="h-1 w-20 bg-stone-200/80 rounded-full overflow-hidden relative shadow-inner">
+          <div className="h-1 w-20 bg-stone-200/80 dark:bg-stone-800 rounded-full overflow-hidden relative shadow-inner">
             <div
-              className="absolute top-0 bottom-0 bg-amber-900 rounded-full transition-all duration-100 ease-out"
+              className="absolute top-0 bottom-0 bg-amber-900 dark:bg-amber-500 rounded-full transition-all duration-100 ease-out"
               style={{
                 width: '32%',
                 left: `${scrollProgress * 68}%`,

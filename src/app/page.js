@@ -170,32 +170,32 @@ export default function HomePage() {
 
       {/* Culinary Pillars */}
       <section className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="p-6 rounded-2xl bg-white border border-stone-200/80 shadow-sm hover:border-amber-700/30 transition-colors">
-          <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-900 flex items-center justify-center font-mono font-bold text-xs mb-4">
+        <div className="p-6 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 shadow-sm hover:border-amber-700/30 dark:hover:border-amber-500/40 transition-colors">
+          <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-950/60 text-amber-900 dark:text-amber-300 flex items-center justify-center font-mono font-bold text-xs mb-4 border border-amber-200/50 dark:border-amber-800/60">
             01
           </div>
-          <h3 className="text-lg font-bold text-stone-900 mb-2">Clay Pot Traditions</h3>
-          <p className="text-sm text-stone-600 leading-relaxed">
+          <h3 className="text-lg font-bold text-stone-900 dark:text-stone-100 mb-2">Clay Pot Traditions</h3>
+          <p className="text-sm text-stone-600 dark:text-stone-400 leading-relaxed">
             Slow-simmered in earthen pots using clarified niter kibbeh, whole cardamom, and sun-dried red chilies from the Ethiopian highlands.
           </p>
         </div>
 
-        <div className="p-6 rounded-2xl bg-white border border-stone-200/80 shadow-sm hover:border-amber-700/30 transition-colors">
-          <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-900 flex items-center justify-center font-mono font-bold text-xs mb-4">
+        <div className="p-6 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 shadow-sm hover:border-amber-700/30 dark:hover:border-amber-500/40 transition-colors">
+          <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-900 dark:text-emerald-300 flex items-center justify-center font-mono font-bold text-xs mb-4 border border-emerald-200/50 dark:border-emerald-800/60">
             02
           </div>
-          <h3 className="text-lg font-bold text-stone-900 mb-2">100% Teff Sourdough</h3>
-          <p className="text-sm text-stone-600 leading-relaxed">
+          <h3 className="text-lg font-bold text-stone-900 dark:text-stone-100 mb-2">100% Teff Sourdough</h3>
+          <p className="text-sm text-stone-600 dark:text-stone-400 leading-relaxed">
             Naturally fermented over four days to cultivate the signature airy spongy eyes that capture every drop of savoury wot sauce.
           </p>
         </div>
 
-        <div className="p-6 rounded-2xl bg-white border border-stone-200/80 shadow-sm hover:border-amber-700/30 transition-colors">
-          <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-900 flex items-center justify-center font-mono font-bold text-xs mb-4">
+        <div className="p-6 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 shadow-sm hover:border-amber-700/30 dark:hover:border-amber-500/40 transition-colors">
+          <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-950/60 text-amber-900 dark:text-amber-300 flex items-center justify-center font-mono font-bold text-xs mb-4 border border-amber-200/50 dark:border-amber-800/60">
             03
           </div>
-          <h3 className="text-lg font-bold text-stone-900 mb-2">Vegetarian & Fasting</h3>
-          <p className="text-sm text-stone-600 leading-relaxed">
+          <h3 className="text-lg font-bold text-stone-900 dark:text-stone-100 mb-2">Vegetarian & Fasting</h3>
+          <p className="text-sm text-stone-600 dark:text-stone-400 leading-relaxed">
             Rich vegan traditions crafted for fasting Wednesdays and Fridays, featuring slow-cooked split red lentils, yellow split peas, and collards.
           </p>
         </div>

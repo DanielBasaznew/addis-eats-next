@@ -9,21 +9,21 @@ export default function CartPage() {
   return (
     <main className="max-w-3xl mx-auto px-4 sm:px-6 py-10 md:py-14">
       <header className="mb-8">
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-stone-900 tracking-tight">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-stone-900 dark:text-stone-100 tracking-tight">
           Your Order Cart
         </h1>
-        <p className="mt-1 text-sm text-stone-500">
+        <p className="mt-1 text-sm text-stone-500 dark:text-stone-400">
           Review your selected traditional dishes before completing your order.
         </p>
       </header>
 
       {cart.length === 0 ? (
-        <div className="text-center py-16 px-6 border border-dashed border-stone-300 rounded-3xl bg-white shadow-sm max-w-md mx-auto">
-          <div className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-900 flex items-center justify-center text-xs font-bold uppercase tracking-wider mx-auto mb-4 border border-amber-200">
+        <div className="text-center py-16 px-6 border border-dashed border-stone-300 dark:border-stone-700 rounded-3xl bg-white dark:bg-stone-900 shadow-sm max-w-md mx-auto">
+          <div className="w-14 h-14 rounded-2xl bg-amber-50 dark:bg-amber-950/60 text-amber-900 dark:text-amber-300 flex items-center justify-center text-xs font-bold uppercase tracking-wider mx-auto mb-4 border border-amber-200 dark:border-amber-800/60">
             Cart
           </div>
-          <h2 className="text-xl font-bold text-stone-900 mb-1.5">Your cart is currently empty</h2>
-          <p className="text-sm text-stone-500 mb-6 max-w-xs mx-auto">
+          <h2 className="text-xl font-bold text-stone-900 dark:text-stone-100 mb-1.5">Your cart is currently empty</h2>
+          <p className="text-sm text-stone-500 dark:text-stone-400 mb-6 max-w-xs mx-auto">
             Discover hearty stews, fresh injera, and vegan platters from our authentic kitchen.
           </p>
           <Link
@@ -40,25 +40,25 @@ export default function CartPage() {
             {cart.map((item) => (
               <li
                 key={item.id}
-                className="flex items-center justify-between p-4 sm:p-5 rounded-2xl bg-white border border-stone-200/90 shadow-sm"
+                className="flex items-center justify-between p-4 sm:p-5 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200/90 dark:border-stone-800 shadow-sm"
               >
                 <div>
-                  <h3 className="m-0 text-base font-bold text-stone-900">
+                  <h3 className="m-0 text-base font-bold text-stone-900 dark:text-stone-100">
                     {item.name}
                   </h3>
-                  <p className="m-0 text-xs text-stone-500 mt-1">
+                  <p className="m-0 text-xs text-stone-500 dark:text-stone-400 mt-1">
                     {item.quantity} × {item.price} ETB
                   </p>
                 </div>
 
                 <div className="flex items-center gap-4">
-                  <span className="font-extrabold text-amber-950 text-base">
-                    {item.price * item.quantity} <span className="text-xs font-semibold text-stone-500">ETB</span>
+                  <span className="font-extrabold text-amber-950 dark:text-amber-300 text-base">
+                    {item.price * item.quantity} <span className="text-xs font-semibold text-stone-500 dark:text-stone-400">ETB</span>
                   </span>
                   <button
                     type="button"
                     onClick={() => removeFromCart(item.id)}
-                    className="px-2.5 py-1 text-xs font-semibold text-stone-400 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                    className="px-2.5 py-1 text-xs font-semibold text-stone-400 dark:text-stone-500 hover:text-red-700 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/50 rounded-lg transition-colors cursor-pointer"
                     title="Remove item"
                   >
                     Remove
@@ -68,18 +68,18 @@ export default function CartPage() {
             ))}
           </ul>
 
-          <div className="p-6 rounded-2xl bg-amber-50/60 border border-amber-200/70 flex items-center justify-between">
+          <div className="p-6 rounded-2xl bg-amber-50/60 dark:bg-amber-950/40 border border-amber-200/70 dark:border-amber-800/60 flex items-center justify-between">
             <div>
-              <span className="text-xs uppercase tracking-wider text-amber-900 font-bold block">
+              <span className="text-xs uppercase tracking-wider text-amber-900 dark:text-amber-300 font-bold block">
                 Order Total
               </span>
-              <span className="text-xs text-stone-500">Inclusive of fresh teff injera & spices</span>
+              <span className="text-xs text-stone-500 dark:text-stone-400">Inclusive of fresh teff injera & spices</span>
             </div>
             <div className="text-right">
-              <span className="text-3xl font-extrabold text-amber-950">
+              <span className="text-3xl font-extrabold text-amber-950 dark:text-amber-300">
                 {total}
               </span>
-              <span className="text-sm font-bold text-amber-800 ml-1.5">ETB</span>
+              <span className="text-sm font-bold text-amber-800 dark:text-amber-400 ml-1.5">ETB</span>
             </div>
           </div>
 
@@ -88,13 +88,13 @@ export default function CartPage() {
               <button
                 type="button"
                 onClick={clearCart}
-                className="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl border border-stone-300 text-stone-600 hover:bg-stone-100 text-xs font-semibold transition-colors cursor-pointer"
+                className="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl border border-stone-300 dark:border-stone-700 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 text-xs font-semibold transition-colors cursor-pointer"
               >
                 Clear Cart
               </button>
               <Link
                 href="/menu"
-                className="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl border border-amber-900/30 text-amber-900 hover:bg-amber-50 text-xs font-semibold transition-colors text-center no-underline"
+                className="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl border border-amber-900/30 dark:border-amber-800/60 text-amber-900 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/50 text-xs font-semibold transition-colors text-center no-underline"
               >
                 Add More Dishes
               </Link>

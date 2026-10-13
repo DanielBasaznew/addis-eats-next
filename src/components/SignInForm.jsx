@@ -22,7 +22,7 @@ export default function SignInForm({ next = '/' }) {
       {state?.error && (
         <div
           role="alert"
-          className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-800 text-xs font-medium"
+          className="p-3 bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-900/60 rounded-xl text-red-800 dark:text-red-200 text-xs font-medium"
         >
           {state.error}
         </div>
@@ -31,7 +31,7 @@ export default function SignInForm({ next = '/' }) {
       <div>
         <label
           htmlFor="sessionId"
-          className="block text-xs font-semibold text-stone-700 uppercase tracking-wide mb-1"
+          className="block text-xs font-semibold text-stone-700 dark:text-stone-300 uppercase tracking-wide mb-1"
         >
           Session ID / Name <span className="text-rose-600">*</span>
         </label>
@@ -41,16 +41,16 @@ export default function SignInForm({ next = '/' }) {
           placeholder="e.g. Daniel or Selam"
           required
           disabled={isPending}
-          className="w-full border border-stone-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-900/20 focus:border-amber-900 disabled:opacity-60"
+          className="w-full border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-900 dark:text-stone-100 placeholder-stone-400 dark:placeholder-stone-500 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-900/20 dark:focus:ring-amber-500/20 focus:border-amber-900 dark:focus:border-amber-500 disabled:opacity-60"
         />
       </div>
 
       <div>
         <label
           htmlFor="staffCode"
-          className="block text-xs font-semibold text-stone-700 uppercase tracking-wide mb-1"
+          className="block text-xs font-semibold text-stone-700 dark:text-stone-300 uppercase tracking-wide mb-1"
         >
-          Staff Passcode <span className="text-stone-400 font-normal">(Kitchen & Admin staff only)</span>
+          Staff Passcode <span className="text-stone-400 dark:text-stone-500 font-normal">(Kitchen & Admin staff only)</span>
         </label>
         <input
           id="staffCode"
@@ -58,22 +58,22 @@ export default function SignInForm({ next = '/' }) {
           type="password"
           placeholder="Leave blank for regular customer"
           disabled={isPending}
-          className="w-full border border-stone-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-900/20 focus:border-amber-900 disabled:opacity-60"
+          className="w-full border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-900 dark:text-stone-100 placeholder-stone-400 dark:placeholder-stone-500 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-900/20 dark:focus:ring-amber-500/20 focus:border-amber-900 dark:focus:border-amber-500 disabled:opacity-60"
         />
-        <p className="mt-1.5 text-[11px] text-stone-500">
-          Leave blank to sign in as a customer. For kitchen & admin access, enter: <code className="bg-stone-100 text-stone-800 px-1 py-0.5 rounded font-mono font-medium">addis-kitchen-2026</code>
+        <p className="mt-1.5 text-[11px] text-stone-500 dark:text-stone-400">
+          Leave blank to sign in as a customer. For kitchen & admin access, enter: <code className="bg-stone-100 dark:bg-stone-800 text-stone-800 dark:text-stone-200 px-1 py-0.5 rounded font-mono font-medium">addis-kitchen-2026</code>
         </p>
       </div>
 
       <button
         type="submit"
         disabled={isPending}
-        className="w-full bg-stone-900 hover:bg-stone-800 text-white font-semibold rounded-lg px-4 py-3 transition-colors cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+        className="w-full bg-stone-900 hover:bg-stone-800 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-stone-950 font-bold rounded-lg px-4 py-3 transition-colors cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2 shadow-xs"
       >
         {isPending ? (
           <>
             <svg
-              className="animate-spin h-4 w-4 text-white"
+              className="animate-spin h-4 w-4 text-white dark:text-stone-950"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"

@@ -42,21 +42,21 @@ export default async function FavoritesPage() {
   return (
     <main className="max-w-6xl mx-auto px-4 sm:px-6 py-10 md:py-12">
       {/* Header */}
-      <header className="mb-8 pb-6 border-b border-stone-200">
+      <header className="mb-8 pb-6 border-b border-stone-200 dark:border-stone-800">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div>
-            <span className="text-xs uppercase tracking-widest text-rose-700 font-bold mb-1.5 block">
+            <span className="text-xs uppercase tracking-widest text-rose-700 dark:text-rose-400 font-bold mb-1.5 block">
               Personal Collection • {session.role === 'staff' ? 'Staff Member' : 'Customer'}
             </span>
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-stone-900 tracking-tight">
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-stone-900 dark:text-stone-100 tracking-tight">
               My Favorite Dishes
             </h1>
-            <p className="mt-2 text-stone-600 text-sm sm:text-base max-w-xl">
+            <p className="mt-2 text-stone-600 dark:text-stone-400 text-sm sm:text-base max-w-xl">
               Your saved culinary favorites for quick access and reordering. Click the heart on any dish to remove it.
             </p>
           </div>
           <div className="flex items-center gap-2 self-start sm:self-auto">
-            <span className="px-3.5 py-1.5 rounded-full bg-rose-50 text-rose-800 text-xs font-bold border border-rose-200">
+            <span className="px-3.5 py-1.5 rounded-full bg-rose-50 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 text-xs font-bold border border-rose-200 dark:border-rose-800/60">
               {favoriteDishes.length} {favoriteDishes.length === 1 ? 'Favorite' : 'Favorites'}
             </span>
             <Link
@@ -73,9 +73,9 @@ export default async function FavoritesPage() {
       {favoriteDishes.length === 0 ? (
         <section
           aria-labelledby="empty-favorites-heading"
-          className="bg-white rounded-3xl border border-stone-200/90 shadow-xs p-10 sm:p-16 text-center max-w-2xl mx-auto my-6"
+          className="bg-white dark:bg-stone-900 rounded-3xl border border-stone-200/90 dark:border-stone-800 shadow-xs p-10 sm:p-16 text-center max-w-2xl mx-auto my-6"
         >
-          <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-500">
+          <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-rose-50 dark:bg-rose-950/60 border border-rose-100 dark:border-rose-900/60 flex items-center justify-center text-rose-500 dark:text-rose-400">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="w-8 h-8"
@@ -93,11 +93,11 @@ export default async function FavoritesPage() {
           </div>
           <h2
             id="empty-favorites-heading"
-            className="text-2xl font-bold text-stone-900 tracking-tight"
+            className="text-2xl font-bold text-stone-900 dark:text-stone-100 tracking-tight"
           >
             No favorite dishes yet
           </h2>
-          <p className="mt-2 text-stone-600 text-sm sm:text-base max-w-md mx-auto leading-relaxed">
+          <p className="mt-2 text-stone-600 dark:text-stone-400 text-sm sm:text-base max-w-md mx-auto leading-relaxed">
             You haven&apos;t saved any dishes yet. Browse our menu to discover authentic Ethiopian slow-cooked wots, vegetarian delights, and freshly baked injera.
           </p>
           <div className="mt-8">

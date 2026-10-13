@@ -34,20 +34,20 @@ export default async function SignInPage({ searchParams }) {
 
   return (
     <main className="max-w-md mx-auto px-4 py-16">
-      <h1 className="text-3xl font-bold text-stone-900 mb-2">
+      <h1 className="text-3xl font-bold text-stone-900 dark:text-stone-100 mb-2">
         Sign In
       </h1>
 
       {isStaffRequired && (
         <div
           role="alert"
-          className="mb-4 p-3.5 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 text-xs"
+          className="mb-4 p-3.5 bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 rounded-xl text-amber-900 dark:text-amber-200 text-xs"
         >
           <strong>Staff Access Required:</strong> You must enter a valid staff passcode to access the kitchen dashboard.
         </div>
       )}
 
-      <p className="text-sm text-stone-500 mb-6">
+      <p className="text-sm text-stone-500 dark:text-stone-400 mb-6">
         Enter your session ID to continue. Kitchen staff must also provide the server staff access passcode.
       </p>
 

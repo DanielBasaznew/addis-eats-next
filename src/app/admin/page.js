@@ -25,26 +25,26 @@ export default async function AdminPage() {
   if (session.role !== 'staff') {
     return (
       <main className="max-w-xl mx-auto px-4 py-16 text-center">
-        <div className="bg-white rounded-3xl border border-rose-200/90 p-8 sm:p-12 shadow-xs">
-          <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center font-bold text-2xl">
+        <div className="bg-white dark:bg-stone-900 rounded-3xl border border-rose-200/90 dark:border-rose-900/60 p-8 sm:p-12 shadow-xs">
+          <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center font-bold text-2xl">
             &times;
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight mb-2">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-stone-900 dark:text-stone-100 tracking-tight mb-2">
             Staff Access Required
           </h1>
-          <p className="text-stone-600 text-sm sm:text-base leading-relaxed mb-6">
+          <p className="text-stone-600 dark:text-stone-400 text-sm sm:text-base leading-relaxed mb-6">
             This dashboard is restricted to staff members. Your current session does not possess administrative privileges.
           </p>
           <div className="flex items-center justify-center gap-3">
             <Link
               href="/menu"
-              className="px-5 py-2.5 rounded-full bg-stone-900 text-white font-semibold text-sm hover:bg-stone-800 transition-colors no-underline"
+              className="px-5 py-2.5 rounded-full bg-stone-900 hover:bg-stone-800 dark:bg-amber-600 dark:hover:bg-amber-500 text-white font-semibold text-sm transition-colors no-underline"
             >
               Back to Menu
             </Link>
             <Link
               href="/signin?next=/admin"
-              className="px-5 py-2.5 rounded-full border border-stone-200 text-stone-700 font-semibold text-sm hover:bg-stone-50 transition-colors no-underline"
+              className="px-5 py-2.5 rounded-full border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-200 font-semibold text-sm hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors no-underline"
             >
               Sign In as Staff
             </Link>
@@ -59,35 +59,35 @@ export default async function AdminPage() {
   return (
     <main className="max-w-6xl mx-auto px-4 sm:px-6 py-10 md:py-12">
       {/* Header */}
-      <header className="mb-8 pb-6 border-b border-stone-200">
+      <header className="mb-8 pb-6 border-b border-stone-200 dark:border-stone-800">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1.5">
-              <span className="text-xs uppercase tracking-widest text-amber-900 font-bold block">
+              <span className="text-xs uppercase tracking-widest text-amber-900 dark:text-amber-400 font-bold block">
                 Back-of-House Administration
               </span>
-              <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[10px] font-bold uppercase">
+              <span className="px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-900 dark:text-amber-300 text-[10px] font-bold uppercase">
                 Staff Verified
               </span>
             </div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-stone-900 tracking-tight">
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-stone-900 dark:text-stone-100 tracking-tight">
               Dish Catalog Management
             </h1>
-            <p className="mt-2 text-stone-600 text-sm sm:text-base max-w-2xl">
+            <p className="mt-2 text-stone-600 dark:text-stone-400 text-sm sm:text-base max-w-2xl">
               Create, update, and manage Ethiopian culinary offerings across the public menu. All changes propagate with ISR revalidation.
             </p>
           </div>
           <div className="flex items-center gap-2 self-start sm:self-auto">
             <Link
               href="/kitchen"
-              className="px-4 py-2 rounded-xl bg-stone-100 text-stone-700 font-semibold text-xs hover:bg-stone-200 transition-colors no-underline"
+              className="px-4 py-2 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-200 font-semibold text-xs hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors no-underline border border-transparent dark:border-stone-700"
             >
               Kitchen Orders &rarr;
             </Link>
             <Link
               href="/menu"
               target="_blank"
-              className="px-4 py-2 rounded-xl bg-amber-900 text-white font-semibold text-xs hover:bg-amber-950 transition-colors no-underline"
+              className="px-4 py-2 rounded-xl bg-amber-900 dark:bg-amber-600 text-white font-semibold text-xs hover:bg-amber-950 dark:hover:bg-amber-500 transition-colors no-underline"
             >
               View Live Menu &nearr;
             </Link>

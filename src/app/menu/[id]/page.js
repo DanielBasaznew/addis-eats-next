@@ -131,14 +131,14 @@ export default async function DishDetailPage({ params }) {
       />
       <Link
         href="/menu"
-        className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-900 hover:text-amber-700 transition-colors mb-6 no-underline"
+        className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-900 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 transition-colors mb-6 no-underline"
       >
         <span aria-hidden="true">&larr;</span>
         <span>Back to Full Menu</span>
       </Link>
 
-      <article className="bg-white rounded-3xl border border-stone-200/90 shadow-sm p-6 sm:p-10 relative overflow-hidden">
-        <div className="relative mb-8 w-full h-72 sm:h-96 bg-stone-100 rounded-2xl overflow-hidden">
+      <article className="bg-white dark:bg-stone-900 rounded-3xl border border-stone-200/90 dark:border-stone-800 shadow-sm p-6 sm:p-10 relative overflow-hidden">
+        <div className="relative mb-8 w-full h-72 sm:h-96 bg-stone-100 dark:bg-stone-800 rounded-2xl overflow-hidden">
           {dish.image && (
             <Image
               src={dish.image}
@@ -160,36 +160,36 @@ export default async function DishDetailPage({ params }) {
         </div>
 
         <div className="flex flex-wrap items-center gap-2 mb-4">
-          <span className="text-xs px-3 py-1 rounded-full bg-stone-100 text-stone-700 font-medium">
+          <span className="text-xs px-3 py-1 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-medium">
             Category: {dish.category}
           </span>
           <span
             className={`text-xs px-3 py-1 rounded-full font-semibold border ${
               dish.vegetarian
-                ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-                : 'bg-amber-50 text-amber-900 border-amber-200'
+                ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/60'
+                : 'bg-amber-50 dark:bg-amber-950/60 text-amber-900 dark:text-amber-300 border-amber-200 dark:border-amber-800/60'
             }`}
           >
             {dish.vegetarian ? 'Vegetarian Specialty' : 'Traditional Stew'}
           </span>
-          <span className="text-xs px-3 py-1 rounded-full bg-amber-50/60 text-amber-800 border border-amber-100 font-medium hidden sm:inline-block">
+          <span className="text-xs px-3 py-1 rounded-full bg-amber-50/60 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-100 dark:border-amber-800/40 font-medium hidden sm:inline-block">
             Fresh Sourdough Injera Included
           </span>
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-4 mb-6">
-          <h1 className="m-0 text-3xl sm:text-4xl font-extrabold text-stone-900 tracking-tight">
+          <h1 className="m-0 text-3xl sm:text-4xl font-extrabold text-stone-900 dark:text-stone-100 tracking-tight">
             {dish.name}
           </h1>
-          <div className="inline-flex items-baseline gap-1 px-4 py-2 rounded-2xl bg-amber-50 border border-amber-200/70 self-start sm:self-auto">
-            <span className="text-2xl sm:text-3xl font-extrabold text-amber-950">
+          <div className="inline-flex items-baseline gap-1 px-4 py-2 rounded-2xl bg-amber-50 dark:bg-amber-950/60 border border-amber-200/70 dark:border-amber-800/60 self-start sm:self-auto">
+            <span className="text-2xl sm:text-3xl font-extrabold text-amber-950 dark:text-amber-300">
               {dish.price}
             </span>
-            <span className="text-xs font-bold text-amber-800">ETB</span>
+            <span className="text-xs font-bold text-amber-800 dark:text-amber-400">ETB</span>
           </div>
         </div>
 
-        <div className="space-y-4 text-stone-600 text-sm sm:text-base leading-relaxed">
+        <div className="space-y-4 text-stone-600 dark:text-stone-300 text-sm sm:text-base leading-relaxed">
           {dish.description ? (
             <p className="m-0">{dish.description}</p>
           ) : (
@@ -197,12 +197,12 @@ export default async function DishDetailPage({ params }) {
               A quintessential specialty of Ethiopian cuisine. Cooked in clay pots using fragrant highland spices, aromatic garlic, ginger, and clarified spiced butter, creating a harmonious and comforting depth of flavour.
             </p>
           )}
-          <p className="text-xs text-stone-500 italic">
+          <p className="text-xs text-stone-500 dark:text-stone-400 italic">
             * Served piping hot alongside freshly rolled fermented teff injera. Enjoyed traditionally by hand.
           </p>
         </div>
 
-        <div className="mt-8 pt-6 border-t border-stone-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="mt-8 pt-6 border-t border-stone-200 dark:border-stone-800 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex flex-col sm:flex-row items-center gap-3">
             <FavoriteButton
               dishId={dish.id}
@@ -210,8 +210,8 @@ export default async function DishDetailPage({ params }) {
               size="md"
               showText
             />
-            <span className="text-stone-300 hidden sm:inline">•</span>
-            <div className="text-xs text-stone-500 text-center sm:text-left">
+            <span className="text-stone-300 dark:text-stone-700 hidden sm:inline">•</span>
+            <div className="text-xs text-stone-500 dark:text-stone-400 text-center sm:text-left">
               <span>Prepared fresh upon order</span>
               <span className="mx-2">•</span>
               <span>Approx. 20–30 mins delivery</span>

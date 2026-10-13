@@ -53,24 +53,24 @@ export default async function MenuPage() {
 
   return (
     <main className="max-w-6xl mx-auto px-4 sm:px-6 py-10 md:py-12">
-      <header className="mb-8 pb-6 border-b border-stone-200">
+      <header className="mb-8 pb-6 border-b border-stone-200 dark:border-stone-800">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div>
-            <span className="text-xs uppercase tracking-widest text-amber-800 font-bold mb-1.5 block">
+            <span className="text-xs uppercase tracking-widest text-amber-800 dark:text-amber-400 font-bold mb-1.5 block">
               Traditional Kitchen • Fresh Daily
             </span>
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-stone-900 tracking-tight">
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-stone-900 dark:text-stone-100 tracking-tight">
               Our Handcrafted Menu
             </h1>
-            <p className="mt-2 text-stone-600 text-sm sm:text-base max-w-xl">
+            <p className="mt-2 text-stone-600 dark:text-stone-400 text-sm sm:text-base max-w-xl">
               Authentic Ethiopian recipes slow-cooked with spiced butter, berbere, and fresh vegetables. Served with warm teff injera.
             </p>
           </div>
           <div className="flex items-center gap-2 self-start sm:self-auto">
-            <span className="px-3 py-1 rounded-full bg-stone-100 text-stone-700 text-xs font-semibold border border-stone-200">
+            <span className="px-3 py-1 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 text-xs font-semibold border border-stone-200 dark:border-stone-700">
               {dishes.length} Dishes
             </span>
-            <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-semibold border border-emerald-200">
+            <span className="px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 text-xs font-semibold border border-emerald-200 dark:border-emerald-800/60">
               Vegan Options
             </span>
           </div>

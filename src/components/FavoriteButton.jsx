@@ -112,8 +112,8 @@ export default function FavoriteButton({
         }
         className={`rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer ${sizeClasses} ${
           isFavorite
-            ? 'bg-rose-50 text-rose-600 border border-rose-300 shadow-sm hover:bg-rose-100'
-            : 'bg-white/95 text-stone-400 border border-stone-200/90 hover:text-rose-500 hover:border-rose-300 hover:bg-white shadow-sm backdrop-blur-xs'
+            ? 'bg-rose-50 dark:bg-rose-950/80 text-rose-600 dark:text-rose-400 border border-rose-300 dark:border-rose-800 shadow-sm hover:bg-rose-100 dark:hover:bg-rose-900/60'
+            : 'bg-white/95 dark:bg-stone-800/90 text-stone-400 border border-stone-200/90 dark:border-stone-700 hover:text-rose-500 dark:hover:text-rose-400 hover:border-rose-300 dark:hover:border-rose-500 hover:bg-white dark:hover:bg-stone-800 shadow-sm backdrop-blur-xs'
         } ${isPending ? 'opacity-70 scale-95' : 'hover:scale-108 active:scale-95'} ${className}`}
       >
         <svg
@@ -131,7 +131,7 @@ export default function FavoriteButton({
       </button>
 
       {showText && (
-        <span className="text-xs font-semibold text-stone-600 select-none">
+        <span className="text-xs font-semibold text-stone-600 dark:text-stone-300 select-none">
           {isFavorite ? 'Saved to Favorites' : 'Add to Favorites'}
         </span>
       )}
@@ -139,7 +139,7 @@ export default function FavoriteButton({
       {error && (
         <span
           role="alert"
-          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2.5 py-1 bg-stone-900 text-white text-[10px] font-medium rounded-md shadow-lg whitespace-nowrap z-30"
+          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2.5 py-1 bg-stone-900 dark:bg-stone-800 text-white text-[10px] font-medium rounded-md shadow-lg border border-transparent dark:border-stone-700 whitespace-nowrap z-30"
         >
           {error}
         </span>

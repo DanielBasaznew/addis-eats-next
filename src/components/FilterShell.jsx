@@ -163,7 +163,7 @@ export default function FilterShell({ categories = [], children }) {
       <div className="flex flex-col sm:flex-row gap-3.5 items-stretch sm:items-center">
         <div className="relative w-full sm:w-64 md:w-72 shrink-0">
           <svg
-            className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 pointer-events-none"
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 dark:text-stone-500 pointer-events-none"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -181,7 +181,7 @@ export default function FilterShell({ categories = [], children }) {
             value={searchTerm}
             onChange={handleSearchChange}
             placeholder="Search dishes..."
-            className="w-full h-10 pl-10 pr-4 rounded-xl border border-stone-200 bg-white text-stone-900 text-sm outline-none focus:ring-2 focus:ring-amber-800/20 focus:border-amber-800 transition-all shadow-xs"
+            className="w-full h-10 pl-10 pr-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100 placeholder-stone-400 dark:placeholder-stone-500 text-sm outline-none focus:ring-2 focus:ring-amber-800/20 dark:focus:ring-amber-500/20 focus:border-amber-800 dark:focus:border-amber-500 transition-all shadow-xs"
           />
         </div>
 
@@ -196,27 +196,27 @@ export default function FilterShell({ categories = [], children }) {
       </div>
 
       {error && (
-        <p className="text-sm text-red-700">
+        <p className="text-sm text-red-700 dark:text-red-400">
           Failed to load dishes.
         </p>
       )}
 
       {isLoading && query && filteredChildren.length === 0 && (
-        <p className="text-sm text-stone-500">
+        <p className="text-sm text-stone-500 dark:text-stone-400">
           Searching...
         </p>
       )}
 
       {!isLoading && filteredChildren.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-stone-500">
+          <p className="text-stone-500 dark:text-stone-400">
             No dishes found.
           </p>
 
           <button
             type="button"
             onClick={resetFilters}
-            className="mt-3 text-sm font-semibold text-amber-900 hover:text-amber-700"
+            className="mt-3 text-sm font-semibold text-amber-900 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 cursor-pointer"
           >
             Clear filters
           </button>
@@ -235,12 +235,12 @@ export default function FilterShell({ categories = [], children }) {
             type="button"
             disabled={page === 1}
             onClick={() => handlePageChange(page - 1)}
-            className="px-4 py-2 rounded-lg border border-stone-200 disabled:opacity-40 cursor-pointer"
+            className="px-4 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 disabled:opacity-40 cursor-pointer transition-colors"
           >
             Previous
           </button>
 
-          <span className="text-sm text-stone-600">
+          <span className="text-sm text-stone-600 dark:text-stone-400">
             Page {page} of {totalPages}
           </span>
 
@@ -248,7 +248,7 @@ export default function FilterShell({ categories = [], children }) {
             type="button"
             disabled={page === totalPages}
             onClick={() => handlePageChange(page + 1)}
-            className="px-4 py-2 rounded-lg border border-stone-200 disabled:opacity-40 cursor-pointer"
+            className="px-4 py-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 disabled:opacity-40 cursor-pointer transition-colors"
           >
             Next
           </button>

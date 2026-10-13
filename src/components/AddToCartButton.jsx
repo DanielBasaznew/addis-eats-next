@@ -23,7 +23,7 @@ export default function AddToCartButton({ dish, compact = false, className = '' 
         aria-label={`Add ${dish?.name || 'dish'} to cart`}
         className={`inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl font-bold text-xs tracking-wide transition-all duration-200 shadow-xs cursor-pointer ${added
             ? 'bg-emerald-700 text-white shadow-emerald-700/20 scale-[0.98]'
-            : 'bg-amber-900 hover:bg-amber-800 text-amber-50 shadow-amber-950/15 hover:shadow-sm active:scale-[0.98]'
+            : 'bg-amber-900 hover:bg-amber-800 dark:bg-amber-600 dark:hover:bg-amber-500 text-amber-50 dark:text-white shadow-amber-950/15 hover:shadow-sm active:scale-[0.98]'
           } ${className}`}
       >
         {added ? (
@@ -67,7 +67,7 @@ export default function AddToCartButton({ dish, compact = false, className = '' 
       onClick={handleAdd}
       className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold text-sm tracking-wide transition-all duration-200 shadow-sm cursor-pointer ${added
           ? 'bg-emerald-700 text-white shadow-emerald-700/20 scale-[0.98]'
-          : 'bg-amber-900 hover:bg-amber-800 text-amber-50 shadow-amber-950/15 hover:shadow-md active:scale-[0.98]'
+          : 'bg-amber-900 hover:bg-amber-800 dark:bg-amber-600 dark:hover:bg-amber-500 text-amber-50 dark:text-white shadow-amber-950/15 hover:shadow-md active:scale-[0.98]'
         } ${className}`}
     >
       {added ? 'Added to Cart!' : 'Add to Order'}

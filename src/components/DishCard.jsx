@@ -9,12 +9,12 @@ function DishCard({ dish, priority = false, isFavorite = false }) {
 
   return (
     <article
-      className="group dish-card relative flex flex-col justify-between p-5 rounded-2xl bg-white border border-stone-200/90 shadow-sm hover:shadow-md hover:border-amber-900/30 transition-all duration-200"
+      className="group dish-card relative flex flex-col justify-between p-5 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200/90 dark:border-stone-800 shadow-sm hover:shadow-md hover:border-amber-900/30 dark:hover:border-amber-500/40 transition-all duration-200"
       data-category={dish.category}
       data-dish-id={dish.id}
     >
       <div>
-        <div className="relative mb-4 w-full h-44 bg-stone-100 rounded-xl overflow-hidden">
+        <div className="relative mb-4 w-full h-44 bg-stone-100 dark:bg-stone-800 rounded-xl overflow-hidden">
           {dish.image ? (
             <Image
               src={dish.image}
@@ -25,7 +25,7 @@ function DishCard({ dish, priority = false, isFavorite = false }) {
               className="object-cover rounded-xl group-hover:scale-102 transition-transform duration-300"
             />
           ) : (
-            <div className="w-full h-full flex flex-col items-center justify-center bg-stone-100 text-stone-400">
+            <div className="w-full h-full flex flex-col items-center justify-center bg-stone-100 dark:bg-stone-800 text-stone-400 dark:text-stone-500">
               <span className="text-3xl mb-1">🍲</span>
               <span className="text-xs font-medium">Addis Eats Kitchen</span>
             </div>
@@ -40,14 +40,14 @@ function DishCard({ dish, priority = false, isFavorite = false }) {
         </div>
 
         <div className="flex items-center justify-between gap-2 mb-3">
-          <span className="text-xs px-2.5 py-1 rounded-full bg-stone-100 text-stone-600 font-medium">
+          <span className="text-xs px-2.5 py-1 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 font-medium">
             {dish.category}
           </span>
 
           <span
             className={`text-xs px-2.5 py-1 rounded-full font-semibold border ${dish.vegetarian
-              ? 'bg-emerald-50 text-emerald-800 border-emerald-200/80'
-              : 'bg-amber-50 text-amber-900 border-amber-200/80'
+              ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border-emerald-200/80 dark:border-emerald-800/60'
+              : 'bg-amber-50 dark:bg-amber-950/60 text-amber-900 dark:text-amber-300 border-amber-200/80 dark:border-amber-800/60'
               }`}
           >
             {dish.vegetarian ? 'Vegetarian' : 'Traditional Stew'}
@@ -55,7 +55,7 @@ function DishCard({ dish, priority = false, isFavorite = false }) {
         </div>
 
         <div className="flex items-baseline justify-between gap-2">
-          <h3 className="m-0 text-xl font-bold text-stone-900 group-hover:text-amber-900 transition-colors tracking-tight">
+          <h3 className="m-0 text-xl font-bold text-stone-900 dark:text-stone-100 group-hover:text-amber-900 dark:group-hover:text-amber-400 transition-colors tracking-tight">
             <Link
               href={`/menu/${encodeURIComponent(dish.name)}`}
               className="no-underline text-inherit focus:outline-none"
@@ -64,23 +64,23 @@ function DishCard({ dish, priority = false, isFavorite = false }) {
             </Link>
           </h3>
 
-          <span className="text-lg font-extrabold text-amber-900 whitespace-nowrap">
+          <span className="text-lg font-extrabold text-amber-900 dark:text-amber-400 whitespace-nowrap">
             {dish.price}{' '}
-            <span className="text-xs font-semibold text-stone-500">
+            <span className="text-xs font-semibold text-stone-500 dark:text-stone-400">
               ETB
             </span>
           </span>
         </div>
 
-        <p className="mt-2 text-xs text-stone-500 leading-relaxed">
+        <p className="mt-2 text-xs text-stone-500 dark:text-stone-400 leading-relaxed">
           Prepared fresh daily with authentic Ethiopian spices & sourdough teff injera.
         </p>
       </div>
 
-      <div className="mt-5 pt-3.5 border-t border-stone-100 flex items-center justify-between gap-2">
+      <div className="mt-5 pt-3.5 border-t border-stone-100 dark:border-stone-800 flex items-center justify-between gap-2">
         <Link
           href={`/menu/${encodeURIComponent(dish.name)}`}
-          className="inline-flex items-center justify-center px-3.5 py-2 rounded-xl text-xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200 hover:text-stone-950 transition-all duration-200 no-underline shadow-xs"
+          className="inline-flex items-center justify-center px-3.5 py-2 rounded-xl text-xs font-semibold text-stone-700 dark:text-stone-300 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 hover:text-stone-950 dark:hover:text-white transition-all duration-200 no-underline shadow-xs"
         >
           <span>View Details</span>
           <span aria-hidden="true" className="ml-1 text-stone-400 group-hover:translate-x-0.5 transition-transform">
