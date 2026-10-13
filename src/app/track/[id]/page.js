@@ -126,22 +126,31 @@ export default async function TrackPage({ params }) {
             </span>
           </div>
 
-          <dl className="grid grid-cols-2 md:grid-cols-4 gap-6 text-sm">
+          <dl className="grid grid-cols-2 md:grid-cols-5 gap-6 text-sm">
             <div>
               <dt className="text-xs font-semibold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
-                Customer Name
+                Kitchen Origin
               </dt>
               <dd className="font-bold text-stone-900 dark:text-stone-100 mt-1 text-base">
-                {order.name || session.id}
+                🏪 Bole Kitchen
               </dd>
             </div>
 
             <div>
               <dt className="text-xs font-semibold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
-                Delivery Area
+                Destination
               </dt>
               <dd className="font-bold text-stone-900 dark:text-stone-100 mt-1 text-base">
-                📍 {order.area || 'Bole, Addis Ababa'}
+                📍 {order.area || 'Addis Ababa'}
+              </dd>
+            </div>
+
+            <div>
+              <dt className="text-xs font-semibold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
+                Customer Name
+              </dt>
+              <dd className="font-bold text-stone-900 dark:text-stone-100 mt-1 text-base truncate">
+                {order.name || session.id}
               </dd>
             </div>
 
@@ -188,7 +197,8 @@ export default async function TrackPage({ params }) {
           {/* Accessible summary note */}
           <div className="mt-6 p-4 rounded-2xl bg-stone-50 dark:bg-stone-800/40 border border-stone-200/80 dark:border-stone-700/80 text-xs text-stone-600 dark:text-stone-300 space-y-1">
             <p>
-              <strong>Courier Telemetry:</strong> Courier dispatch departing kitchen in Addis Ababa towards{' '}
+              <strong>Courier Telemetry:</strong> Courier departs from Addis Eats Main Kitchen in{' '}
+              <span className="font-semibold text-stone-900 dark:text-stone-100">Bole</span> traveling along the route towards{' '}
               <span className="font-semibold text-stone-900 dark:text-stone-100">{order.area || 'Addis Ababa'}</span>.
             </p>
             <p className="text-stone-500 dark:text-stone-400">
