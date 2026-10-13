@@ -260,7 +260,7 @@ export default function AdminDishManager({ initialDishes = [] }) {
                         )}
                         <div>
                           <div className="font-bold text-stone-900 hover:text-amber-900">
-                            <Link href={`/menu/${dish.id}`} className="no-underline text-inherit" target="_blank">
+                            <Link href={`/menu/${encodeURIComponent(dish.name)}`} className="no-underline text-inherit" target="_blank">
                               {dish.name}
                             </Link>
                           </div>
@@ -300,7 +300,7 @@ export default function AdminDishManager({ initialDishes = [] }) {
                     <td className="py-3.5 px-4 text-right whitespace-nowrap">
                       <div className="inline-flex items-center gap-1.5">
                         <Link
-                          href={`/menu/${dish.id}`}
+                          href={`/menu/${encodeURIComponent(dish.name)}`}
                           target="_blank"
                           className="px-2.5 py-1 rounded-lg text-xs font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-100 transition-colors no-underline"
                           title="View on live menu"

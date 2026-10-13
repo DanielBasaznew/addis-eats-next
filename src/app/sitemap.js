@@ -18,7 +18,7 @@ export default async function sitemap() {
   ];
 
   const dishRoutes = dishes.map((dish) => ({
-    url: `${baseUrl}/menu/${dish.id}`,
+    url: `${baseUrl}/menu/${encodeURIComponent(dish.name)}`,
     lastModified: now,
     changeFrequency: 'weekly',
     priority: 0.8,

@@ -18,14 +18,32 @@ async function getDishes() {
 export async function generateStaticParams() {
   const dishes = await getDishes();
   return dishes.map((dish) => ({
-    id: String(dish.id),
+    id: dish.name,
   }));
 }
 
 export default async function OpenGraphImage({ params }) {
   const { id } = await params;
   const dishes = await getDishes();
-  const dish = dishes.find((item) => String(item.id) === String(id));
+  let decoded = id;
+  try {
+    decoded = decodeURIComponent(id).trim();
+  } catch {
+    decoded = id;
+  }
+  const clean = (s) =>
+    String(s || '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+
+  const dish =
+    dishes.find(
+      (item) =>
+        String(item.id) === decoded ||
+        item.name.toLowerCase() === decoded.toLowerCase() ||
+        clean(item.name) === clean(decoded)
+    ) || null;
 
   const name = dish?.name || 'Ethiopian Dish';
   const category = dish?.category || 'Traditional Kitchen';
@@ -155,7 +173,7 @@ export default async function OpenGraphImage({ params }) {
           }}
         >
           <div style={{ display: 'flex' }}>Fresh Daily in Addis Ababa</div>
-          <div style={{ display: 'flex' }}>{`addiseats.et/menu/${id}`}</div>
+          <div style={{ display: 'flex' }}>{`addiseats.et/menu/${encodeURIComponent(dish?.name || id)}`}</div>
         </div>
       </div>
     ),

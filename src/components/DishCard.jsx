@@ -57,7 +57,7 @@ function DishCard({ dish, priority = false, isFavorite = false }) {
         <div className="flex items-baseline justify-between gap-2">
           <h3 className="m-0 text-xl font-bold text-stone-900 group-hover:text-amber-900 transition-colors tracking-tight">
             <Link
-              href={`/menu/${dish.id}`}
+              href={`/menu/${encodeURIComponent(dish.name)}`}
               className="no-underline text-inherit focus:outline-none"
             >
               {dish.name}
@@ -79,7 +79,7 @@ function DishCard({ dish, priority = false, isFavorite = false }) {
 
       <div className="mt-5 pt-3.5 border-t border-stone-100 flex items-center justify-between gap-2">
         <Link
-          href={`/menu/${dish.id}`}
+          href={`/menu/${encodeURIComponent(dish.name)}`}
           className="inline-flex items-center justify-center px-3.5 py-2 rounded-xl text-xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200 hover:text-stone-950 transition-all duration-200 no-underline shadow-xs"
         >
           <span>View Details</span>

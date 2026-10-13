@@ -4,21 +4,20 @@ import { notFound } from 'next/navigation';
 import { cookies } from 'next/headers';
 import AddToCartButton from '@/components/AddToCartButton';
 import FavoriteButton from '@/components/FavoriteButton';
-import { getDishes } from '@/lib/dishes';
+import { getDishes, getDishBySlugOrId } from '@/lib/dishes';
 import { getSession } from '@/lib/session';
 import { isDishFavorite, syncFavoritesFromList } from '@/lib/favorites';
 
 export async function generateStaticParams() {
   const dishes = await getDishes();
   return dishes.map((dish) => ({
-    id: String(dish.id),
+    id: dish.name,
   }));
 }
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
-  const dishes = await getDishes();
-  const dish = dishes.find((item) => String(item.id) === String(id));
+  const dish = await getDishBySlugOrId(id);
 
   if (!dish) {
     return {
@@ -35,8 +34,8 @@ export async function generateMetadata({ params }) {
   const description =
     dish.description ||
     `${dish.name} — ${dish.price} ETB at Addis Eats. Handcrafted Ethiopian culinary specialty served with sourdough teff injera.`;
-  const url = `/menu/${dish.id}`;
-  const foodImage = dish.image || `/menu/${dish.id}/opengraph-image`;
+  const url = `/menu/${encodeURIComponent(dish.name)}`;
+  const foodImage = dish.image || `/menu/${encodeURIComponent(dish.name)}/opengraph-image`;
 
   return {
     title,
@@ -83,7 +82,7 @@ function createMenuItemJsonLd(dish) {
       price: dish.price,
       priceCurrency: 'ETB',
       availability: 'https://schema.org/InStock',
-      url: `/menu/${dish.id}`,
+      url: `/menu/${encodeURIComponent(dish.name)}`,
     },
     menuAddOn: {
       '@type': 'MenuItem',
@@ -100,8 +99,7 @@ function createMenuItemJsonLd(dish) {
 
 export default async function DishDetailPage({ params }) {
   const { id } = await params;
-  const dishes = await getDishes();
-  const dish = dishes.find((item) => String(item.id) === String(id));
+  const dish = await getDishBySlugOrId(id);
 
   if (!dish) {
     notFound();

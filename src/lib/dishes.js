@@ -60,6 +60,45 @@ export async function getDishById(id) {
 }
 
 /**
+ * Retrieve a dish strictly by its dish name or name slug.
+ * Rejects typos and numeric IDs.
+ * Supports:
+ * - "Doro Wot", "Doro%20Wot", "doro wot"
+ * - "doro-wot"
+ */
+export async function getDishBySlugOrId(param) {
+  if (!param) return null;
+  const dishes = await ensureDishesLoaded();
+  const raw = String(param).trim();
+  let decoded = raw;
+  try {
+    decoded = decodeURIComponent(raw).trim();
+  } catch {
+    decoded = raw;
+  }
+
+  const cleanSlug = (s) =>
+    String(s || '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+
+  const normalizedParam = cleanSlug(decoded);
+
+  // 1. Exact or case-insensitive dish name match (e.g. "Doro Wot" or "doro wot")
+  const byName = dishes.find((d) => d.name.toLowerCase() === decoded.toLowerCase());
+  if (byName) return byName;
+
+  // 2. Clean name slug match (e.g. "doro-wot")
+  const bySlug = dishes.find((d) => cleanSlug(d.name) === normalizedParam);
+  if (bySlug) return bySlug;
+
+  return null;
+}
+
+export const getDishByName = getDishBySlugOrId;
+
+/**
  * Create a new dish.
  * @param {Object} dishData
  */
