@@ -5,7 +5,8 @@
     "category": "Breakfast",
     "price": 240,
     "vegetarian": false,
-    "image": "/images/dishes/genfo.jpg"
+    "image": "/images/dishes/genfo.jpg",
+    "description": "Traditional thick barley and wheat porridge served hot with a well of spiced clarified butter (niter kibe) and fiery berbere."
   },
   {
     "id": 2,
@@ -13,7 +14,8 @@
     "category": "Breakfast",
     "price": 220,
     "vegetarian": false,
-    "image": "/images/dishes/chechebsa.jpg"
+    "image": "/images/dishes/chechebsa.jpg",
+    "description": "Torn pieces of freshly baked flatbread pan-fried in seasoned berbere and spiced butter, served with cooling fresh yogurt."
   },
   {
     "id": 3,
@@ -21,7 +23,8 @@
     "category": "Lunch",
     "price": 180,
     "vegetarian": true,
-    "image": "/images/dishes/shiro-wot.jpg"
+    "image": "/images/dishes/shiro-wot.jpg",
+    "description": "Velvety spiced chickpea and split pea flour stew, slow-cooked in a traditional clay pot and served bubbling hot with teff injera."
   },
   {
     "id": 4,
@@ -29,7 +32,8 @@
     "category": "Lunch",
     "price": 160,
     "vegetarian": true,
-    "image": "/images/dishes/misir-wot.jpg"
+    "image": "/images/dishes/misir-wot.jpg",
+    "description": "Red split lentils slow-simmered in rich berbere sauce, fragrant garlic, ginger, and caramelized onions."
   },
   {
     "id": 5,
@@ -37,7 +41,8 @@
     "category": "Dinner",
     "price": 650,
     "vegetarian": false,
-    "image": "/images/dishes/doro-wot.jpg"
+    "image": "/images/dishes/doro-wot.jpg",
+    "description": "The celebratory crown of Ethiopian feasts: tender chicken leg simmered for hours in rich berbere sauce with hard-boiled farm eggs and ayib."
   },
   {
     "id": 6,
@@ -45,7 +50,8 @@
     "category": "Dinner",
     "price": 550,
     "vegetarian": false,
-    "image": "/images/dishes/tibs.jpg"
+    "image": "/images/dishes/tibs.jpg",
+    "description": "Tender lean beef cubes sautéed on high heat in a sizzling cast-iron skillet with red onions, rosemary, and sliced fresh jalapeño peppers."
   },
   {
     "id": 7,
@@ -53,7 +59,8 @@
     "category": "Dinner",
     "price": 480,
     "vegetarian": false,
-    "image": "/images/dishes/dulet.jpg"
+    "image": "/images/dishes/dulet.jpg",
+    "description": "Finely minced lean beef, liver, and tripe seasoned with fiery mitmita spice, clarified spiced butter, and fresh diced green peppers."
   },
   {
     "id": 8,
@@ -61,42 +68,25 @@
     "category": "Lunch",
     "price": 280,
     "vegetarian": true,
-    "image": "/images/dishes/beyaynetu.jpg"
+    "image": "/images/dishes/beyaynetu.jpg",
+    "description": "A colorful feast platter featuring an assortment of vegetarian and vegan stews, lentils, split peas, and garden greens atop teff injera."
   },
   {
     "id": 9,
-    "name": "Special Gomen Kitfo",
-    "category": "Beef",
+    "name": "Gomen Kitfo",
+    "category": "Dinner",
     "price": 490,
     "vegetarian": false,
-    "image": "/images/dishes/genfo.jpg",
-    "description": "Finely minced lean beef with collard greens and mitmita."
+    "image": "/images/dishes/gomen-kitfo.jpg",
+    "description": "Finely chopped highland collard greens sautéed with seasoned minced beef, niter kibe, and mitmita, served with house-made ayib cheese."
   },
   {
     "id": 10,
-    "name": "Updated Delicious Stew",
-    "category": "Vegetarian",
-    "price": 275,
+    "name": "Fasolia",
+    "category": "Lunch",
+    "price": 190,
     "vegetarian": true,
-    "image": "/images/dishes/genfo.jpg",
-    "description": "Now with extra clarified spiced butter and rosemary."
-  },
-  {
-    "id": 11,
-    "name": "Special Gomen Kitfo",
-    "category": "Beef",
-    "price": 490,
-    "vegetarian": false,
-    "image": "/images/dishes/genfo.jpg",
-    "description": "Finely minced lean beef with collard greens and mitmita."
-  },
-  {
-    "id": 12,
-    "name": "Updated Delicious Stew",
-    "category": "Vegetarian",
-    "price": 275,
-    "vegetarian": true,
-    "image": "/images/dishes/genfo.jpg",
-    "description": "Now with extra clarified spiced butter and rosemary."
+    "image": "/images/dishes/fasolia.jpg",
+    "description": "Tender string green beans and sweet carrots gently sautéed with caramelized onions, garlic, and Ethiopian highland herbs."
   }
 ]
