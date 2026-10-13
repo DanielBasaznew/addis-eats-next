@@ -1,35 +1,45 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+} from 'react';
 
 const CartContext = createContext(null);
 
 export function CartProvider({ children }) {
   const [cart, setCart] = useState([]);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const isLoadedRef = useRef(false);
 
   useEffect(() => {
     try {
       const saved = localStorage.getItem('addis_eats_cart');
       if (saved) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setCart(JSON.parse(saved));
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setCart(parsed);
+        }
       }
     } catch (e) {
       console.error('Failed to load cart from localStorage', e);
     }
-    setIsLoaded(true);
+    isLoadedRef.current = true;
   }, []);
 
   useEffect(() => {
-    if (isLoaded) {
+    if (isLoadedRef.current) {
       try {
         localStorage.setItem('addis_eats_cart', JSON.stringify(cart));
       } catch (e) {
         console.error('Failed to save cart to localStorage', e);
       }
     }
-  }, [cart, isLoaded]);
+  }, [cart]);
 
   const addToCart = useCallback((dish) => {
     setCart((prev) => {
@@ -49,21 +59,28 @@ export function CartProvider({ children }) {
 
   const clearCart = useCallback(() => setCart([]), []);
 
-  const total = cart.reduce(
-    (sum, item) => sum + item.price * (item.quantity || 1),
-    0
+  const total = useMemo(
+    () =>
+      cart.reduce(
+        (sum, item) => sum + item.price * (item.quantity || 1),
+        0
+      ),
+    [cart]
+  );
+
+  const value = useMemo(
+    () => ({
+      cart,
+      addToCart,
+      removeFromCart,
+      clearCart,
+      total,
+    }),
+    [cart, addToCart, removeFromCart, clearCart, total]
   );
 
   return (
-    <CartContext.Provider
-      value={{
-        cart,
-        addToCart,
-        removeFromCart,
-        clearCart,
-        total,
-      }}
-    >
+    <CartContext.Provider value={value}>
       {children}
     </CartContext.Provider>
   );

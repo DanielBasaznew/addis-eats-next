@@ -17,9 +17,11 @@ export default function FavoriteButton({
   const [error, setError] = useState(null);
   const [isPending, startTransition] = useTransition();
 
-  // Conditionally sync favorites via SWR if user is authenticated
+  // Sync favorites via SWR without blocking or running 12 parallel requests on initial mount
   const { data: favoritesData } = useSWR('/api/favorites', fetcher, {
     revalidateOnFocus: false,
+    revalidateOnMount: false,
+    revalidateIfStale: false,
     shouldRetryOnError: false,
   });
 

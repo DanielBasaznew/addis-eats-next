@@ -1,9 +1,10 @@
+import { memo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import FavoriteButton from '@/components/FavoriteButton';
 import AddToCartButton from '@/components/AddToCartButton';
 
-export default function DishCard({ dish, priority = false, isFavorite = false }) {
+function DishCard({ dish, priority = false, isFavorite = false }) {
   if (!dish) return null;
 
   return (
@@ -45,8 +46,8 @@ export default function DishCard({ dish, priority = false, isFavorite = false })
 
           <span
             className={`text-xs px-2.5 py-1 rounded-full font-semibold border ${dish.vegetarian
-                ? 'bg-emerald-50 text-emerald-800 border-emerald-200/80'
-                : 'bg-amber-50 text-amber-900 border-amber-200/80'
+              ? 'bg-emerald-50 text-emerald-800 border-emerald-200/80'
+              : 'bg-amber-50 text-amber-900 border-amber-200/80'
               }`}
           >
             {dish.vegetarian ? 'Vegetarian' : 'Traditional Stew'}
@@ -92,3 +93,5 @@ export default function DishCard({ dish, priority = false, isFavorite = false })
     </article>
   );
 }
+
+export default memo(DishCard);
