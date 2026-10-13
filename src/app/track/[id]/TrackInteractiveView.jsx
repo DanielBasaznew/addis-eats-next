@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import OrderStatus from '@/components/OrderStatus';
 import MapPanel from './MapPanel';
 
@@ -11,8 +11,18 @@ import MapPanel from './MapPanel';
 export default function TrackInteractiveView({ initialOrder, children }) {
   const [currentOrder, setCurrentOrder] = useState(initialOrder);
 
+  useEffect(() => {
+    if (initialOrder) {
+      setCurrentOrder(initialOrder);
+    }
+  }, [initialOrder]);
+
   const handleStatusChange = useCallback((updated) => {
-    setCurrentOrder(updated);
+    setCurrentOrder((prev) => ({
+      ...prev,
+      status: updated?.status || prev.status,
+      updatedAt: updated?.updatedAt || prev.updatedAt,
+    }));
   }, []);
 
   return (

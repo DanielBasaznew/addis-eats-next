@@ -84,15 +84,16 @@ export default function OrderStatus({ initialOrder, onStatusChange }) {
       try {
         const update = JSON.parse(dataString);
         if (update && update.status) {
-          setOrder((prev) => {
-            const next = {
-              ...prev,
-              status: update.status,
-              updatedAt: update.updatedAt || prev.updatedAt,
-            };
-            if (onStatusChangeRef.current) onStatusChangeRef.current(next);
-            return next;
-          });
+          setOrder((prev) => ({
+            ...prev,
+            status: update.status,
+            updatedAt: update.updatedAt || prev.updatedAt,
+          }));
+
+          // Call parent callback outside of setState to keep the updater pure
+          if (onStatusChangeRef.current) {
+            onStatusChangeRef.current(update);
+          }
 
           if (update.status === 'Delivered' || update.status === 'Cancelled') {
             setConnectionState('Terminal');
