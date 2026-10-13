@@ -18,9 +18,9 @@
         "quantity": 1
       }
     ],
-    "status": "Ready",
+    "status": "Preparing",
     "createdAt": "2026-10-12T01:15:00.000Z",
-    "updatedAt": "2026-10-13T16:16:28.447Z",
+    "updatedAt": "2026-10-13T16:34:26.911Z",
     "total": 930,
     "area": "Bole"
   },

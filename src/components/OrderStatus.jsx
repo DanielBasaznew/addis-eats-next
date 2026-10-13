@@ -75,8 +75,16 @@ export default function OrderStatus({ initialOrder, onStatusChange }) {
     const streamUrl = `/api/orders/${encodeURIComponent(initialOrder.id)}/stream`;
     const source = new EventSource(streamUrl);
 
+    let pollInterval = null;
+
     source.onopen = () => {
-      if (active) setConnectionState('Connected');
+      if (active) {
+        setConnectionState('Connected');
+        if (pollInterval) {
+          clearInterval(pollInterval);
+          pollInterval = null;
+        }
+      }
     };
 
     function handleIncomingData(dataString) {
@@ -97,6 +105,7 @@ export default function OrderStatus({ initialOrder, onStatusChange }) {
 
           if (update.status === 'Delivered' || update.status === 'Cancelled') {
             setConnectionState('Terminal');
+            if (pollInterval) clearInterval(pollInterval);
             source.close();
           }
         }
@@ -111,11 +120,41 @@ export default function OrderStatus({ initialOrder, onStatusChange }) {
     source.onerror = () => {
       if (active) {
         setConnectionState('Reconnecting');
+        // Day 47 standard fallback: If serverless hosting terminates the stream, poll every 5s
+        if (!pollInterval) {
+          pollInterval = setInterval(async () => {
+            if (!active) return;
+            try {
+              const res = await fetch(`/api/orders/${encodeURIComponent(initialOrder.id)}`);
+              if (res.ok) {
+                const data = await res.json();
+                if (data?.order) {
+                  setOrder((prev) => ({
+                    ...prev,
+                    status: data.order.status,
+                    updatedAt: data.order.updatedAt || prev.updatedAt,
+                  }));
+                  if (onStatusChangeRef.current) {
+                    onStatusChangeRef.current(data.order);
+                  }
+                  if (data.order.status === 'Delivered' || data.order.status === 'Cancelled') {
+                    setConnectionState('Terminal');
+                    if (pollInterval) clearInterval(pollInterval);
+                    source.close();
+                  }
+                }
+              }
+            } catch {
+              // Ignore transient network errors
+            }
+          }, 5000);
+        }
       }
     };
 
     return () => {
       active = false;
+      if (pollInterval) clearInterval(pollInterval);
       source.close();
     };
   }, [initialOrder.id]);

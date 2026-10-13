@@ -1,7 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import os from 'node:os';
 
 const ORDERS_FILE = path.join(process.cwd(), 'public', 'orders.json');
+const TMP_ORDERS_FILE = path.join(os.tmpdir(), 'orders.json');
 
 const globalForOrders = globalThis;
 
@@ -22,12 +24,13 @@ export function getOrderTotal(order) {
 }
 
 /**
- * Load initial orders from public/orders.json if present.
+ * Load initial orders from /tmp/orders.json or public/orders.json.
  */
 function loadOrdersFromDisk() {
   try {
-    if (fs.existsSync(ORDERS_FILE)) {
-      const fileContents = fs.readFileSync(ORDERS_FILE, 'utf-8');
+    const targetFile = fs.existsSync(TMP_ORDERS_FILE) ? TMP_ORDERS_FILE : ORDERS_FILE;
+    if (fs.existsSync(targetFile)) {
+      const fileContents = fs.readFileSync(targetFile, 'utf-8');
       const parsed = JSON.parse(fileContents);
       if (Array.isArray(parsed)) {
         const orderMap = new Map();
@@ -45,26 +48,37 @@ function loadOrdersFromDisk() {
       }
     }
   } catch (error) {
-    console.error('Error loading orders.json:', error);
+    console.error('Error loading orders:', error);
   }
   return new Map();
 }
 
 /**
- * Persist current orders map to public/orders.json.
+ * Persist current orders map to /tmp and public/orders.json.
  */
 function saveOrdersToDisk(ordersMap) {
+  const list = Array.from(ordersMap.values());
+  const serialized = JSON.stringify(list, null, 2);
+  let saved = false;
+
+  // Always write to /tmp (writable on Vercel Serverless)
   try {
-    const list = Array.from(ordersMap.values());
-    fs.writeFileSync(ORDERS_FILE, JSON.stringify(list, null, 2), 'utf-8');
-    try {
-      globalForOrders.__addis_orders_mtime__ = fs.statSync(ORDERS_FILE).mtimeMs;
-    } catch {}
-    return true;
-  } catch (error) {
-    console.error('Error saving orders.json:', error);
-    return false;
+    fs.writeFileSync(TMP_ORDERS_FILE, serialized, 'utf-8');
+    saved = true;
+  } catch (err) {
+    console.error('Error saving to /tmp:', err);
   }
+
+  // Also write to public/orders.json if filesystem permits (e.g. localhost)
+  try {
+    fs.writeFileSync(ORDERS_FILE, serialized, 'utf-8');
+    globalForOrders.__addis_orders_mtime__ = fs.statSync(ORDERS_FILE).mtimeMs;
+    saved = true;
+  } catch {
+    // Expected on read-only serverless filesystems (e.g. Vercel)
+  }
+
+  return saved;
 }
 
 /**
@@ -72,8 +86,9 @@ function saveOrdersToDisk(ordersMap) {
  */
 function getOrdersMap() {
   try {
-    if (fs.existsSync(ORDERS_FILE)) {
-      const stats = fs.statSync(ORDERS_FILE);
+    const targetFile = fs.existsSync(TMP_ORDERS_FILE) ? TMP_ORDERS_FILE : ORDERS_FILE;
+    if (fs.existsSync(targetFile)) {
+      const stats = fs.statSync(targetFile);
       if (
         !globalForOrders.__addis_orders__ ||
         stats.mtimeMs > (globalForOrders.__addis_orders_mtime__ || 0)
