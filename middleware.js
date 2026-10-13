@@ -23,8 +23,12 @@ export function middleware(request) {
     return NextResponse.redirect(signInUrl);
   }
 
-  // Layer 1 staff role enforcement: reject non-staff sessions from /kitchen and /admin
-  if (pathname.startsWith('/kitchen') || pathname.startsWith('/admin')) {
+  // Layer 1 staff role enforcement: reject non-staff sessions from /kitchen, /admin, and /dashboard
+  if (
+    pathname.startsWith('/kitchen') ||
+    pathname.startsWith('/admin') ||
+    pathname.startsWith('/dashboard')
+  ) {
     const role = getSessionRole(sessionToken);
     if (role !== 'staff') {
       const signInUrl = new URL('/signin', request.url);
@@ -44,6 +48,7 @@ export const config = {
     '/orders/:path*',
     '/kitchen/:path*',
     '/admin/:path*',
+    '/dashboard/:path*',
     '/favorites/:path*',
   ],
 };

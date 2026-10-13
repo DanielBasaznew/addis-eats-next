@@ -40,17 +40,30 @@ export default async function KitchenPage() {
 
   return (
     <main className="max-w-4xl mx-auto px-4 sm:px-6 py-10 md:py-14">
-      <span className="text-xs uppercase tracking-widest text-emerald-700 dark:text-emerald-400 font-bold">
-        Staff Area
-      </span>
+      <header className="mb-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 pb-6 border-b border-stone-200 dark:border-stone-800">
+        <div>
+          <span className="text-xs uppercase tracking-widest text-emerald-700 dark:text-emerald-400 font-bold block mb-1">
+            Staff Area
+          </span>
 
-      <h1 className="text-3xl sm:text-4xl font-extrabold text-stone-900 dark:text-stone-100 mt-1">
-        Kitchen Dashboard
-      </h1>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-stone-900 dark:text-stone-100 tracking-tight">
+            Kitchen Dashboard
+          </h1>
 
-      <p className="text-stone-500 dark:text-stone-400 mt-2">
-        Welcome, staff. You can manage incoming orders here.
-      </p>
+          <p className="text-stone-500 dark:text-stone-400 text-sm mt-1.5">
+            Real-time queue of incoming customer orders and preparation status.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          <Link
+            href="/dashboard"
+            className="px-4 py-2 rounded-xl bg-amber-900 hover:bg-amber-800 dark:bg-amber-600 dark:hover:bg-amber-500 text-white font-semibold text-xs transition-colors no-underline shadow-xs"
+          >
+            📊 Analytics & Charts &rarr;
+          </Link>
+        </div>
+      </header>
 
       <div className="mt-8">
         <h2 className="text-lg font-bold text-stone-900 dark:text-stone-100 mb-4">

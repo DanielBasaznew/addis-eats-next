@@ -20,7 +20,9 @@
     ],
     "status": "Preparing",
     "createdAt": "2026-10-12T01:15:00.000Z",
-    "updatedAt": "2026-10-12T01:31:25.379Z"
+    "updatedAt": "2026-10-12T01:31:25.379Z",
+    "total": 930,
+    "area": "Bole"
   },
   {
     "id": "ORD-1002",
@@ -37,7 +39,9 @@
     ],
     "status": "Cooking",
     "createdAt": "2026-10-11T20:45:00.000Z",
-    "updatedAt": "2026-10-11T21:00:00.000Z"
+    "updatedAt": "2026-10-11T21:00:00.000Z",
+    "total": 1100,
+    "area": "Kazanchis"
   },
   {
     "id": "ORD-1003",
@@ -60,7 +64,9 @@
     ],
     "status": "Ready",
     "createdAt": "2026-10-11T16:20:00.000Z",
-    "updatedAt": "2026-10-11T16:50:00.000Z"
+    "updatedAt": "2026-10-11T16:50:00.000Z",
+    "total": 460,
+    "area": "Sarbet"
   },
   {
     "id": "ORD-1004",
@@ -83,7 +89,9 @@
     ],
     "status": "Delivered",
     "createdAt": "2026-10-10T12:00:00.000Z",
-    "updatedAt": "2026-10-10T12:45:00.000Z"
+    "updatedAt": "2026-10-10T12:45:00.000Z",
+    "total": 520,
+    "area": "Piassa"
   },
   {
     "id": "ORD-1005",
@@ -100,7 +108,9 @@
     ],
     "status": "Preparing",
     "createdAt": "2026-10-12T02:30:00.000Z",
-    "updatedAt": "2026-10-12T02:30:00.000Z"
+    "updatedAt": "2026-10-12T02:30:00.000Z",
+    "total": 560,
+    "area": "Arat Kilo"
   },
   {
     "id": "ORD-1006",
@@ -117,7 +127,9 @@
     ],
     "status": "Cooking",
     "createdAt": "2026-10-11T19:10:00.000Z",
-    "updatedAt": "2026-10-11T19:35:00.000Z"
+    "updatedAt": "2026-10-11T19:35:00.000Z",
+    "total": 650,
+    "area": "Bole"
   },
   {
     "id": "ORD-1007",
@@ -140,7 +152,9 @@
     ],
     "status": "Delivered",
     "createdAt": "2026-10-10T18:00:00.000Z",
-    "updatedAt": "2026-10-10T18:50:00.000Z"
+    "updatedAt": "2026-10-10T18:50:00.000Z",
+    "total": 1030,
+    "area": "Kazanchis"
   },
   {
     "id": "ORD-1008",
@@ -157,7 +171,9 @@
     ],
     "status": "Cancelled",
     "createdAt": "2026-10-09T09:15:00.000Z",
-    "updatedAt": "2026-10-09T09:20:00.000Z"
+    "updatedAt": "2026-10-09T09:20:00.000Z",
+    "total": 220,
+    "area": "Sarbet"
   },
   {
     "id": "ORD-1009",
@@ -180,7 +196,9 @@
     ],
     "status": "Preparing",
     "createdAt": "2026-10-12T03:00:00.000Z",
-    "updatedAt": "2026-10-12T03:00:00.000Z"
+    "updatedAt": "2026-10-12T03:00:00.000Z",
+    "total": 790,
+    "area": "Piassa"
   },
   {
     "id": "ORD-1010",
@@ -203,7 +221,9 @@
     ],
     "status": "Ready",
     "createdAt": "2026-10-11T17:40:00.000Z",
-    "updatedAt": "2026-10-11T18:05:00.000Z"
+    "updatedAt": "2026-10-11T18:05:00.000Z",
+    "total": 460,
+    "area": "Arat Kilo"
   },
   {
     "id": "ORD-1011",
@@ -220,7 +240,9 @@
     ],
     "status": "Delivered",
     "createdAt": "2026-10-10T19:30:00.000Z",
-    "updatedAt": "2026-10-10T20:15:00.000Z"
+    "updatedAt": "2026-10-10T20:15:00.000Z",
+    "total": 1300,
+    "area": "Bole"
   },
   {
     "id": "ORD-1012",
@@ -237,7 +259,9 @@
     ],
     "status": "Delivered",
     "createdAt": "2026-10-09T13:00:00.000Z",
-    "updatedAt": "2026-10-09T13:40:00.000Z"
+    "updatedAt": "2026-10-09T13:40:00.000Z",
+    "total": 480,
+    "area": "Kazanchis"
   },
   {
     "id": "ORD-1013",
@@ -260,7 +284,9 @@
     ],
     "status": "Cooking",
     "createdAt": "2026-10-11T21:15:00.000Z",
-    "updatedAt": "2026-10-11T21:30:00.000Z"
+    "updatedAt": "2026-10-11T21:30:00.000Z",
+    "total": 440,
+    "area": "Sarbet"
   },
   {
     "id": "ORD-1014",
@@ -277,7 +303,9 @@
     ],
     "status": "Ready",
     "createdAt": "2026-10-11T15:00:00.000Z",
-    "updatedAt": "2026-10-11T15:25:00.000Z"
+    "updatedAt": "2026-10-11T15:25:00.000Z",
+    "total": 440,
+    "area": "Piassa"
   },
   {
     "id": "ORD-1015",
@@ -300,7 +328,9 @@
     ],
     "status": "Delivered",
     "createdAt": "2026-10-10T14:10:00.000Z",
-    "updatedAt": "2026-10-10T14:55:00.000Z"
+    "updatedAt": "2026-10-10T14:55:00.000Z",
+    "total": 1200,
+    "area": "Arat Kilo"
   },
   {
     "id": "ORD-1016",
@@ -317,7 +347,9 @@
     ],
     "status": "Cancelled",
     "createdAt": "2026-10-09T11:20:00.000Z",
-    "updatedAt": "2026-10-09T11:25:00.000Z"
+    "updatedAt": "2026-10-09T11:25:00.000Z",
+    "total": 180,
+    "area": "Bole"
   },
   {
     "id": "ORD-1017",
@@ -334,7 +366,9 @@
     ],
     "status": "Preparing",
     "createdAt": "2026-10-12T03:30:00.000Z",
-    "updatedAt": "2026-10-12T03:30:00.000Z"
+    "updatedAt": "2026-10-12T03:30:00.000Z",
+    "total": 480,
+    "area": "Kazanchis"
   },
   {
     "id": "ORD-1018",
@@ -357,7 +391,9 @@
     ],
     "status": "Cooking",
     "createdAt": "2026-10-11T22:00:00.000Z",
-    "updatedAt": "2026-10-11T22:20:00.000Z"
+    "updatedAt": "2026-10-11T22:20:00.000Z",
+    "total": 1030,
+    "area": "Sarbet"
   },
   {
     "id": "ORD-1019",
@@ -374,7 +410,9 @@
     ],
     "status": "Ready",
     "createdAt": "2026-10-11T18:30:00.000Z",
-    "updatedAt": "2026-10-11T18:55:00.000Z"
+    "updatedAt": "2026-10-11T18:55:00.000Z",
+    "total": 650,
+    "area": "Piassa"
   },
   {
     "id": "ORD-1020",
@@ -397,6 +435,171 @@
     ],
     "status": "Delivered",
     "createdAt": "2026-10-10T16:00:00.000Z",
-    "updatedAt": "2026-10-10T16:40:00.000Z"
+    "updatedAt": "2026-10-10T16:40:00.000Z",
+    "total": 460,
+    "area": "Arat Kilo"
+  },
+  {
+    "id": "ORD-1021",
+    "userId": "daniel",
+    "name": "Daniel Basaznew",
+    "phone": "+251911223344",
+    "area": "Bole",
+    "total": 830,
+    "items": [
+      {
+        "id": 6,
+        "name": "Tibs",
+        "price": 550,
+        "quantity": 1
+      },
+      {
+        "id": 8,
+        "name": "Beyaynetu",
+        "price": 280,
+        "quantity": 1
+      }
+    ],
+    "status": "Delivered",
+    "createdAt": "2026-10-09T14:30:00.000Z",
+    "updatedAt": "2026-10-09T15:15:00.000Z"
+  },
+  {
+    "id": "ORD-1022",
+    "userId": "daniel",
+    "name": "Daniel Basaznew",
+    "phone": "+251911223344",
+    "area": "Kazanchis",
+    "total": 480,
+    "items": [
+      {
+        "id": 7,
+        "name": "Dulet",
+        "price": 480,
+        "quantity": 1
+      }
+    ],
+    "status": "Delivered",
+    "createdAt": "2026-10-08T18:00:00.000Z",
+    "updatedAt": "2026-10-08T18:45:00.000Z"
+  },
+  {
+    "id": "ORD-1023",
+    "userId": "daniel",
+    "name": "Daniel Basaznew",
+    "phone": "+251911223344",
+    "area": "Sarbet",
+    "total": 1300,
+    "items": [
+      {
+        "id": 5,
+        "name": "Doro Wot",
+        "price": 650,
+        "quantity": 2
+      }
+    ],
+    "status": "Delivered",
+    "createdAt": "2026-10-07T12:15:00.000Z",
+    "updatedAt": "2026-10-07T13:00:00.000Z"
+  },
+  {
+    "id": "ORD-1024",
+    "userId": "daniel",
+    "name": "Daniel Basaznew",
+    "phone": "+251911223344",
+    "area": "Piassa",
+    "total": 720,
+    "items": [
+      {
+        "id": 3,
+        "name": "Shiro Wot",
+        "price": 180,
+        "quantity": 1
+      },
+      {
+        "id": 6,
+        "name": "Tibs",
+        "price": 550,
+        "quantity": 1
+      }
+    ],
+    "status": "Delivered",
+    "createdAt": "2026-10-06T19:20:00.000Z",
+    "updatedAt": "2026-10-06T20:10:00.000Z"
+  },
+  {
+    "id": "ORD-1025",
+    "userId": "daniel",
+    "name": "Daniel Basaznew",
+    "phone": "+251911223344",
+    "area": "Arat Kilo",
+    "total": 1130,
+    "items": [
+      {
+        "id": 5,
+        "name": "Doro Wot",
+        "price": 650,
+        "quantity": 1
+      },
+      {
+        "id": 7,
+        "name": "Dulet",
+        "price": 480,
+        "quantity": 1
+      }
+    ],
+    "status": "Delivered",
+    "createdAt": "2026-10-05T13:45:00.000Z",
+    "updatedAt": "2026-10-05T14:30:00.000Z"
+  },
+  {
+    "id": "ORD-1026",
+    "userId": "daniel",
+    "name": "Daniel Basaznew",
+    "phone": "+251911223344",
+    "area": "Bole",
+    "total": 460,
+    "items": [
+      {
+        "id": 1,
+        "name": "Genfo",
+        "price": 240,
+        "quantity": 1
+      },
+      {
+        "id": 2,
+        "name": "Chechebsa",
+        "price": 220,
+        "quantity": 1
+      }
+    ],
+    "status": "Delivered",
+    "createdAt": "2026-10-04T10:30:00.000Z",
+    "updatedAt": "2026-10-04T11:15:00.000Z"
+  },
+  {
+    "id": "ORD-1027",
+    "userId": "daniel",
+    "name": "Daniel Basaznew",
+    "phone": "+251911223344",
+    "area": "Kazanchis",
+    "total": 1200,
+    "items": [
+      {
+        "id": 5,
+        "name": "Doro Wot",
+        "price": 650,
+        "quantity": 1
+      },
+      {
+        "id": 6,
+        "name": "Tibs",
+        "price": 550,
+        "quantity": 1
+      }
+    ],
+    "status": "Delivered",
+    "createdAt": "2026-10-03T17:15:00.000Z",
+    "updatedAt": "2026-10-03T18:00:00.000Z"
   }
 ]

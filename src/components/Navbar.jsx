@@ -100,6 +100,12 @@ export default function Navbar({ initialSession = null }) {
               <span>Kitchen</span>
             </Link>
             <Link
+              href="/dashboard"
+              className="px-3 py-1.5 rounded-full text-xs font-semibold bg-amber-100 dark:bg-amber-950/70 text-amber-950 dark:text-amber-200 hover:bg-amber-200 dark:hover:bg-amber-900/60 transition-colors no-underline flex items-center gap-1 border border-amber-300 dark:border-amber-800"
+            >
+              <span>Analytics</span>
+            </Link>
+            <Link
               href="/admin"
               className="px-3 py-1.5 rounded-full text-xs font-semibold bg-amber-100 dark:bg-amber-950/70 text-amber-950 dark:text-amber-200 hover:bg-amber-200 dark:hover:bg-amber-900/60 transition-colors no-underline flex items-center gap-1 border border-amber-300 dark:border-amber-800"
             >
@@ -286,11 +292,19 @@ export default function Navbar({ initialSession = null }) {
                     <span className="text-stone-400 dark:text-stone-500 text-xs">&rarr;</span>
                   </Link>
                   <Link
+                    href="/dashboard"
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-semibold text-amber-950 dark:text-amber-200 hover:bg-amber-100/60 dark:hover:bg-amber-900/40 transition-colors no-underline"
+                  >
+                    <span>📊 Analytics Dashboard</span>
+                    <span className="text-stone-400 dark:text-stone-500 text-xs">&rarr;</span>
+                  </Link>
+                  <Link
                     href="/admin"
                     onClick={() => setIsOpen(false)}
                     className="flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-semibold text-amber-950 dark:text-amber-200 hover:bg-amber-100/60 dark:hover:bg-amber-900/40 transition-colors no-underline"
                   >
-                    <span>⚙️ Admin Dashboard</span>
+                    <span>⚙️ Admin Catalog</span>
                     <span className="text-stone-400 dark:text-stone-500 text-xs">&rarr;</span>
                   </Link>
                 </div>
