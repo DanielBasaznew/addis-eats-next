@@ -185,12 +185,14 @@ export default function FilterShell({ categories = [], children }) {
           />
         </div>
 
-        <CategoryBar
-          categories={categories}
-          selectedCategory={selectedCategory}
-          onCategoryChange={handleCategoryChange}
-          onSelectCategory={handleCategoryChange}
-        />
+        <div className="flex-1 min-w-0 w-full">
+          <CategoryBar
+            categories={categories}
+            selectedCategory={selectedCategory}
+            onCategoryChange={handleCategoryChange}
+            onSelectCategory={handleCategoryChange}
+          />
+        </div>
       </div>
 
       {error && (
