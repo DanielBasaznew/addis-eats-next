@@ -1,8 +1,11 @@
 'use client';
 
 import { useEffect, useRef, useState, useTransition } from 'react';
+import useSWR from 'swr';
 import { cancelOrder } from '@/app/actions';
 import { when } from '@/lib/format';
+
+const fetcher = (url) => fetch(url).then((res) => res.json());
 
 const STATUS_STEPS = [
   {
@@ -41,123 +44,50 @@ const STATUS_STEPS = [
 
 export default function OrderStatus({ initialOrder, onStatusChange }) {
   const [order, setOrder] = useState(initialOrder);
-  const [connectionState, setConnectionState] = useState(
-    initialOrder?.status === 'Delivered' || initialOrder?.status === 'Cancelled'
-      ? 'Terminal'
-      : 'Connecting'
-  );
-  const [isPending, startTransition] = useTransition();
   const [cancelError, setCancelError] = useState(null);
+  const [isPending, startTransition] = useTransition();
+
+  const isTerminal = order.status === 'Delivered' || order.status === 'Cancelled';
+
+  // Day 41 SWR Real-Time Polling: Works reliably on both local dev and Vercel serverless.
+  // Polling stops immediately when the order is Delivered or Cancelled.
+  const { data, error } = useSWR(
+    !isTerminal ? `/api/orders/${encodeURIComponent(initialOrder.id)}` : null,
+    fetcher,
+    {
+      refreshInterval: 5000,
+      revalidateOnFocus: true,
+      fallbackData: { success: true, order: initialOrder },
+    }
+  );
 
   const onStatusChangeRef = useRef(onStatusChange);
   useEffect(() => {
     onStatusChangeRef.current = onStatusChange;
   }, [onStatusChange]);
 
-  // Sync state if server passes updated initialOrder (e.g. upon page refresh)
+  // Keep state updated when SWR receives a status update from the server
+  useEffect(() => {
+    if (data?.order && data.order.status !== order.status) {
+      setOrder(data.order);
+      if (onStatusChangeRef.current) {
+        onStatusChangeRef.current(data.order);
+      }
+    }
+  }, [data?.order, order.status]);
+
+  // Sync state if server passes updated initialOrder (e.g. upon full page refresh)
   useEffect(() => {
     if (initialOrder) {
       setOrder(initialOrder);
-      if (initialOrder.status === 'Delivered' || initialOrder.status === 'Cancelled') {
-        setConnectionState('Terminal');
-      }
     }
   }, [initialOrder]);
 
-  useEffect(() => {
-    // If order is already completed or cancelled, do not keep an SSE connection open
-    if (order.status === 'Delivered' || order.status === 'Cancelled') {
-      setConnectionState('Terminal');
-      return;
-    }
-
-    let active = true;
-    const streamUrl = `/api/orders/${encodeURIComponent(initialOrder.id)}/stream`;
-    const source = new EventSource(streamUrl);
-
-    let pollInterval = null;
-
-    source.onopen = () => {
-      if (active) {
-        setConnectionState('Connected');
-        if (pollInterval) {
-          clearInterval(pollInterval);
-          pollInterval = null;
-        }
-      }
-    };
-
-    function handleIncomingData(dataString) {
-      if (!active) return;
-      try {
-        const update = JSON.parse(dataString);
-        if (update && update.status) {
-          setOrder((prev) => ({
-            ...prev,
-            status: update.status,
-            updatedAt: update.updatedAt || prev.updatedAt,
-          }));
-
-          // Call parent callback outside of setState to keep the updater pure
-          if (onStatusChangeRef.current) {
-            onStatusChangeRef.current(update);
-          }
-
-          if (update.status === 'Delivered' || update.status === 'Cancelled') {
-            setConnectionState('Terminal');
-            if (pollInterval) clearInterval(pollInterval);
-            source.close();
-          }
-        }
-      } catch (err) {
-        console.error('Error parsing SSE status update:', err);
-      }
-    }
-
-    source.onmessage = (event) => handleIncomingData(event.data);
-    source.addEventListener('status', (event) => handleIncomingData(event.data));
-
-    source.onerror = () => {
-      if (active) {
-        setConnectionState('Reconnecting');
-        // Day 47 standard fallback: If serverless hosting terminates the stream, poll every 5s
-        if (!pollInterval) {
-          pollInterval = setInterval(async () => {
-            if (!active) return;
-            try {
-              const res = await fetch(`/api/orders/${encodeURIComponent(initialOrder.id)}`);
-              if (res.ok) {
-                const data = await res.json();
-                if (data?.order) {
-                  setOrder((prev) => ({
-                    ...prev,
-                    status: data.order.status,
-                    updatedAt: data.order.updatedAt || prev.updatedAt,
-                  }));
-                  if (onStatusChangeRef.current) {
-                    onStatusChangeRef.current(data.order);
-                  }
-                  if (data.order.status === 'Delivered' || data.order.status === 'Cancelled') {
-                    setConnectionState('Terminal');
-                    if (pollInterval) clearInterval(pollInterval);
-                    source.close();
-                  }
-                }
-              }
-            } catch {
-              // Ignore transient network errors
-            }
-          }, 5000);
-        }
-      }
-    };
-
-    return () => {
-      active = false;
-      if (pollInterval) clearInterval(pollInterval);
-      source.close();
-    };
-  }, [initialOrder.id]);
+  const connectionState = isTerminal
+    ? 'Terminal'
+    : error
+    ? 'Reconnecting'
+    : 'Connected';
 
   async function handleCancel(formData) {
     setCancelError(null);
@@ -202,7 +132,7 @@ export default function OrderStatus({ initialOrder, onStatusChange }) {
             {connectionState === 'Connected' && (
               <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-100 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/80 shadow-2xs">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                Live SSE Active
+                Live Telemetry Active
               </span>
             )}
             {connectionState === 'Connecting' && (

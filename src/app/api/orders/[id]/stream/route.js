@@ -2,7 +2,6 @@ import { getOrder } from '@/lib/orders';
 import { getSession } from '@/lib/session';
 
 export const dynamic = 'force-dynamic';
-export const maxDuration = 60;
 
 /**
  * Server-Sent Events (SSE) Route Handler for Live Order Tracking (Day 47)

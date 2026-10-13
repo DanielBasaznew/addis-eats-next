@@ -2,8 +2,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
 
-const ORDERS_FILE = path.join(process.cwd(), 'public', 'orders.json');
-const TMP_ORDERS_FILE = path.join(os.tmpdir(), 'orders.json');
+const PUBLIC_ORDERS_FILE = path.join(process.cwd(), 'public', 'orders.json');
+const TMP_ORDERS_FILE = path.join(os.tmpdir(), 'addis_orders.json');
 
 const globalForOrders = globalThis;
 
@@ -23,84 +23,82 @@ export function getOrderTotal(order) {
   return 0;
 }
 
+function parseOrdersArray(list) {
+  const orderMap = new Map();
+  for (const order of list) {
+    if (order && order.id) {
+      const enriched = {
+        ...order,
+        total: getOrderTotal(order),
+        area: order.area || 'Bole',
+      };
+      orderMap.set(order.id, enriched);
+    }
+  }
+  return orderMap;
+}
+
 /**
- * Load initial orders from /tmp/orders.json or public/orders.json.
+ * Load orders: checks /tmp first (persists across warm serverless lambdas on Vercel),
+ * then falls back to public/orders.json.
  */
 function loadOrdersFromDisk() {
   try {
-    const targetFile = fs.existsSync(TMP_ORDERS_FILE) ? TMP_ORDERS_FILE : ORDERS_FILE;
-    if (fs.existsSync(targetFile)) {
-      const fileContents = fs.readFileSync(targetFile, 'utf-8');
+    if (fs.existsSync(TMP_ORDERS_FILE)) {
+      const fileContents = fs.readFileSync(TMP_ORDERS_FILE, 'utf-8');
+      const parsed = JSON.parse(fileContents);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parseOrdersArray(parsed);
+      }
+    }
+  } catch {
+    // Ignore tmp read errors
+  }
+
+  try {
+    if (fs.existsSync(PUBLIC_ORDERS_FILE)) {
+      const fileContents = fs.readFileSync(PUBLIC_ORDERS_FILE, 'utf-8');
       const parsed = JSON.parse(fileContents);
       if (Array.isArray(parsed)) {
-        const orderMap = new Map();
-        for (const order of parsed) {
-          if (order && order.id) {
-            const enriched = {
-              ...order,
-              total: getOrderTotal(order),
-              area: order.area || 'Bole',
-            };
-            orderMap.set(order.id, enriched);
-          }
-        }
-        return orderMap;
+        return parseOrdersArray(parsed);
       }
     }
   } catch (error) {
-    console.error('Error loading orders:', error);
+    console.error('Error loading orders.json:', error);
   }
   return new Map();
 }
 
 /**
- * Persist current orders map to /tmp and public/orders.json.
+ * Persist current orders map to /tmp (writable on Vercel) and public/orders.json (local).
  */
 function saveOrdersToDisk(ordersMap) {
   const list = Array.from(ordersMap.values());
   const serialized = JSON.stringify(list, null, 2);
-  let saved = false;
 
-  // Always write to /tmp (writable on Vercel Serverless)
+  // 1. Write to /tmp (always writable in Vercel Serverless environment)
   try {
     fs.writeFileSync(TMP_ORDERS_FILE, serialized, 'utf-8');
-    saved = true;
-  } catch (err) {
-    console.error('Error saving to /tmp:', err);
+  } catch (error) {
+    console.error('Error saving orders to tmp:', error);
   }
 
-  // Also write to public/orders.json if filesystem permits (e.g. localhost)
+  // 2. Also write to public/orders.json for local dev persistence (silent no-op on Vercel read-only FS)
   try {
-    fs.writeFileSync(ORDERS_FILE, serialized, 'utf-8');
-    globalForOrders.__addis_orders_mtime__ = fs.statSync(ORDERS_FILE).mtimeMs;
-    saved = true;
+    fs.writeFileSync(PUBLIC_ORDERS_FILE, serialized, 'utf-8');
   } catch {
-    // Expected on read-only serverless filesystems (e.g. Vercel)
+    // Expected EROFS on Vercel serverless read-only filesystem
   }
 
-  return saved;
+  return true;
 }
 
 /**
- * Ensure in-memory cache is populated from public/orders.json and synchronized with disk.
+ * Ensure in-memory cache is populated from disk and up to date.
  */
 function getOrdersMap() {
-  try {
-    const targetFile = fs.existsSync(TMP_ORDERS_FILE) ? TMP_ORDERS_FILE : ORDERS_FILE;
-    if (fs.existsSync(targetFile)) {
-      const stats = fs.statSync(targetFile);
-      if (
-        !globalForOrders.__addis_orders__ ||
-        stats.mtimeMs > (globalForOrders.__addis_orders_mtime__ || 0)
-      ) {
-        globalForOrders.__addis_orders__ = loadOrdersFromDisk();
-        globalForOrders.__addis_orders_mtime__ = stats.mtimeMs;
-      }
-    }
-  } catch {
-    if (!globalForOrders.__addis_orders__) {
-      globalForOrders.__addis_orders__ = loadOrdersFromDisk();
-    }
+  if (!globalForOrders.__addis_orders__) {
+    globalForOrders.__addis_orders__ = loadOrdersFromDisk();
   }
   return globalForOrders.__addis_orders__;
 }
