@@ -14,10 +14,20 @@ export async function GET(request, { params }) {
   const { id } = await params;
   const order = getOrder(id);
 
-  if (!order || (order.userId !== session.id && session.role !== 'staff')) {
+  if (!order) {
     return Response.json(
       { success: false, error: 'Order not found' },
       { status: 404 }
+    );
+  }
+
+  if (order.userId !== session.id && session.role !== 'staff') {
+    return Response.json(
+      {
+        success: false,
+        error: `Access Denied: Order #${id} belongs to another account. You are signed in as "${session.id}".`,
+      },
+      { status: 403 }
     );
   }
 
