@@ -50,7 +50,23 @@ const STATUS_STEPS = [
 ];
 
 export default function OrderStatus({ initialOrder, onStatusChange }) {
-  const [order, setOrder] = useState(initialOrder);
+  const [order, setOrder] = useState(() => {
+    if (typeof document !== 'undefined') {
+      try {
+        const match = document.cookie.match(/order_status_overrides=([^;]+)/);
+        if (match) {
+          const overrides = JSON.parse(decodeURIComponent(match[1]));
+          if (overrides && overrides[initialOrder.id]) {
+            return {
+              ...initialOrder,
+              status: overrides[initialOrder.id],
+            };
+          }
+        }
+      } catch {}
+    }
+    return initialOrder;
+  });
   const [cancelError, setCancelError] = useState(null);
   const [isPending, startTransition] = useTransition();
 

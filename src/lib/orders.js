@@ -236,3 +236,65 @@ export function updateOrderStatus(id, status) {
   saveOrdersToDisk(orders);
   return updatedOrder;
 }
+
+/**
+ * Hydrate memory from cookie overrides if cold start occurred on Vercel.
+ */
+export function syncOrderOverrides(overrides) {
+  if (!overrides || typeof overrides !== 'object') return;
+  const orders = getOrdersMap();
+  for (const [id, status] of Object.entries(overrides)) {
+    if (orders.has(id)) {
+      const existing = orders.get(id);
+      orders.set(id, {
+        ...existing,
+        status,
+        updatedAt: new Date().toISOString(),
+      });
+    }
+  }
+}
+
+const SYNC_OBJECT_ID = 'ff808181a09d98f701a13666a97956c3';
+
+/**
+ * Fetch remote overrides for cross-container / cross-browser sync on Vercel.
+ */
+export async function fetchRemoteOrderOverrides() {
+  try {
+    const res = await fetch(`https://api.restful-api.dev/objects/${SYNC_OBJECT_ID}`, {
+      cache: 'no-store',
+    });
+    if (res.ok) {
+      const json = await res.json();
+      if (json?.data && typeof json.data === 'object') {
+        syncOrderOverrides(json.data);
+        return json.data;
+      }
+    }
+  } catch {
+    // Safe no-op on network issues
+  }
+  return null;
+}
+
+/**
+ * Broadcast status update to remote store so isolated serverless containers synchronize.
+ */
+export async function pushRemoteOrderOverride(orderId, status) {
+  try {
+    const current = (await fetchRemoteOrderOverrides()) || {};
+    current[orderId] = status;
+    await fetch(`https://api.restful-api.dev/objects/${SYNC_OBJECT_ID}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: 'addis_eats_order_status_sync',
+        data: current,
+      }),
+      cache: 'no-store',
+    });
+  } catch {
+    // Safe no-op on network issues
+  }
+}

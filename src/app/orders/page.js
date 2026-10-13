@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { getOrdersForUser } from '@/lib/orders';
+import { getOrdersForUser, syncOrderOverrides, fetchRemoteOrderOverrides } from '@/lib/orders';
 import { getSession } from '@/lib/session';
 import { etb, when } from '@/lib/format';
+import { cookies } from 'next/headers';
 import CsvExportButton from '@/components/CsvExportButton';
 
 export const dynamic = 'force-dynamic';
@@ -52,6 +53,18 @@ export default async function OrdersPage({ searchParams }) {
   const page = Number.isInteger(requestedPage) && requestedPage > 0
     ? requestedPage
     : 1;
+
+  // Hydrate memory from cookie if cold start occurred on Vercel
+  const cookieStore = await cookies();
+  const cookieVal = cookieStore.get('order_status_overrides')?.value;
+  if (cookieVal) {
+    try {
+      syncOrderOverrides(JSON.parse(cookieVal));
+    } catch {}
+  } else {
+    // Cross-browser fallback sync on Vercel
+    await fetchRemoteOrderOverrides();
+  }
 
   const allOrders = getOrdersForUser(session.id);
 

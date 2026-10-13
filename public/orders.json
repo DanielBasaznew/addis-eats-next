@@ -20,7 +20,7 @@
     ],
     "status": "Cooking",
     "createdAt": "2026-10-12T01:15:00.000Z",
-    "updatedAt": "2026-10-13T17:18:38.824Z",
+    "updatedAt": "2026-10-13T17:40:26.009Z",
     "total": 930,
     "area": "Bole"
   },
@@ -37,9 +37,9 @@
         "quantity": 2
       }
     ],
-    "status": "Preparing",
+    "status": "Ready",
     "createdAt": "2026-10-11T20:45:00.000Z",
-    "updatedAt": "2026-10-13T17:16:01.528Z",
+    "updatedAt": "2026-10-13T17:40:44.445Z",
     "total": 1100,
     "area": "Kazanchis"
   },

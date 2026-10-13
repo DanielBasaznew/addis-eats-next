@@ -7,6 +7,8 @@ import {
   getOrder,
   updateOrderStatus as updateOrderStatusInStore,
   ALLOWED_ORDER_STATUSES,
+  syncOrderOverrides,
+  pushRemoteOrderOverride,
 } from '@/lib/orders';
 import {
   getDishById,
@@ -147,6 +149,32 @@ export async function updateOrderStatus(prevStateOrFormData, maybeFormData, mayb
 
   const updatedOrder = updateOrderStatusInStore(orderId, status);
 
+  // Hydrate memory from cookie if cold start occurred on Vercel, and persist updated order status
+  try {
+    const cookieStore = await cookies();
+    let overrides = {};
+    const existingCookie = cookieStore.get('order_status_overrides')?.value;
+    if (existingCookie) {
+      try {
+        overrides = JSON.parse(existingCookie);
+      } catch {}
+    }
+    overrides[orderId] = status;
+
+    // Persist updated order status in cookie to survive serverless instance changes
+    cookieStore.set('order_status_overrides', JSON.stringify(overrides), {
+      path: '/',
+      httpOnly: false,
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 7,
+    });
+  } catch {
+    // Safe no-op if cookies cannot be modified
+  }
+
+  // Cross-browser remote sync for Vercel serverless
+  pushRemoteOrderOverride(orderId, status).catch(() => {});
+
   try {
     revalidatePath('/kitchen');
     revalidatePath('/orders');
@@ -230,6 +258,32 @@ export async function cancelOrder(prevStateOrFormData, maybeFormData, maybeInjec
   }
 
   const updatedOrder = updateOrderStatusInStore(orderId, 'Cancelled');
+
+  // Hydrate memory from cookie if cold start occurred on Vercel, and persist updated order status
+  try {
+    const cookieStore = await cookies();
+    let overrides = {};
+    const existingCookie = cookieStore.get('order_status_overrides')?.value;
+    if (existingCookie) {
+      try {
+        overrides = JSON.parse(existingCookie);
+      } catch {}
+    }
+    overrides[orderId] = 'Cancelled';
+
+    // Persist updated order status in cookie to survive serverless instance changes
+    cookieStore.set('order_status_overrides', JSON.stringify(overrides), {
+      path: '/',
+      httpOnly: false,
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 7,
+    });
+  } catch {
+    // Safe no-op if cookies cannot be modified
+  }
+
+  // Cross-browser remote sync for Vercel serverless
+  pushRemoteOrderOverride(orderId, 'Cancelled').catch(() => {});
 
   try {
     revalidatePath('/orders');

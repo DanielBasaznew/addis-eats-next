@@ -3,8 +3,14 @@ import {
   getOrder,
   getOrdersForUser,
   saveOrder,
+  syncOrderOverrides,
+  fetchRemoteOrderOverrides,
 } from '@/lib/orders';
 import { getSession } from '@/lib/session';
+import { cookies } from 'next/headers';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function GET(request) {
   const session = await getSession();
@@ -14,6 +20,18 @@ export async function GET(request) {
       { success: false, error: 'Not signed in' },
       { status: 401 }
     );
+  }
+
+  // Hydrate memory from cookie if cold start occurred on Vercel
+  const cookieStore = await cookies();
+  const cookieVal = cookieStore.get('order_status_overrides')?.value;
+  if (cookieVal) {
+    try {
+      syncOrderOverrides(JSON.parse(cookieVal));
+    } catch {}
+  } else {
+    // Cross-browser fallback sync on Vercel
+    await fetchRemoteOrderOverrides();
   }
 
   const { searchParams } = new URL(request.url);

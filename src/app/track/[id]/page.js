@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { getOrder } from '@/lib/orders';
+import { getOrder, syncOrderOverrides, fetchRemoteOrderOverrides } from '@/lib/orders';
 import { getSession } from '@/lib/session';
 import { etb, when } from '@/lib/format';
+import { cookies } from 'next/headers';
 import TrackInteractiveView from './TrackInteractiveView';
 
 export const dynamic = 'force-dynamic';
@@ -28,6 +29,18 @@ export default async function TrackPage({ params }) {
 
   if (!session) {
     redirect(`/signin?next=/track/${encodeURIComponent(id)}`);
+  }
+
+  // Hydrate memory from cookie if cold start occurred on Vercel
+  const cookieStore = await cookies();
+  const cookieVal = cookieStore.get('order_status_overrides')?.value;
+  if (cookieVal) {
+    try {
+      syncOrderOverrides(JSON.parse(cookieVal));
+    } catch {}
+  } else {
+    // Cross-browser fallback sync on Vercel
+    await fetchRemoteOrderOverrides();
   }
 
   const order = getOrder(id);
