@@ -4,6 +4,7 @@ import RevenueChart from './RevenueChart';
 import OrdersChart from './OrdersChart';
 import { getOrdersByDay, getRevenueByArea, getAllOrders } from '@/lib/orders';
 import { getSession } from '@/lib/session';
+import { etb } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,13 +16,6 @@ export const metadata = {
     follow: false,
   },
 };
-
-const formatETB = (value) =>
-  new Intl.NumberFormat('en-ET', {
-    style: 'currency',
-    currency: 'ETB',
-    maximumFractionDigits: 0,
-  }).format(value);
 
 export default async function DashboardPage() {
   const session = await getSession();
@@ -123,7 +117,7 @@ export default async function DashboardPage() {
             Total Revenue
           </span>
           <div className="text-2xl sm:text-3xl font-extrabold text-stone-900 dark:text-stone-100 mt-1 tabular-nums">
-            {formatETB(totalRevenue)}
+            {etb(totalRevenue)}
           </div>
           <span className="text-[11px] text-emerald-700 dark:text-emerald-400 font-medium mt-1 block">
             Across all neighbourhoods
@@ -147,7 +141,7 @@ export default async function DashboardPage() {
             Average Ticket
           </span>
           <div className="text-2xl sm:text-3xl font-extrabold text-stone-900 dark:text-stone-100 mt-1 tabular-nums">
-            {formatETB(avgOrderValue)}
+            {etb(avgOrderValue)}
           </div>
           <span className="text-[11px] text-stone-500 dark:text-stone-400 font-medium mt-1 block">
             Average per customer order
@@ -246,7 +240,7 @@ export default async function DashboardPage() {
                               {item.area}
                             </td>
                             <td className="py-3 px-4 text-right tabular-nums font-bold text-stone-900 dark:text-stone-100">
-                              {formatETB(item.revenue)}
+                              {etb(item.revenue)}
                             </td>
                             <td className="py-3 px-4 text-right tabular-nums text-stone-500 dark:text-stone-400 text-xs hidden sm:table-cell">
                               {sharePercent}%

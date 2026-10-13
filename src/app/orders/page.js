@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getOrdersForUser } from '@/lib/orders';
 import { getSession } from '@/lib/session';
+import { etb, when } from '@/lib/format';
+import CsvExportButton from '@/components/CsvExportButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,13 +17,6 @@ export const metadata = {
 };
 
 const PAGE_SIZE = 5;
-
-const formatETB = (value) =>
-  new Intl.NumberFormat('en-ET', {
-    style: 'currency',
-    currency: 'ETB',
-    maximumFractionDigits: 0,
-  }).format(value);
 
 function getSortValue(order, sort) {
   if (sort === 'status') return order.status || '';
@@ -113,7 +108,8 @@ export default async function OrdersPage({ searchParams }) {
           </p>
         </div>
 
-        <div className="flex items-center gap-2 self-start sm:self-auto">
+        <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+          {allOrders.length > 0 && <CsvExportButton orders={allOrders} />}
           <Link
             href="/menu"
             className="px-4 py-2 rounded-xl bg-amber-900 hover:bg-amber-800 dark:bg-amber-600 dark:hover:bg-amber-500 text-white font-semibold text-xs transition-colors no-underline shadow-xs"
@@ -265,11 +261,7 @@ export default async function OrdersPage({ searchParams }) {
                             {order.id}
                           </div>
                           <div className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
-                            {new Date(order.createdAt).toLocaleDateString('en-ET', {
-                              year: 'numeric',
-                              month: 'short',
-                              day: 'numeric',
-                            })}
+                            {when(order.createdAt)}
                             {itemCount > 0 && ` · ${itemCount} ${itemCount === 1 ? 'item' : 'items'}`}
                           </div>
                         </td>
@@ -292,13 +284,13 @@ export default async function OrdersPage({ searchParams }) {
 
                         {/* Total amount (right aligned with tabular figures) */}
                         <td className="px-5 py-4 text-right align-middle tabular-nums font-bold text-stone-900 dark:text-stone-100 text-sm sm:text-base">
-                          {formatETB(order.total)}
+                          {etb(order.total)}
                         </td>
 
                         {/* Action link */}
                         <td className="px-5 py-4 text-right align-middle">
                           <Link
-                            href={`/orders/${order.id}`}
+                            href={`/track/${order.id}`}
                             className="inline-flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/60 hover:bg-amber-100 dark:hover:bg-amber-900/60 text-amber-900 dark:text-amber-300 border border-amber-200/60 dark:border-amber-800/60 transition-colors no-underline"
                           >
                             <span>Track</span>

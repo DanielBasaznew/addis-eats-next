@@ -364,9 +364,9 @@
         "quantity": 2
       }
     ],
-    "status": "Preparing",
+    "status": "Delivered",
     "createdAt": "2026-10-12T03:30:00.000Z",
-    "updatedAt": "2026-10-12T03:30:00.000Z",
+    "updatedAt": "2026-10-13T11:57:34.300Z",
     "total": 480,
     "area": "Kazanchis"
   },

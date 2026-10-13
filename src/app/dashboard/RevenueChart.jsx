@@ -10,6 +10,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+import { etb } from '@/lib/format';
 
 const emptySubscribe = () => () => {};
 
@@ -20,13 +21,6 @@ function useMounted() {
     () => false
   );
 }
-
-const formatETB = (value) =>
-  new Intl.NumberFormat('en-ET', {
-    style: 'currency',
-    currency: 'ETB',
-    maximumFractionDigits: 0,
-  }).format(value);
 
 export default function RevenueChart({ data }) {
   const isMounted = useMounted();
@@ -62,14 +56,14 @@ export default function RevenueChart({ data }) {
           />
           <YAxis
             width={90}
-            tickFormatter={formatETB}
+            tickFormatter={etb}
             tick={{ fill: '#78716c', fontSize: 11 }}
             axisLine={false}
             tickLine={false}
             domain={[0, 'auto']}
           />
           <Tooltip
-            formatter={(value) => [formatETB(value), 'Revenue']}
+            formatter={(value) => [etb(value), 'Revenue']}
             cursor={{ fill: 'rgba(154, 52, 18, 0.08)' }}
             contentStyle={{
               backgroundColor: '#ffffff',
