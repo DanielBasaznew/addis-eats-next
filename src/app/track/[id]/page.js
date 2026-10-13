@@ -3,10 +3,10 @@ import { notFound, redirect } from 'next/navigation';
 import { getOrder } from '@/lib/orders';
 import { getSession } from '@/lib/session';
 import { etb, when } from '@/lib/format';
-import OrderStatus from '@/components/OrderStatus';
-import MapPanel from './MapPanel';
+import TrackInteractiveView from './TrackInteractiveView';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -85,31 +85,8 @@ export default async function TrackPage({ params }) {
         </span>
       </div>
 
-      {/* Live SSE Order Status Component */}
-      <OrderStatus initialOrder={order} />
-
-      {/* Main Delivery Tracking & Map Section */}
-      <section aria-labelledby="delivery-tracking-heading" className="space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
-          <div>
-            <h2 id="delivery-tracking-heading" className="text-xl sm:text-2xl font-bold text-stone-900 dark:text-stone-100 tracking-tight">
-              Live Delivery Route Map
-            </h2>
-            <p className="text-xs sm:text-sm text-stone-500 dark:text-stone-400 mt-0.5">
-              Real-time courier progress across the Addis Ababa street network to your doorstep.
-            </p>
-          </div>
-          <span className="text-xs font-medium text-amber-900 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 px-3 py-1 rounded-full border border-amber-200/50 dark:border-amber-800/50 self-start sm:self-auto">
-            📍 Sector: {order.area || 'Addis Ababa'}
-          </span>
-        </div>
-
-        {/* The Leaflet Map (loaded with ssr: false) */}
-        <MapPanel
-          area={order.area || 'Bole'}
-          orderId={order.id}
-          status={order.status}
-        />
+      {/* Live SSE Order Status Component & Real-Time Map */}
+      <TrackInteractiveView initialOrder={order}>
 
         {/* Textual Delivery Information (Day 47 Accessibility Requirement: Map alternative for screen readers) */}
         <div
@@ -206,7 +183,7 @@ export default async function TrackPage({ params }) {
             </p>
           </div>
         </div>
-      </section>
+      </TrackInteractiveView>
     </main>
   );
 }

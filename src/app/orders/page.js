@@ -6,6 +6,7 @@ import { etb, when } from '@/lib/format';
 import CsvExportButton from '@/components/CsvExportButton';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export const metadata = {
   title: 'Order History · Addis Eats',

@@ -57,6 +57,9 @@ function saveOrdersToDisk(ordersMap) {
   try {
     const list = Array.from(ordersMap.values());
     fs.writeFileSync(ORDERS_FILE, JSON.stringify(list, null, 2), 'utf-8');
+    try {
+      globalForOrders.__addis_orders_mtime__ = fs.statSync(ORDERS_FILE).mtimeMs;
+    } catch {}
     return true;
   } catch (error) {
     console.error('Error saving orders.json:', error);
@@ -65,11 +68,24 @@ function saveOrdersToDisk(ordersMap) {
 }
 
 /**
- * Ensure in-memory cache is populated from public/orders.json.
+ * Ensure in-memory cache is populated from public/orders.json and synchronized with disk.
  */
 function getOrdersMap() {
-  if (!globalForOrders.__addis_orders__) {
-    globalForOrders.__addis_orders__ = loadOrdersFromDisk();
+  try {
+    if (fs.existsSync(ORDERS_FILE)) {
+      const stats = fs.statSync(ORDERS_FILE);
+      if (
+        !globalForOrders.__addis_orders__ ||
+        stats.mtimeMs > (globalForOrders.__addis_orders_mtime__ || 0)
+      ) {
+        globalForOrders.__addis_orders__ = loadOrdersFromDisk();
+        globalForOrders.__addis_orders_mtime__ = stats.mtimeMs;
+      }
+    }
+  } catch {
+    if (!globalForOrders.__addis_orders__) {
+      globalForOrders.__addis_orders__ = loadOrdersFromDisk();
+    }
   }
   return globalForOrders.__addis_orders__;
 }

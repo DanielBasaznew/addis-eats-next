@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useTransition } from 'react';
+import { useEffect, useRef, useState, useTransition } from 'react';
 import { cancelOrder } from '@/app/actions';
 import { when } from '@/lib/format';
 
@@ -49,6 +49,21 @@ export default function OrderStatus({ initialOrder, onStatusChange }) {
   const [isPending, startTransition] = useTransition();
   const [cancelError, setCancelError] = useState(null);
 
+  const onStatusChangeRef = useRef(onStatusChange);
+  useEffect(() => {
+    onStatusChangeRef.current = onStatusChange;
+  }, [onStatusChange]);
+
+  // Sync state if server passes updated initialOrder (e.g. upon page refresh)
+  useEffect(() => {
+    if (initialOrder) {
+      setOrder(initialOrder);
+      if (initialOrder.status === 'Delivered' || initialOrder.status === 'Cancelled') {
+        setConnectionState('Terminal');
+      }
+    }
+  }, [initialOrder]);
+
   useEffect(() => {
     // If order is already completed or cancelled, do not keep an SSE connection open
     if (order.status === 'Delivered' || order.status === 'Cancelled') {
@@ -64,10 +79,10 @@ export default function OrderStatus({ initialOrder, onStatusChange }) {
       if (active) setConnectionState('Connected');
     };
 
-    source.addEventListener('status', (event) => {
+    function handleIncomingData(dataString) {
       if (!active) return;
       try {
-        const update = JSON.parse(event.data);
+        const update = JSON.parse(dataString);
         if (update && update.status) {
           setOrder((prev) => {
             const next = {
@@ -75,7 +90,7 @@ export default function OrderStatus({ initialOrder, onStatusChange }) {
               status: update.status,
               updatedAt: update.updatedAt || prev.updatedAt,
             };
-            if (onStatusChange) onStatusChange(next);
+            if (onStatusChangeRef.current) onStatusChangeRef.current(next);
             return next;
           });
 
@@ -87,7 +102,10 @@ export default function OrderStatus({ initialOrder, onStatusChange }) {
       } catch (err) {
         console.error('Error parsing SSE status update:', err);
       }
-    });
+    }
+
+    source.onmessage = (event) => handleIncomingData(event.data);
+    source.addEventListener('status', (event) => handleIncomingData(event.data));
 
     source.onerror = () => {
       if (active) {
@@ -99,7 +117,7 @@ export default function OrderStatus({ initialOrder, onStatusChange }) {
       active = false;
       source.close();
     };
-  }, [initialOrder.id, order.status, onStatusChange]);
+  }, [initialOrder.id]);
 
   async function handleCancel(formData) {
     setCancelError(null);

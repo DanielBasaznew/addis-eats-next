@@ -149,6 +149,10 @@ export async function updateOrderStatus(prevStateOrFormData, maybeFormData, mayb
 
   try {
     revalidatePath('/kitchen');
+    revalidatePath('/orders');
+    revalidatePath(`/orders/${orderId}`);
+    revalidatePath(`/track/${orderId}`);
+    revalidatePath('/analytics');
   } catch {
     // Safe no-op when executed outside a Next.js request context (e.g. in unit tests)
   }
@@ -230,7 +234,9 @@ export async function cancelOrder(prevStateOrFormData, maybeFormData, maybeInjec
   try {
     revalidatePath('/orders');
     revalidatePath(`/orders/${orderId}`);
+    revalidatePath(`/track/${orderId}`);
     revalidatePath('/kitchen');
+    revalidatePath('/analytics');
   } catch {
     // Safe no-op when executed outside a Next.js request context (e.g. in unit tests)
   }

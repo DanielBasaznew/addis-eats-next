@@ -5,6 +5,7 @@ import { getAllOrders, ALLOWED_ORDER_STATUSES } from '@/lib/orders';
 import { updateOrderStatus } from '@/app/actions';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export const metadata = {
   title: 'Kitchen Dashboard',
@@ -93,9 +94,14 @@ export default async function KitchenPage() {
                     {order.status}
                   </span>
 
-                  <form action={updateOrderStatus} className="flex items-center gap-1.5">
+                  <form
+                    key={`form-${order.id}-${order.status}`}
+                    action={updateOrderStatus}
+                    className="flex items-center gap-1.5"
+                  >
                     <input type="hidden" name="orderId" value={order.id} />
                     <select
+                      key={`select-${order.id}-${order.status}`}
                       name="status"
                       defaultValue={order.status}
                       aria-label={`Update status for ${order.id}`}
