@@ -115,6 +115,7 @@ export async function createDish(dishData) {
     category: dishData.category.trim(),
     price: Number(dishData.price),
     vegetarian: Boolean(dishData.vegetarian),
+    available: dishData.available !== undefined ? Boolean(dishData.available) : true,
     image: dishData.image?.trim() || '/images/dishes/genfo.jpg',
     description: dishData.description?.trim() || undefined,
   };
@@ -145,8 +146,33 @@ export async function updateDish(id, dishData) {
     category: dishData.category !== undefined ? dishData.category.trim() : existing.category,
     price: dishData.price !== undefined ? Number(dishData.price) : existing.price,
     vegetarian: dishData.vegetarian !== undefined ? Boolean(dishData.vegetarian) : existing.vegetarian,
+    available: dishData.available !== undefined ? Boolean(dishData.available) : existing.available !== undefined ? existing.available : true,
     image: dishData.image !== undefined ? dishData.image.trim() : existing.image,
     description: dishData.description !== undefined ? dishData.description.trim() : existing.description,
+  };
+
+  dishes[index] = updatedDish;
+  await saveDishesToDisk(dishes);
+
+  return updatedDish;
+}
+
+/**
+ * Toggle a dish's availability (Available <=> Sold Out).
+ * @param {number|string} id
+ */
+export async function toggleDishAvailability(id) {
+  const dishes = await ensureDishesLoaded();
+  const index = dishes.findIndex((item) => String(item.id) === String(id));
+
+  if (index === -1) {
+    return null;
+  }
+
+  const currentAvailable = dishes[index].available !== false; // defaults to true
+  const updatedDish = {
+    ...dishes[index],
+    available: !currentAvailable,
   };
 
   dishes[index] = updatedDish;
@@ -173,3 +199,4 @@ export async function deleteDish(id) {
 
   return true;
 }
+

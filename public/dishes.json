@@ -6,7 +6,8 @@
     "price": 240,
     "vegetarian": false,
     "image": "/images/dishes/genfo.jpg",
-    "description": "Traditional thick barley and wheat porridge served hot with a well of spiced clarified butter (niter kibe) and fiery berbere."
+    "description": "Traditional thick barley and wheat porridge served hot with a well of spiced clarified butter (niter kibe) and fiery berbere.",
+    "available": true
   },
   {
     "id": 2,

@@ -15,6 +15,7 @@ import {
   createDish as createDishInStore,
   updateDish as updateDishInStore,
   deleteDish as deleteDishInStore,
+  toggleDishAvailability as toggleDishAvailabilityInStore,
 } from '@/lib/dishes';
 import {
   toggleFavorite as toggleFavoriteInStore,
@@ -437,6 +438,7 @@ export async function createDish(prevState, formData, maybeInjectedSession) {
     category: rawData.category,
     price: rawData.price,
     vegetarian: rawData.vegetarian === 'true' || rawData.vegetarian === 'on' || rawData.vegetarian === true,
+    available: rawData.available !== undefined ? (rawData.available === 'true' || rawData.available === 'on' || rawData.available === true) : true,
     image: rawData.image || undefined,
     description: rawData.description || undefined,
   });
@@ -520,6 +522,7 @@ export async function updateDish(prevState, formData, maybeInjectedSession) {
     category: rawData.category,
     price: rawData.price,
     vegetarian: rawData.vegetarian === 'true' || rawData.vegetarian === 'on' || rawData.vegetarian === true,
+    available: rawData.available !== undefined ? (rawData.available === 'true' || rawData.available === 'on' || rawData.available === true) : true,
     image: rawData.image || undefined,
     description: rawData.description || undefined,
   });
@@ -558,6 +561,66 @@ export async function updateDish(prevState, formData, maybeInjectedSession) {
     authorized: true,
     message: `Dish "${updatedDish.name}" updated successfully!`,
     dish: updatedDish,
+  };
+}
+
+/**
+ * Toggle a dish's availability between Available and Sold Out (Staff only).
+ */
+export async function toggleDishAvailability(dishIdInput, maybeInjectedSession) {
+  const session =
+    maybeInjectedSession !== undefined ? maybeInjectedSession : await getSession();
+
+  if (!session) {
+    return {
+      success: false,
+      authorized: false,
+      error: 'Unauthorized: You must be authenticated as staff to toggle availability.',
+    };
+  }
+
+  if (session.role !== 'staff') {
+    return {
+      success: false,
+      authorized: false,
+      error: 'Forbidden: Only staff members are authorized to toggle dish availability.',
+    };
+  }
+
+  const dishId = Number(dishIdInput);
+  if (isNaN(dishId) || !dishId) {
+    return {
+      success: false,
+      authorized: true,
+      error: 'Invalid dish ID provided.',
+    };
+  }
+
+  const updatedDish = await toggleDishAvailabilityInStore(dishId);
+  if (!updatedDish) {
+    return {
+      success: false,
+      authorized: true,
+      error: `Dish with ID ${dishId} was not found.`,
+    };
+  }
+
+  try {
+    revalidatePath('/menu');
+    revalidatePath('/admin');
+    revalidatePath(`/menu/${encodeURIComponent(updatedDish.name)}`);
+    revalidatePath('/api/dishes');
+  } catch {
+    // Safe no-op outside Next.js request context
+  }
+
+  const statusText = updatedDish.available !== false ? 'Available' : 'Sold Out';
+  return {
+    success: true,
+    authorized: true,
+    dish: updatedDish,
+    available: updatedDish.available !== false,
+    message: `"${updatedDish.name}" is now marked as ${statusText}.`,
   };
 }
 

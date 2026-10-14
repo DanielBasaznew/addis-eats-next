@@ -57,46 +57,8 @@ export default async function AdminPage() {
   const dishes = await getDishes();
 
   return (
-    <main className="max-w-6xl mx-auto px-4 sm:px-6 py-10 md:py-12">
-      {/* Header */}
-      <header className="mb-8 pb-6 border-b border-stone-200 dark:border-stone-800">
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="text-xs uppercase tracking-widest text-amber-900 dark:text-amber-400 font-bold block">
-                Back-of-House Administration
-              </span>
-              <span className="px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-900 dark:text-amber-300 text-[10px] font-bold uppercase">
-                Staff Verified
-              </span>
-            </div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-stone-900 dark:text-stone-100 tracking-tight">
-              Dish Catalog Management
-            </h1>
-            <p className="mt-2 text-stone-600 dark:text-stone-400 text-sm sm:text-base max-w-2xl">
-              Create, update, and manage Ethiopian culinary offerings across the public menu. All changes propagate with ISR revalidation.
-            </p>
-          </div>
-          <div className="flex items-center gap-2 self-start sm:self-auto">
-            <Link
-              href="/kitchen"
-              className="px-4 py-2 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-200 font-semibold text-xs hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors no-underline border border-transparent dark:border-stone-700"
-            >
-              Kitchen Orders &rarr;
-            </Link>
-            <Link
-              href="/menu"
-              target="_blank"
-              className="px-4 py-2 rounded-xl bg-amber-900 dark:bg-amber-600 text-white font-semibold text-xs hover:bg-amber-950 dark:hover:bg-amber-500 transition-colors no-underline"
-            >
-              View Live Menu &nearr;
-            </Link>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Admin Interactive Manager */}
-      <AdminDishManager initialDishes={dishes} />
+    <main className="w-full max-w-7xl mx-auto px-3 sm:px-6 py-6 sm:py-8">
+      <AdminDishManager initialDishes={dishes} session={session} />
     </main>
   );
 }

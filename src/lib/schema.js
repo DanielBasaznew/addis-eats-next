@@ -31,6 +31,10 @@ export const dishSchema = z.object({
     (val) => val === true || val === 'true' || val === 'on' || val === 1 || val === '1',
     z.boolean()
   ),
+  available: z.preprocess(
+    (val) => (val === undefined ? true : val === true || val === 'true' || val === 'on' || val === 1 || val === '1'),
+    z.boolean()
+  ).default(true),
   image: z
     .string()
     .trim()
@@ -41,3 +45,4 @@ export const dishSchema = z.object({
     .trim()
     .optional(),
 });
+

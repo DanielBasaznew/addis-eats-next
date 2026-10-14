@@ -22,12 +22,24 @@ function DishCard({ dish, priority = false, isFavorite = false }) {
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 384px"
               priority={priority}
-              className="object-cover rounded-xl group-hover:scale-102 transition-transform duration-300"
+              className={`object-cover rounded-xl group-hover:scale-102 transition-transform duration-300 ${
+                dish.available === false ? 'filter grayscale-[30%] opacity-85' : ''
+              }`}
             />
           ) : (
             <div className="w-full h-full flex flex-col items-center justify-center bg-stone-100 dark:bg-stone-800 text-stone-400 dark:text-stone-500">
-              <span className="text-3xl mb-1">🍲</span>
+              <svg className="w-8 h-8 mb-1.5 text-stone-400 dark:text-stone-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M12 3v2" />
+                <path d="M4 14a8 8 0 0 1 16 0H4Z" />
+                <path d="M2 18h20" />
+                <path d="M5 18a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2" />
+              </svg>
               <span className="text-xs font-medium">Addis Eats Kitchen</span>
+            </div>
+          )}
+          {dish.available === false && (
+            <div className="absolute top-2.5 left-2.5 z-10 px-2.5 py-1 rounded-full bg-stone-900/90 text-amber-300 text-[10px] font-extrabold uppercase tracking-wider border border-amber-500/40 backdrop-blur-md shadow-xs">
+              Sold Out
             </div>
           )}
           <div className="absolute top-2.5 right-2.5 z-10">

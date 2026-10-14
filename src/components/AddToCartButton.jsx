@@ -6,14 +6,31 @@ import { useCart } from './CartProvider';
 export default function AddToCartButton({ dish, compact = false, className = '' }) {
   const { addToCart } = useCart();
   const [added, setAdded] = useState(false);
+  const isAvailable = dish?.available !== false;
 
   const handleAdd = (e) => {
     e.preventDefault();
     e.stopPropagation();
+    if (!isAvailable) return;
     addToCart(dish);
     setAdded(true);
     setTimeout(() => setAdded(false), 1500);
   };
+
+  if (!isAvailable) {
+    return (
+      <button
+        type="button"
+        disabled
+        aria-label={`${dish?.name || 'Dish'} is sold out`}
+        className={`inline-flex items-center justify-center gap-1.5 ${
+          compact ? 'px-3 py-2' : 'px-6 py-3 w-full'
+        } rounded-xl font-bold text-xs tracking-wide bg-stone-100 dark:bg-stone-800/80 text-stone-400 dark:text-stone-500 border border-stone-200 dark:border-stone-700/80 cursor-not-allowed select-none ${className}`}
+      >
+        <span>Sold Out</span>
+      </button>
+    );
+  }
 
   if (compact) {
     return (
