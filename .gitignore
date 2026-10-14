@@ -45,3 +45,22 @@ next-env.d.ts
 # next.js agent rules
 AGENTS.md
 CLAUDE.md
+
+# course materials and documents
+*.docx
+*.doc
+*.pptx
+*.xlsx
+~$*
+*course-material*
+
+# test files and directories
+*.test.*
+*.spec.*
+__tests__/
+
+# os & temporary files
+Thumbs.db
+desktop.ini
+*.tmp
+*.temp

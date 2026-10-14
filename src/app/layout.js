@@ -2,6 +2,7 @@ import './globals.css';
 import Link from 'next/link';
 import { Inter } from 'next/font/google';
 import { CartProvider } from '@/components/CartProvider';
+import { ThemeProvider } from '@/components/ThemeProvider';
 import Navbar from '@/components/Navbar';
 import { getSession } from '@/lib/session';
 
@@ -57,8 +58,6 @@ export const metadata = {
     images: ['/images/hero-feast.jpg'],
   },
 };
-
-import { ThemeProvider } from '@/components/ThemeProvider';
 
 export default async function RootLayout({ children }) {
   const session = await getSession();

@@ -72,7 +72,7 @@ export default function OrderStatus({ initialOrder, onStatusChange }) {
 
   const isTerminal = order.status === 'Delivered' || order.status === 'Cancelled';
 
-  // Day 41 SWR Real-Time Polling: Works reliably on both local dev and Vercel serverless.
+  // SWR Real-Time Polling: Works reliably on both local dev and Vercel serverless.
   // Polling stops immediately and permanently when the order is Delivered or Cancelled.
   const { data, error } = useSWR(
     !isTerminal ? `/api/orders/${encodeURIComponent(initialOrder.id)}` : null,

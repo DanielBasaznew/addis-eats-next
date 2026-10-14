@@ -51,3 +51,126 @@
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+/* =========================================================================
+   Marketing Hero & Organic Presentation Animations
+   (Hardware-accelerated via transform / opacity / background-position)
+   ========================================================================= */
+
+@keyframes shimmerText {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-9px) rotate(1.2deg);
+  }
+}
+
+@keyframes floatDelayed {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-7px) rotate(-1.5deg);
+  }
+}
+
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.65;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes heroFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-text-shimmer {
+  background-size: 200% auto;
+  animation: shimmerText 6s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: floatSlow 6s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-float-delayed {
+  animation: floatDelayed 7.5s ease-in-out 1.2s infinite;
+  will-change: transform;
+}
+
+.animate-spin-slow {
+  animation: spinSlow 65s linear infinite;
+  will-change: transform;
+}
+
+.animate-glow-pulse {
+  animation: pulseGlow 6s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.animate-hero-fade-1 {
+  animation: heroFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-hero-fade-2 {
+  animation: heroFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
+}
+
+.animate-hero-fade-3 {
+  animation: heroFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.24s both;
+}
+
+.animate-hero-fade-4 {
+  animation: heroFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.36s both;
+}
+
+/* Accessibility: Respect users with vestibular preferences */
+@media (prefers-reduced-motion: reduce) {
+  .animate-text-shimmer,
+  .animate-float-slow,
+  .animate-float-delayed,
+  .animate-spin-slow,
+  .animate-glow-pulse,
+  .animate-hero-fade-1,
+  .animate-hero-fade-2,
+  .animate-hero-fade-3,
+  .animate-hero-fade-4 {
+    animation: none !important;
+    transform: none !important;
+  }
+}
