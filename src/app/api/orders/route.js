@@ -3,8 +3,8 @@ import {
   getOrder,
   getOrdersForUser,
   saveOrder,
-  syncOrderOverrides,
-  fetchRemoteOrderOverrides,
+  hydrateAllOrders,
+  saveCustomOrderToCookie,
 } from '@/lib/orders';
 import { getSession } from '@/lib/session';
 import { cookies } from 'next/headers';
@@ -22,17 +22,9 @@ export async function GET(request) {
     );
   }
 
-  // Hydrate memory from cookie if cold start occurred on Vercel
+  // Hydrate all orders and overrides from cookies for serverless persistence
   const cookieStore = await cookies();
-  const cookieVal = cookieStore.get('order_status_overrides')?.value;
-  if (cookieVal) {
-    try {
-      syncOrderOverrides(JSON.parse(cookieVal));
-    } catch {}
-  } else {
-    // Cross-browser fallback sync on Vercel
-    await fetchRemoteOrderOverrides();
-  }
+  await hydrateAllOrders(cookieStore);
 
   const { searchParams } = new URL(request.url);
   const id = searchParams.get('id');
@@ -109,6 +101,11 @@ export async function POST(request) {
     status: 'Preparing',
     createdAt: new Date().toISOString(),
   });
+
+  try {
+    const cookieStore = await cookies();
+    saveCustomOrderToCookie(cookieStore, order);
+  } catch {}
 
   return Response.json(
     {

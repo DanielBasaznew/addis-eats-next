@@ -69,7 +69,7 @@ export default async function AdminPage() {
 
   const [rawDishes, tables] = await Promise.all([
     getDishes(),
-    getTables(),
+    getTables(cookieStore),
   ]);
   const dishes = applyAvailabilityToDishes(rawDishes, availabilityMap);
 

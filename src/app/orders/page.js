@@ -1,10 +1,11 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { getOrdersForUser, syncOrderOverrides, fetchRemoteOrderOverrides } from '@/lib/orders';
+import { getOrdersForUser, hydrateAllOrders } from '@/lib/orders';
 import { getSession } from '@/lib/session';
 import { etb, when } from '@/lib/format';
 import { cookies } from 'next/headers';
 import CsvExportButton from '@/components/CsvExportButton';
+import OrdersClientSync from './OrdersClientSync';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -54,17 +55,9 @@ export default async function OrdersPage({ searchParams }) {
     ? requestedPage
     : 1;
 
-  // Hydrate memory from cookie if cold start occurred on Vercel
+  // Hydrate all orders and overrides from cookies for serverless persistence
   const cookieStore = await cookies();
-  const cookieVal = cookieStore.get('order_status_overrides')?.value;
-  if (cookieVal) {
-    try {
-      syncOrderOverrides(JSON.parse(cookieVal));
-    } catch {}
-  } else {
-    // Cross-browser fallback sync on Vercel
-    await fetchRemoteOrderOverrides();
-  }
+  await hydrateAllOrders(cookieStore);
 
   const allOrders = getOrdersForUser(session.id);
 
@@ -106,6 +99,9 @@ export default async function OrdersPage({ searchParams }) {
 
   return (
     <main className="max-w-5xl mx-auto px-4 sm:px-6 py-10 md:py-14">
+      {/* Background client hydration and sync for local storage */}
+      <OrdersClientSync serverCount={allOrders.length} />
+
       {/* Header */}
       <header className="mb-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 pb-6 border-b border-stone-200 dark:border-stone-800">
         <div>

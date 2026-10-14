@@ -187,6 +187,7 @@ export default function AdminTableManager({
   initialTables = [],
   session = null,
   onNotice = null,
+  onTablesChange = null,
 }) {
   const [tables, setTables] = useState(initialTables);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -206,6 +207,21 @@ export default function AdminTableManager({
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setOrigin(window.location.origin);
+
+      // Hydrate custom tables from localStorage if available
+      try {
+        const stored = localStorage.getItem('addis_custom_tables');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            if (parsed.length > initialTables.length || parsed.some((pt) => !initialTables.some((t) => String(t.number) === String(pt.number)))) {
+              setTables(parsed);
+              onTablesChange?.(parsed);
+              document.cookie = `addis_custom_tables=${encodeURIComponent(JSON.stringify(parsed))}; path=/; max-age=2592000; SameSite=Lax`;
+            }
+          }
+        }
+      } catch {}
     }
   }, []);
 
@@ -247,13 +263,19 @@ export default function AdminTableManager({
     startTransition(async () => {
       try {
         const res = await createTableAction({
-          number: num,
+          number: String(num),
           label: newLabel.trim() || `Table ${num}`,
           seats: Number(newSeats) || 4,
         });
 
         if (res.success && res.table) {
-          setTables((prev) => [...prev, res.table].sort((a, b) => a.number - b.number));
+          const updated = [...tables, res.table].sort((a, b) => Number(a.number) - Number(b.number));
+          setTables(updated);
+          onTablesChange?.(updated);
+          try {
+            localStorage.setItem('addis_custom_tables', JSON.stringify(updated));
+            document.cookie = `addis_custom_tables=${encodeURIComponent(JSON.stringify(updated))}; path=/; max-age=2592000; SameSite=Lax`;
+          } catch {}
           setIsAddModalOpen(false);
           triggerNotice('success', res.message || `Table #${num} created successfully.`);
         } else {
@@ -279,7 +301,13 @@ export default function AdminTableManager({
       try {
         const res = await deleteTableAction(table.id);
         if (res.success) {
-          setTables((prev) => prev.filter((t) => t.id !== table.id));
+          const updated = tables.filter((t) => t.id !== table.id);
+          setTables(updated);
+          onTablesChange?.(updated);
+          try {
+            localStorage.setItem('addis_custom_tables', JSON.stringify(updated));
+            document.cookie = `addis_custom_tables=${encodeURIComponent(JSON.stringify(updated))}; path=/; max-age=2592000; SameSite=Lax`;
+          } catch {}
           triggerNotice('success', `Table #${table.number} was deleted.`);
         } else {
           triggerNotice('error', res.error || 'Could not delete table.');
@@ -306,6 +334,11 @@ export default function AdminTableManager({
         const res = await resetTablesAction();
         if (res.success && res.tables) {
           setTables(res.tables);
+          onTablesChange?.(res.tables);
+          try {
+            localStorage.removeItem('addis_custom_tables');
+            document.cookie = `addis_custom_tables=${encodeURIComponent(JSON.stringify(res.tables))}; path=/; max-age=2592000; SameSite=Lax`;
+          } catch {}
           triggerNotice('success', res.message || 'Floor layout restored.');
         } else {
           triggerNotice('error', res.error || 'Failed to reset tables.');

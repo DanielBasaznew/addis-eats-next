@@ -2,9 +2,10 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import RevenueChart from './RevenueChart';
 import OrdersChart from './OrdersChart';
-import { getOrdersByDay, getRevenueByArea, getAllOrders } from '@/lib/orders';
+import { getOrdersByDay, getRevenueByArea, getAllOrders, hydrateAllOrders } from '@/lib/orders';
 import { getSession } from '@/lib/session';
 import { etb } from '@/lib/format';
+import { cookies } from 'next/headers';
 
 export const dynamic = 'force-dynamic';
 
@@ -55,6 +56,10 @@ export default async function DashboardPage() {
       </main>
     );
   }
+
+  // Hydrate all orders from cookie for serverless persistence
+  const cookieStore = await cookies();
+  await hydrateAllOrders(cookieStore);
 
   // Server-side aggregations: only summarised rows cross to the client
   const revenueByArea = getRevenueByArea();

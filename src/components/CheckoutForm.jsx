@@ -38,12 +38,61 @@ export default function CheckoutForm({ session = null }) {
     }
   }, [searchParams]);
 
-  // Clear cart upon successful order
+  // Clear cart and persist order into localStorage + document.cookie upon successful order
   useEffect(() => {
-    if (state?.success && cart.length > 0) {
-      clearCart();
+    if (state?.success) {
+      if (cart.length > 0) {
+        clearCart();
+      }
+
+      if (state.order) {
+        try {
+          const order = state.order;
+          const stored = localStorage.getItem('addis_placed_orders');
+          let orderList = [];
+          if (stored) {
+            try {
+              const parsed = JSON.parse(stored);
+              if (Array.isArray(parsed)) orderList = parsed;
+            } catch {}
+          }
+          const filtered = orderList.filter((o) => o && o.id !== order.id);
+          const updated = [order, ...filtered].slice(0, 15);
+          localStorage.setItem('addis_placed_orders', JSON.stringify(updated));
+
+          // Also set cookie directly in browser for immediate server hydration on next request
+          const leanList = updated.slice(0, 5).map((o) => ({
+            id: o.id,
+            userId: o.userId,
+            name: o.name,
+            phone: o.phone,
+            area: o.area,
+            address: o.address,
+            orderType: o.orderType,
+            tableNumber: o.tableNumber,
+            isTableOrder: o.isTableOrder,
+            paymentMethod: o.paymentMethod,
+            status: o.status,
+            total: o.total,
+            createdAt: o.createdAt,
+            items: Array.isArray(o.items)
+              ? o.items.map((i) => ({
+                  id: i.id || i.dishId,
+                  name: i.name,
+                  price: i.price,
+                  quantity: i.quantity,
+                }))
+              : [],
+          }));
+          document.cookie = `addis_custom_orders=${encodeURIComponent(
+            JSON.stringify(leanList)
+          )}; path=/; max-age=2592000; SameSite=Lax`;
+        } catch (err) {
+          console.error('Failed to sync placed order to localStorage/cookie:', err);
+        }
+      }
     }
-  }, [state?.success, cart.length, clearCart]);
+  }, [state?.success, state?.order, cart.length, clearCart]);
 
   // Delivery estimation (0 ETB for Table orders)
   const deliveryEstimate = useMemo(() => {
@@ -155,7 +204,7 @@ export default function CheckoutForm({ session = null }) {
 
         <div className="flex flex-col sm:flex-row justify-center gap-3">
           <Link
-            href={`/orders/${state.orderId}`}
+            href={`/track/${encodeURIComponent(state.orderId)}`}
             className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-sm shadow-sm transition-all no-underline"
           >
             Track Order Status &rarr;

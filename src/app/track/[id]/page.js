@@ -1,10 +1,11 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { getOrder, syncOrderOverrides, fetchRemoteOrderOverrides } from '@/lib/orders';
+import { getOrder, hydrateAllOrders } from '@/lib/orders';
 import { getSession } from '@/lib/session';
 import { etb, when } from '@/lib/format';
 import { cookies } from 'next/headers';
 import TrackInteractiveView from './TrackInteractiveView';
+import TrackClientFallback from './TrackClientFallback';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -31,22 +32,14 @@ export default async function TrackPage({ params }) {
     redirect(`/signin?next=/track/${encodeURIComponent(id)}`);
   }
 
-  // Hydrate memory from cookie if cold start occurred on Vercel
+  // Hydrate all orders and overrides from cookies for seamless serverless persistence
   const cookieStore = await cookies();
-  const cookieVal = cookieStore.get('order_status_overrides')?.value;
-  if (cookieVal) {
-    try {
-      syncOrderOverrides(JSON.parse(cookieVal));
-    } catch {}
-  } else {
-    // Cross-browser fallback sync on Vercel
-    await fetchRemoteOrderOverrides();
-  }
+  await hydrateAllOrders(cookieStore);
 
   const order = getOrder(id);
 
   if (!order) {
-    notFound();
+    return <TrackClientFallback orderId={id} session={session} />;
   }
 
   const isOwner = order.userId === session.id;

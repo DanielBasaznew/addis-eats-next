@@ -1,5 +1,6 @@
-import { getOrder } from '@/lib/orders';
+import { getOrder, hydrateAllOrders } from '@/lib/orders';
 import { getSession } from '@/lib/session';
+import { cookies } from 'next/headers';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,6 +17,9 @@ export async function GET(request, { params }) {
       { status: 401 }
     );
   }
+
+  const cookieStore = await cookies();
+  await hydrateAllOrders(cookieStore);
 
   const resolvedParams = await params;
   const id = resolvedParams?.id;

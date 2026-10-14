@@ -43,10 +43,10 @@ export const orderSchema = z
   });
 
 export const tableSchema = z.object({
-  number: z
-    .string({ required_error: 'Table number is required' })
-    .trim()
-    .min(1, { message: 'Table number is required' }),
+  number: z.preprocess(
+    (val) => (val !== undefined && val !== null ? String(val).trim() : ''),
+    z.string().min(1, { message: 'Table number is required' })
+  ),
   label: z
     .string()
     .trim()

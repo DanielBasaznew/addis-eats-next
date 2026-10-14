@@ -9,6 +9,8 @@ import {
   ALLOWED_ORDER_STATUSES,
   syncOrderOverrides,
   pushRemoteOrderOverride,
+  saveCustomOrderToCookie,
+  updateCustomOrderInCookie,
 } from '@/lib/orders';
 import {
   getDishById,
@@ -129,6 +131,14 @@ export async function placeOrder(prevState, formData, maybeInjectedSession) {
     createdAt: new Date().toISOString(),
   });
 
+  // Persist order in cookies so it is immediately accessible across all serverless Vercel lambdas
+  try {
+    const cookieStore = await cookies();
+    saveCustomOrderToCookie(cookieStore, order);
+  } catch (err) {
+    console.error('Failed to save orders cookie in placeOrder:', err);
+  }
+
   try {
     revalidatePath('/orders');
     revalidatePath('/kitchen');
@@ -232,6 +242,8 @@ export async function updateOrderStatus(prevStateOrFormData, maybeFormData, mayb
       sameSite: 'lax',
       maxAge: 60 * 60 * 24 * 7,
     });
+
+    updateCustomOrderInCookie(cookieStore, orderId, status);
   } catch {
     // Safe no-op if cookies cannot be modified
   }
@@ -342,6 +354,8 @@ export async function cancelOrder(prevStateOrFormData, maybeFormData, maybeInjec
       sameSite: 'lax',
       maxAge: 60 * 60 * 24 * 7,
     });
+
+    updateCustomOrderInCookie(cookieStore, orderId, 'Cancelled');
   } catch {
     // Safe no-op if cookies cannot be modified
   }
@@ -873,9 +887,9 @@ export async function createTableAction(prevState, formData, maybeInjectedSessio
   const rawData =
     formData instanceof FormData
       ? Object.fromEntries(formData.entries())
-      : typeof formData === 'object' && formData !== null
+      : typeof formData === 'object' && formData !== null && !Array.isArray(formData)
         ? formData
-        : typeof prevState === 'object' && prevState !== null
+        : typeof prevState === 'object' && prevState !== null && !Array.isArray(prevState)
           ? prevState
           : {};
 
@@ -893,13 +907,16 @@ export async function createTableAction(prevState, formData, maybeInjectedSessio
     };
   }
 
-  const result = await createTableInStore(parseResult.data);
+  const cookieStore = await cookies();
+  const result = await createTableInStore(parseResult.data, cookieStore);
   if (result?.error) {
     return { success: false, error: result.error };
   }
 
   try {
     revalidatePath('/admin');
+    revalidatePath('/menu');
+    revalidatePath('/', 'layout');
   } catch {}
 
   return {
@@ -923,7 +940,8 @@ export async function deleteTableAction(tableId, maybeInjectedSession) {
     };
   }
 
-  const success = await deleteTableInStore(tableId);
+  const cookieStore = await cookies();
+  const success = await deleteTableInStore(tableId, cookieStore);
   if (!success) {
     return {
       success: false,
@@ -933,6 +951,8 @@ export async function deleteTableAction(tableId, maybeInjectedSession) {
 
   try {
     revalidatePath('/admin');
+    revalidatePath('/menu');
+    revalidatePath('/', 'layout');
   } catch {}
 
   return {
@@ -956,9 +976,12 @@ export async function resetTablesAction(maybeInjectedSession) {
     };
   }
 
-  const tables = await resetTablesInStore();
+  const cookieStore = await cookies();
+  const tables = await resetTablesInStore(cookieStore);
   try {
     revalidatePath('/admin');
+    revalidatePath('/menu');
+    revalidatePath('/', 'layout');
   } catch {}
 
   return {

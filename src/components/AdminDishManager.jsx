@@ -544,6 +544,7 @@ export default function AdminDishManager({
             initialTables={tables}
             session={session}
             onNotice={setNotice}
+            onTablesChange={setTables}
           />
         </section>
       ) : (

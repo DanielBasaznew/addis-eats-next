@@ -125,13 +125,53 @@ function ensureTablesLoaded() {
   return globalForTables.__addis_tables__;
 }
 
-export async function getTables() {
+export const TABLES_COOKIE_NAME = 'addis_custom_tables';
+
+/**
+ * Hydrates tables from cookieStore if available, ensuring custom tables
+ * created in serverless Vercel environments persist across lambdas.
+ */
+export function hydrateTables(cookieStore) {
+  if (cookieStore) {
+    try {
+      const cookieVal = cookieStore.get(TABLES_COOKIE_NAME)?.value;
+      if (cookieVal) {
+        const parsed = JSON.parse(cookieVal);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          globalForTables.__addis_tables__ = parsed;
+          saveTablesToDisk(parsed);
+          return parsed;
+        }
+      }
+    } catch {}
+  }
   return ensureTablesLoaded();
 }
 
-export async function getTableByNumber(number) {
+/**
+ * Save tables list to cookieStore for instant serverless cross-lambda persistence.
+ */
+export function saveTablesToCookie(cookieStore, tablesList) {
+  if (!cookieStore || !Array.isArray(tablesList)) return;
+  try {
+    cookieStore.set(TABLES_COOKIE_NAME, JSON.stringify(tablesList), {
+      path: '/',
+      httpOnly: false,
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 30, // 30 days
+    });
+  } catch (err) {
+    console.error('Failed to save tables cookie:', err);
+  }
+}
+
+export async function getTables(cookieStore) {
+  return hydrateTables(cookieStore);
+}
+
+export async function getTableByNumber(number, cookieStore) {
   if (!number) return null;
-  const tables = ensureTablesLoaded();
+  const tables = hydrateTables(cookieStore);
   const clean = String(number).trim().toLowerCase();
   return (
     tables.find(
@@ -142,8 +182,8 @@ export async function getTableByNumber(number) {
   );
 }
 
-export async function createTable(tableData) {
-  const tables = ensureTablesLoaded();
+export async function createTable(tableData, cookieStore) {
+  const tables = hydrateTables(cookieStore);
   const trimmedNumber = String(tableData.number || '').trim();
   if (!trimmedNumber) return null;
 
@@ -163,28 +203,37 @@ export async function createTable(tableData) {
 
   tables.push(newTable);
   saveTablesToDisk(tables);
+  if (cookieStore) {
+    saveTablesToCookie(cookieStore, tables);
+  }
   pushRemoteTables(tables).catch(() => {});
 
   return newTable;
 }
 
-export async function deleteTable(id) {
+export async function deleteTable(id, cookieStore) {
   if (!id) return false;
-  const tables = ensureTablesLoaded();
+  const tables = hydrateTables(cookieStore);
   const index = tables.findIndex((t) => String(t.id) === String(id));
   if (index === -1) return false;
 
   tables.splice(index, 1);
   saveTablesToDisk(tables);
+  if (cookieStore) {
+    saveTablesToCookie(cookieStore, tables);
+  }
   pushRemoteTables(tables).catch(() => {});
 
   return true;
 }
 
-export async function resetDefaultTables() {
+export async function resetDefaultTables(cookieStore) {
   const tables = [...DEFAULT_TABLES];
   globalForTables.__addis_tables__ = tables;
   saveTablesToDisk(tables);
+  if (cookieStore) {
+    saveTablesToCookie(cookieStore, tables);
+  }
   pushRemoteTables(tables).catch(() => {});
   return tables;
 }

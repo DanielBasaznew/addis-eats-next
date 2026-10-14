@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getSession } from '@/lib/session';
-import { getAllOrders, ALLOWED_ORDER_STATUSES, syncOrderOverrides, fetchRemoteOrderOverrides } from '@/lib/orders';
+import { getAllOrders, ALLOWED_ORDER_STATUSES, hydrateAllOrders } from '@/lib/orders';
 import { updateOrderStatus } from '@/app/actions';
 import { cookies } from 'next/headers';
 
@@ -38,17 +38,9 @@ export default async function KitchenPage() {
     );
   }
 
-  // Hydrate memory from cookie if cold start occurred on Vercel
+  // Hydrate all orders and overrides from cookies for serverless persistence
   const cookieStore = await cookies();
-  const cookieVal = cookieStore.get('order_status_overrides')?.value;
-  if (cookieVal) {
-    try {
-      syncOrderOverrides(JSON.parse(cookieVal));
-    } catch {}
-  } else {
-    // Cross-browser fallback sync on Vercel
-    await fetchRemoteOrderOverrides();
-  }
+  await hydrateAllOrders(cookieStore);
 
   const orders = getAllOrders();
 
