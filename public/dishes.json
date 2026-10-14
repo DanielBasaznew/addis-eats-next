@@ -3,7 +3,7 @@
     "id": 1,
     "name": "Genfo",
     "category": "Breakfast",
-    "price": 240,
+    "price": 300,
     "vegetarian": false,
     "image": "/images/dishes/genfo.jpg",
     "description": "Traditional thick barley and wheat porridge served hot with a well of spiced clarified butter (niter kibe) and fiery berbere.",
@@ -17,7 +17,7 @@
     "vegetarian": false,
     "image": "/images/dishes/chechebsa.jpg",
     "description": "Torn pieces of freshly baked flatbread pan-fried in seasoned berbere and spiced butter, served with cooling fresh yogurt.",
-    "available": false
+    "available": true
   },
   {
     "id": 3,
@@ -26,7 +26,8 @@
     "price": 180,
     "vegetarian": true,
     "image": "/images/dishes/shiro-wot.jpg",
-    "description": "Velvety spiced chickpea and split pea flour stew, slow-cooked in a traditional clay pot and served bubbling hot with teff injera."
+    "description": "Velvety spiced chickpea and split pea flour stew, slow-cooked in a traditional clay pot and served bubbling hot with teff injera.",
+    "available": true
   },
   {
     "id": 4,
@@ -35,7 +36,8 @@
     "price": 160,
     "vegetarian": true,
     "image": "/images/dishes/misir-wot.jpg",
-    "description": "Red split lentils slow-simmered in rich berbere sauce, fragrant garlic, ginger, and caramelized onions."
+    "description": "Red split lentils slow-simmered in rich berbere sauce, fragrant garlic, ginger, and caramelized onions.",
+    "available": false
   },
   {
     "id": 5,
@@ -44,7 +46,8 @@
     "price": 650,
     "vegetarian": false,
     "image": "/images/dishes/doro-wot.jpg",
-    "description": "The celebratory crown of Ethiopian feasts: tender chicken leg simmered for hours in rich berbere sauce with hard-boiled farm eggs and ayib."
+    "description": "The celebratory crown of Ethiopian feasts: tender chicken leg simmered for hours in rich berbere sauce with hard-boiled farm eggs and ayib.",
+    "available": false
   },
   {
     "id": 6,
@@ -90,5 +93,15 @@
     "vegetarian": true,
     "image": "/images/dishes/fasolia.jpg",
     "description": "Tender string green beans and sweet carrots gently sautéed with caramelized onions, garlic, and Ethiopian highland herbs."
+  },
+  {
+    "id": 11,
+    "name": "Test",
+    "category": "Breakfast",
+    "price": 450,
+    "vegetarian": false,
+    "available": true,
+    "image": "/images/dishes/genfo.jpg",
+    "description": "This food added for testing purpose"
   }
 ]

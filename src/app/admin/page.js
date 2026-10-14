@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { getSession } from '@/lib/session';
 import { getDishes, applyAvailabilityToDishes } from '@/lib/dishes';
+import { getTables } from '@/lib/tables';
 import AdminDishManager from '@/components/AdminDishManager';
 
 export const dynamic = 'force-dynamic';
@@ -66,12 +67,19 @@ export default async function AdminPage() {
     }
   }
 
-  const rawDishes = await getDishes();
+  const [rawDishes, tables] = await Promise.all([
+    getDishes(),
+    getTables(),
+  ]);
   const dishes = applyAvailabilityToDishes(rawDishes, availabilityMap);
 
   return (
     <main className="w-full max-w-7xl mx-auto px-3 sm:px-6 py-6 sm:py-8">
-      <AdminDishManager initialDishes={dishes} session={session} />
+      <AdminDishManager
+        initialDishes={dishes}
+        initialTables={tables}
+        session={session}
+      />
     </main>
   );
 }

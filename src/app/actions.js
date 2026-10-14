@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { orderSchema, dishSchema } from '@/lib/schema';
+import { orderSchema, dishSchema, tableSchema } from '@/lib/schema';
 import {
   saveOrder,
   getOrder,
@@ -18,6 +18,12 @@ import {
   toggleDishAvailability as toggleDishAvailabilityInStore,
   pushRemoteDishAvailability,
 } from '@/lib/dishes';
+import {
+  createTable as createTableInStore,
+  deleteTable as deleteTableInStore,
+  resetDefaultTables as resetTablesInStore,
+} from '@/lib/tables';
+import { calculateDeliveryEstimate } from '@/lib/delivery';
 import {
   toggleFavorite as toggleFavoriteInStore,
   isDishFavorite,
@@ -53,9 +59,24 @@ export async function placeOrder(prevState, formData, maybeInjectedSession) {
       ? prevState
       : {};
 
+  let parsedItems = [];
+  if (rawData.itemsJson) {
+    try {
+      parsedItems = JSON.parse(rawData.itemsJson);
+    } catch {}
+  } else if (Array.isArray(rawData.items)) {
+    parsedItems = rawData.items;
+  }
+
   const parseResult = orderSchema.safeParse({
     name: rawData.name,
     phone: rawData.phone,
+    isTableOrder: rawData.isTableOrder,
+    tableNumber: rawData.tableNumber,
+    address: rawData.address,
+    paymentMethod: rawData.paymentMethod || 'telebirr',
+    specialInstructions: rawData.specialInstructions,
+    items: parsedItems,
   });
 
   if (!parseResult.success) {
@@ -70,20 +91,61 @@ export async function placeOrder(prevState, formData, maybeInjectedSession) {
     };
   }
 
+  const data = parseResult.data;
+  const isTable = Boolean(data.isTableOrder);
+  const tableNum = data.tableNumber ? String(data.tableNumber).trim() : null;
+
+  // Calculate delivery fee
+  const deliveryEstimate = calculateDeliveryEstimate(data.address, isTable, tableNum);
+  const deliveryFee = isTable ? 0 : deliveryEstimate.fee;
+
+  // Calculate subtotal from items if present
+  const itemsSubtotal = parsedItems.reduce(
+    (sum, item) => sum + (Number(item?.price || 0) * Number(item?.quantity || 1)),
+    0
+  );
+  const grandTotal = itemsSubtotal + deliveryFee;
+
+  const area = isTable
+    ? `Table #${tableNum || 'Dine-In'}`
+    : deliveryEstimate.matchedArea || 'Bole';
+
   const order = saveOrder({
     id: `ORD-${Date.now()}`,
     userId: session.id,
-    name: parseResult.data.name,
-    phone: parseResult.data.phone,
+    name: data.name,
+    phone: data.phone,
+    address: isTable ? null : data.address,
+    area,
+    orderType: isTable ? 'dine-in' : 'delivery',
+    tableNumber: tableNum,
+    paymentMethod: data.paymentMethod || 'telebirr',
+    specialInstructions: data.specialInstructions || undefined,
+    items: parsedItems,
+    deliveryFee,
+    subtotal: itemsSubtotal,
+    total: grandTotal > 0 ? grandTotal : itemsSubtotal,
     status: 'Preparing',
     createdAt: new Date().toISOString(),
   });
+
+  try {
+    revalidatePath('/orders');
+    revalidatePath('/kitchen');
+    revalidatePath('/admin');
+  } catch {
+    // Safe no-op outside Next.js request context
+  }
 
   return {
     success: true,
     authorized: true,
     orderId: order.id,
-    message: 'Order placed successfully!',
+    isTableOrder: isTable,
+    tableNumber: tableNum,
+    message: isTable
+      ? `Order placed for Table #${tableNum}! Your Ethiopian feast is being prepared.`
+      : 'Order placed successfully! Kitchen preparing your feast.',
     order,
   };
 }
@@ -792,4 +854,116 @@ export async function signInAction(prevState, formData) {
   }
 
   return { success: true, target: safeTarget };
+}
+
+/**
+ * Create a new dining table (Staff only).
+ */
+export async function createTableAction(prevState, formData, maybeInjectedSession) {
+  const session =
+    maybeInjectedSession !== undefined ? maybeInjectedSession : await getSession();
+
+  if (!session || session.role !== 'staff') {
+    return {
+      success: false,
+      error: 'Unauthorized: Staff credentials required to manage restaurant tables.',
+    };
+  }
+
+  const rawData =
+    formData instanceof FormData
+      ? Object.fromEntries(formData.entries())
+      : typeof formData === 'object' && formData !== null
+        ? formData
+        : typeof prevState === 'object' && prevState !== null
+          ? prevState
+          : {};
+
+  const parseResult = tableSchema.safeParse({
+    number: rawData.number,
+    label: rawData.label,
+    seats: rawData.seats,
+  });
+
+  if (!parseResult.success) {
+    return {
+      success: false,
+      error: parseResult.error.issues[0]?.message || 'Validation failed for table.',
+      fieldErrors: parseResult.error.flatten().fieldErrors,
+    };
+  }
+
+  const result = await createTableInStore(parseResult.data);
+  if (result?.error) {
+    return { success: false, error: result.error };
+  }
+
+  try {
+    revalidatePath('/admin');
+  } catch {}
+
+  return {
+    success: true,
+    table: result,
+    message: `Table #${result.number} created successfully!`,
+  };
+}
+
+/**
+ * Delete a dining table (Staff only).
+ */
+export async function deleteTableAction(tableId, maybeInjectedSession) {
+  const session =
+    maybeInjectedSession !== undefined ? maybeInjectedSession : await getSession();
+
+  if (!session || session.role !== 'staff') {
+    return {
+      success: false,
+      error: 'Unauthorized: Staff credentials required to delete tables.',
+    };
+  }
+
+  const success = await deleteTableInStore(tableId);
+  if (!success) {
+    return {
+      success: false,
+      error: 'Table not found or could not be deleted.',
+    };
+  }
+
+  try {
+    revalidatePath('/admin');
+  } catch {}
+
+  return {
+    success: true,
+    tableId,
+    message: 'Table deleted successfully.',
+  };
+}
+
+/**
+ * Reset restaurant tables to default layout (Staff only).
+ */
+export async function resetTablesAction(maybeInjectedSession) {
+  const session =
+    maybeInjectedSession !== undefined ? maybeInjectedSession : await getSession();
+
+  if (!session || session.role !== 'staff') {
+    return {
+      success: false,
+      error: 'Unauthorized: Staff credentials required to reset tables.',
+    };
+  }
+
+  const tables = await resetTablesInStore();
+  try {
+    revalidatePath('/admin');
+  } catch {}
+
+  return {
+    success: true,
+    tables,
+    message: 'Tables successfully reset to default 6-table dining layout.',
+  };
 }

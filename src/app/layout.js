@@ -1,9 +1,11 @@
 import './globals.css';
 import Link from 'next/link';
 import { Inter } from 'next/font/google';
+import { Suspense } from 'react';
 import { CartProvider } from '@/components/CartProvider';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import Navbar from '@/components/Navbar';
+import TableBanner from '@/components/TableBanner';
 import { getSession } from '@/lib/session';
 
 
@@ -107,6 +109,9 @@ export default async function RootLayout({ children }) {
                 <Navbar initialSession={session} />
               </div>
             </header>
+            <Suspense fallback={null}>
+              <TableBanner />
+            </Suspense>
 
             <div className="flex-1">{children}</div>
 

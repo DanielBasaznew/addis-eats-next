@@ -94,12 +94,58 @@ export default async function KitchenPage() {
                 className="border border-stone-200 dark:border-stone-800 rounded-xl p-5 bg-white dark:bg-stone-900 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
               >
                 <div>
-                  <h3 className="font-bold text-stone-900 dark:text-stone-100 text-base">
-                    {order.id}
-                  </h3>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h3 className="font-bold text-stone-900 dark:text-stone-100 text-base">
+                      {order.id}
+                    </h3>
+                    {order.isTableOrder || order.tableNumber ? (
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-black bg-amber-100 dark:bg-amber-950/80 text-amber-900 dark:text-amber-300 border border-amber-300 dark:border-amber-800">
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                        Table #{order.tableNumber} (Dine-In)
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300">
+                        Delivery {order.area ? `· ${order.area}` : ''}
+                      </span>
+                    )}
+
+                    {order.paymentMethod && (
+                      <span className="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400">
+                        {order.paymentMethod === 'cash'
+                          ? order.isTableOrder
+                            ? 'Cash at Table'
+                            : 'Cash on Delivery'
+                          : order.paymentMethod.toUpperCase()}
+                      </span>
+                    )}
+                  </div>
+
                   <p className="text-sm text-stone-500 dark:text-stone-400 mt-1">
-                    {order.name} · {order.phone} (Session: {order.userId})
+                    {order.name} · {order.phone}
+                    {order.address && !order.isTableOrder ? ` · ${order.address}` : ''}
                   </p>
+
+                  {order.items && order.items.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {order.items.map((item, idx) => (
+                        <span
+                          key={idx}
+                          className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-lg bg-stone-100 dark:bg-stone-800 text-stone-800 dark:text-stone-200 font-medium"
+                        >
+                          <span className="font-bold text-amber-900 dark:text-amber-400">
+                            {item.quantity}×
+                          </span>
+                          <span>{item.name || `Dish #${item.dishId}`}</span>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {order.specialInstructions && (
+                    <p className="mt-2 text-xs italic text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 p-2 rounded-lg border border-amber-200/60 dark:border-amber-900/40">
+                      <strong>Note:</strong> {order.specialInstructions}
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3">

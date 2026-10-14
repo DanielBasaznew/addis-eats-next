@@ -4,6 +4,7 @@ import { useState, useTransition, useActionState, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { createDish, updateDish, deleteDish, toggleDishAvailability } from '@/app/actions';
+import AdminTableManager from '@/components/AdminTableManager';
 
 const INITIAL_FORM_STATE = {
   success: false,
@@ -11,8 +12,14 @@ const INITIAL_FORM_STATE = {
   fieldErrors: {},
 };
 
-export default function AdminDishManager({ initialDishes = [], session = null }) {
+export default function AdminDishManager({
+  initialDishes = [],
+  initialTables = [],
+  session = null,
+}) {
+  const [activeWorkspace, setActiveWorkspace] = useState('dishes'); // 'dishes' | 'tables'
   const [dishes, setDishes] = useState(initialDishes);
+  const [tables, setTables] = useState(initialTables);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all'); // 'all' | 'available' | 'sold_out'
   const [filterCategory, setFilterCategory] = useState('All');
@@ -255,7 +262,15 @@ export default function AdminDishManager({ initialDishes = [], session = null })
             Workspaces
           </p>
           <nav className="space-y-1">
-            <div className="flex items-center justify-between px-3 py-2.5 rounded-xl bg-amber-500/10 dark:bg-amber-400/10 text-amber-950 dark:text-amber-300 font-bold text-xs border border-amber-500/20">
+            <button
+              type="button"
+              onClick={() => setActiveWorkspace('dishes')}
+              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-bold text-xs transition-colors cursor-pointer text-left ${
+                activeWorkspace === 'dishes'
+                  ? 'bg-amber-500/10 dark:bg-amber-400/10 text-amber-950 dark:text-amber-300 border border-amber-500/20'
+                  : 'text-stone-600 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800/60'
+              }`}
+            >
               <span className="flex items-center gap-2.5">
                 <svg className="w-4 h-4 text-amber-600 dark:text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="3" y="3" width="7" height="7" rx="1" />
@@ -268,7 +283,29 @@ export default function AdminDishManager({ initialDishes = [], session = null })
               <span className="px-2 py-0.5 rounded-full bg-amber-200/60 dark:bg-amber-900/60 text-[10px]">
                 {totalCount}
               </span>
-            </div>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveWorkspace('tables')}
+              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-bold text-xs transition-colors cursor-pointer text-left ${
+                activeWorkspace === 'tables'
+                  ? 'bg-amber-500/10 dark:bg-amber-400/10 text-amber-950 dark:text-amber-300 border border-amber-500/20'
+                  : 'text-stone-600 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800/60'
+              }`}
+            >
+              <span className="flex items-center gap-2.5">
+                <svg className="w-4 h-4 text-amber-600 dark:text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
+                  <path d="M6 6h10" />
+                  <path d="M6 10h10" />
+                </svg>
+                <span>Floor Tables & QR</span>
+              </span>
+              <span className="px-2 py-0.5 rounded-full bg-amber-200/60 dark:bg-amber-900/60 text-[10px]">
+                {tables.length}
+              </span>
+            </button>
 
             <Link
               href="/kitchen"
@@ -316,123 +353,163 @@ export default function AdminDishManager({ initialDishes = [], session = null })
           </nav>
         </div>
 
-        {/* =====================================================================
-            LEFT SIDE SELECTOR 1: Stock Status (All vs Available vs Sold Out)
-            ===================================================================== */}
-        <div className="py-4 border-b border-stone-100 dark:border-stone-800">
-          <div className="flex items-center justify-between mb-2.5 px-2">
-            <span className="text-[10px] uppercase font-bold text-stone-400 dark:text-stone-500 tracking-wider">
-              Stock Availability
-            </span>
-            <span className="text-[10px] font-bold text-amber-900 dark:text-amber-400">
-              {inStockPercentage}% Active
-            </span>
-          </div>
+        {activeWorkspace === 'dishes' ? (
+          <>
+            {/* =====================================================================
+                LEFT SIDE SELECTOR 1: Stock Status (All vs Available vs Sold Out)
+                ===================================================================== */}
+            <div className="py-4 border-b border-stone-100 dark:border-stone-800">
+              <div className="flex items-center justify-between mb-2.5 px-2">
+                <span className="text-[10px] uppercase font-bold text-stone-400 dark:text-stone-500 tracking-wider">
+                  Stock Availability
+                </span>
+                <span className="text-[10px] font-bold text-amber-900 dark:text-amber-400">
+                  {inStockPercentage}% Active
+                </span>
+              </div>
 
-          {/* Mini progress bar */}
-          <div className="w-full bg-stone-100 dark:bg-stone-800 h-1.5 rounded-full overflow-hidden mb-3">
-            <div
-              className="bg-emerald-500 h-full rounded-full transition-all duration-500"
-              style={{ width: `${inStockPercentage}%` }}
-            />
-          </div>
+              {/* Mini progress bar */}
+              <div className="w-full bg-stone-100 dark:bg-stone-800 h-1.5 rounded-full overflow-hidden mb-3">
+                <div
+                  className="bg-emerald-500 h-full rounded-full transition-all duration-500"
+                  style={{ width: `${inStockPercentage}%` }}
+                />
+              </div>
 
-          <div className="space-y-1">
-            <button
-              type="button"
-              onClick={() => setStatusFilter('all')}
-              className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-                statusFilter === 'all'
-                  ? 'bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 shadow-xs'
-                  : 'text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800/50'
-              }`}
-            >
-              <span className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-stone-400" />
-                <span>All Dishes</span>
-              </span>
-              <span className="text-[11px] opacity-70 font-mono">{totalCount}</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setStatusFilter('available')}
-              className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-                statusFilter === 'available'
-                  ? 'bg-emerald-600 text-white shadow-xs'
-                  : 'text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800/50'
-              }`}
-            >
-              <span className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-300 dark:ring-emerald-800" />
-                <span>In Stock (Available)</span>
-              </span>
-              <span className="text-[11px] opacity-70 font-mono">{availableCount}</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setStatusFilter('sold_out')}
-              className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-                statusFilter === 'sold_out'
-                  ? 'bg-rose-600 text-white shadow-xs'
-                  : 'text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800/50'
-              }`}
-            >
-              <span className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-rose-500 ring-2 ring-rose-300 dark:ring-rose-800" />
-                <span>Sold Out</span>
-              </span>
-              <span className="text-[11px] opacity-70 font-mono">{soldOutCount}</span>
-            </button>
-          </div>
-        </div>
-
-        {/* =====================================================================
-            LEFT SIDE SELECTOR 2: Meal Category Filter
-            ===================================================================== */}
-        <div className="py-4 border-b border-stone-100 dark:border-stone-800">
-          <p className="text-[10px] uppercase font-bold text-stone-400 dark:text-stone-500 tracking-wider mb-2.5 px-2">
-            Filter Category
-          </p>
-          <div className="flex flex-wrap gap-1.5">
-            {categories.map((cat) => {
-              const count =
-                cat === 'All'
-                  ? totalCount
-                  : dishes.filter((d) => d.category === cat).length;
-              const isSelected = filterCategory === cat;
-              return (
+              <div className="space-y-1">
                 <button
-                  key={cat}
                   type="button"
-                  onClick={() => setFilterCategory(cat)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                    isSelected
-                      ? 'bg-amber-900 dark:bg-amber-600 text-white shadow-xs'
-                      : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 hover:bg-stone-200 dark:hover:bg-stone-700'
+                  onClick={() => setStatusFilter('all')}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+                    statusFilter === 'all'
+                      ? 'bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 shadow-xs'
+                      : 'text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800/50'
                   }`}
                 >
-                  {cat} <span className="opacity-60 text-[10px] font-mono">({count})</span>
+                  <span className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-stone-400" />
+                    <span>All Dishes</span>
+                  </span>
+                  <span className="text-[11px] opacity-70 font-mono">{totalCount}</span>
                 </button>
-              );
-            })}
-          </div>
 
-          {/* Vegetarian quick toggle */}
-          <label className="mt-3.5 flex items-center justify-between px-2 py-1 text-xs font-medium text-stone-700 dark:text-stone-300 cursor-pointer">
-            <span className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-500" />
-              <span>Vegetarian Only</span>
-            </span>
-            <input
-              type="checkbox"
-              checked={vegetarianOnly}
-              onChange={(e) => setVegetarianOnly(e.target.checked)}
-              className="w-4 h-4 accent-amber-600 rounded cursor-pointer"
-            />
-          </label>
-        </div>
+                <button
+                  type="button"
+                  onClick={() => setStatusFilter('available')}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+                    statusFilter === 'available'
+                      ? 'bg-emerald-600 text-white shadow-xs'
+                      : 'text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800/50'
+                  }`}
+                >
+                  <span className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-300 dark:ring-emerald-800" />
+                    <span>In Stock (Available)</span>
+                  </span>
+                  <span className="text-[11px] opacity-70 font-mono">{availableCount}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setStatusFilter('sold_out')}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+                    statusFilter === 'sold_out'
+                      ? 'bg-rose-600 text-white shadow-xs'
+                      : 'text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800/50'
+                  }`}
+                >
+                  <span className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-rose-500 ring-2 ring-rose-300 dark:ring-rose-800" />
+                    <span>Sold Out</span>
+                  </span>
+                  <span className="text-[11px] opacity-70 font-mono">{soldOutCount}</span>
+                </button>
+              </div>
+            </div>
+
+            {/* =====================================================================
+                LEFT SIDE SELECTOR 2: Meal Category Filter
+                ===================================================================== */}
+            <div className="py-4 border-b border-stone-100 dark:border-stone-800">
+              <p className="text-[10px] uppercase font-bold text-stone-400 dark:text-stone-500 tracking-wider mb-2.5 px-2">
+                Filter Category
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {categories.map((cat) => {
+                  const count =
+                    cat === 'All'
+                      ? totalCount
+                      : dishes.filter((d) => d.category === cat).length;
+                  const isSelected = filterCategory === cat;
+                  return (
+                    <button
+                      key={cat}
+                      type="button"
+                      onClick={() => setFilterCategory(cat)}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                        isSelected
+                          ? 'bg-amber-900 dark:bg-amber-600 text-white shadow-xs'
+                          : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 hover:bg-stone-200 dark:hover:bg-stone-700'
+                      }`}
+                    >
+                      {cat} <span className="opacity-60 text-[10px] font-mono">({count})</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Vegetarian quick toggle */}
+              <label className="mt-3.5 flex items-center justify-between px-2 py-1 text-xs font-medium text-stone-700 dark:text-stone-300 cursor-pointer">
+                <span className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                  <span>Vegetarian Only</span>
+                </span>
+                <input
+                  type="checkbox"
+                  checked={vegetarianOnly}
+                  onChange={(e) => setVegetarianOnly(e.target.checked)}
+                  className="w-4 h-4 accent-amber-600 rounded cursor-pointer"
+                />
+              </label>
+            </div>
+          </>
+        ) : (
+          /* =====================================================================
+              FLOOR OVERVIEW SIDEBAR SUMMARY
+              ===================================================================== */
+          <div className="py-4 border-b border-stone-100 dark:border-stone-800 space-y-3">
+            <div className="flex items-center justify-between px-2">
+              <span className="text-[10px] uppercase font-bold text-stone-400 dark:text-stone-500 tracking-wider">
+                Floor Summary
+              </span>
+              <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                Live Dine-In
+              </span>
+            </div>
+
+            <div className="bg-stone-50 dark:bg-stone-800/60 rounded-2xl p-3 border border-stone-100 dark:border-stone-800 text-xs space-y-2">
+              <div className="flex items-center justify-between text-stone-600 dark:text-stone-300">
+                <span>Active Stations</span>
+                <span className="font-bold text-stone-900 dark:text-stone-100">{tables.length} Tables</span>
+              </div>
+              <div className="flex items-center justify-between text-stone-600 dark:text-stone-300">
+                <span>Total Seats</span>
+                <span className="font-bold text-amber-900 dark:text-amber-400">
+                  {tables.reduce((sum, t) => sum + (Number(t.seats) || 4), 0)} Guests
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-stone-600 dark:text-stone-300">
+                <span>Service Fee</span>
+                <span className="font-bold text-emerald-600">0 ETB</span>
+              </div>
+            </div>
+
+            <p className="text-[11px] text-stone-500 dark:text-stone-400 leading-relaxed px-1">
+              QR codes can be printed and laminated for dining tables. Customers scanning with camera will automatically order under that table.
+            </p>
+          </div>
+        )}
 
         {/* Staff User Card */}
         <div className="pt-4 flex items-center justify-between">
@@ -461,9 +538,18 @@ export default function AdminDishManager({ initialDishes = [], session = null })
       {/* =========================================================================
           RIGHT-SIDE MAIN WORKSPACE (Admin Data Grid & Controls)
           ========================================================================= */}
-      <section className="flex-1 w-full min-w-0 space-y-6">
-        {/* Top Control Bar: Header, Search & Action Button */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-white dark:bg-stone-900 p-5 rounded-3xl border border-stone-200/90 dark:border-stone-800 shadow-xs">
+      {activeWorkspace === 'tables' ? (
+        <section className="flex-1 w-full min-w-0">
+          <AdminTableManager
+            initialTables={tables}
+            session={session}
+            onNotice={setNotice}
+          />
+        </section>
+      ) : (
+        <section className="flex-1 w-full min-w-0 space-y-6">
+          {/* Top Control Bar: Header, Search & Action Button */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-white dark:bg-stone-900 p-5 rounded-3xl border border-stone-200/90 dark:border-stone-800 shadow-xs">
           <div>
             <div className="flex items-center gap-2 text-xs text-stone-400 mb-1">
               <span>Admin</span>
@@ -774,6 +860,7 @@ export default function AdminDishManager({ initialDishes = [], session = null })
           </div>
         </div>
       </section>
+      )}
 
       {/* =========================================================================
           MODAL: CREATE NEW DISH

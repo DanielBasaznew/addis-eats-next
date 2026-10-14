@@ -1,0 +1,44 @@
+[
+  {
+    "id": "tbl-1",
+    "number": "1",
+    "label": "Window Booth",
+    "seats": 4,
+    "createdAt": "2026-09-01T10:00:00.000Z"
+  },
+  {
+    "id": "tbl-2",
+    "number": "2",
+    "label": "Main Hall",
+    "seats": 2,
+    "createdAt": "2026-09-01T10:00:00.000Z"
+  },
+  {
+    "id": "tbl-3",
+    "number": "3",
+    "label": "Main Hall",
+    "seats": 4,
+    "createdAt": "2026-09-01T10:00:00.000Z"
+  },
+  {
+    "id": "tbl-4",
+    "number": "4",
+    "label": "Garden Patio",
+    "seats": 6,
+    "createdAt": "2026-09-01T10:00:00.000Z"
+  },
+  {
+    "id": "tbl-5",
+    "number": "5",
+    "label": "Garden Patio",
+    "seats": 4,
+    "createdAt": "2026-09-01T10:00:00.000Z"
+  },
+  {
+    "id": "tbl-6",
+    "number": "6",
+    "label": "VIP Lounge",
+    "seats": 8,
+    "createdAt": "2026-09-01T10:00:00.000Z"
+  }
+]

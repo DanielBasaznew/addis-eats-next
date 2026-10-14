@@ -1,17 +1,61 @@
 import { z } from 'zod';
 
-export const orderSchema = z.object({
-  name: z
+export const orderSchema = z
+  .object({
+    name: z
+      .string({ required_error: 'Full name is required' })
+      .trim()
+      .min(2, { message: 'Full name must be at least 2 characters' }),
+    phone: z
+      .string({ required_error: 'Phone number is required' })
+      .trim()
+      .regex(/^(\+251|0)?[79]\d{8}$/, {
+        message: 'Invalid phone number (must be valid Ethiopian format, e.g. 0912345678 or +251912345678)',
+      }),
+    isTableOrder: z.preprocess(
+      (val) => val === true || val === 'true' || val === '1' || val === 'on',
+      z.boolean()
+    ).default(false),
+    tableNumber: z.string().trim().optional(),
+    address: z.string().trim().optional(),
+    paymentMethod: z.enum(['telebirr', 'cbe', 'cash']).default('telebirr'),
+    specialInstructions: z.string().trim().optional(),
+    items: z.array(z.any()).optional(),
+  })
+  .superRefine((data, ctx) => {
+    // Address is required only for delivery orders
+    if (!data.isTableOrder && (!data.address || data.address.trim().length < 3)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['address'],
+        message: 'Delivery address/area is required for delivery orders (min 3 characters).',
+      });
+    }
+
+    // Table number is required for dine-in table orders
+    if (data.isTableOrder && (!data.tableNumber || !data.tableNumber.trim())) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['tableNumber'],
+        message: 'Table number is required for dine-in orders.',
+      });
+    }
+  });
+
+export const tableSchema = z.object({
+  number: z
+    .string({ required_error: 'Table number is required' })
+    .trim()
+    .min(1, { message: 'Table number is required' }),
+  label: z
     .string()
     .trim()
-    .min(2, { message: 'Name must be at least 2 characters' }),
-  phone: z
-    .string()
-    .trim()
-    .regex(/^(\+251|0)?[79]\d{8}$/, {
-      message: 'Invalid phone number (must be valid Ethiopian format, e.g. 0912345678 or +251912345678)',
-    }),
-  items: z.array(z.any()).optional(),
+    .optional()
+    .default('General Dining'),
+  seats: z.preprocess(
+    (val) => (typeof val === 'string' ? parseInt(val, 10) : val),
+    z.number().min(1, { message: 'Table must have at least 1 seat' }).default(4)
+  ),
 });
 
 export const dishSchema = z.object({

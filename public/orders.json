@@ -20,7 +20,7 @@
     ],
     "status": "Cooking",
     "createdAt": "2026-10-12T01:15:00.000Z",
-    "updatedAt": "2026-10-13T17:40:26.009Z",
+    "updatedAt": "2026-10-14T16:53:13.095Z",
     "total": 930,
     "area": "Bole"
   },
@@ -37,9 +37,9 @@
         "quantity": 2
       }
     ],
-    "status": "Ready",
+    "status": "Cooking",
     "createdAt": "2026-10-11T20:45:00.000Z",
-    "updatedAt": "2026-10-13T17:40:44.445Z",
+    "updatedAt": "2026-10-14T16:53:13.095Z",
     "total": 1100,
     "area": "Kazanchis"
   },
@@ -62,9 +62,9 @@
         "quantity": 1
       }
     ],
-    "status": "Ready",
+    "status": "Preparing",
     "createdAt": "2026-10-11T16:20:00.000Z",
-    "updatedAt": "2026-10-11T16:50:00.000Z",
+    "updatedAt": "2026-10-14T16:53:13.095Z",
     "total": 460,
     "area": "Sarbet"
   },
@@ -106,9 +106,9 @@
         "quantity": 2
       }
     ],
-    "status": "Preparing",
+    "status": "Ready",
     "createdAt": "2026-10-12T02:30:00.000Z",
-    "updatedAt": "2026-10-12T02:30:00.000Z",
+    "updatedAt": "2026-10-14T16:53:13.095Z",
     "total": 560,
     "area": "Arat Kilo"
   },
@@ -125,9 +125,9 @@
         "quantity": 1
       }
     ],
-    "status": "Cooking",
+    "status": "Delivered",
     "createdAt": "2026-10-11T19:10:00.000Z",
-    "updatedAt": "2026-10-11T19:35:00.000Z",
+    "updatedAt": "2026-10-14T16:53:13.095Z",
     "total": 650,
     "area": "Bole"
   },
@@ -194,9 +194,9 @@
         "quantity": 1
       }
     ],
-    "status": "Preparing",
+    "status": "Delivered",
     "createdAt": "2026-10-12T03:00:00.000Z",
-    "updatedAt": "2026-10-12T03:00:00.000Z",
+    "updatedAt": "2026-10-14T16:53:13.095Z",
     "total": 790,
     "area": "Piassa"
   },
@@ -460,9 +460,9 @@
         "quantity": 1
       }
     ],
-    "status": "Delivered",
+    "status": "Preparing",
     "createdAt": "2026-10-09T14:30:00.000Z",
-    "updatedAt": "2026-10-09T15:15:00.000Z"
+    "updatedAt": "2026-10-14T16:53:13.095Z"
   },
   {
     "id": "ORD-1022",
@@ -601,5 +601,112 @@
     "status": "Delivered",
     "createdAt": "2026-10-03T17:15:00.000Z",
     "updatedAt": "2026-10-03T18:00:00.000Z"
+  },
+  {
+    "id": "ORD-1791996159099",
+    "userId": "Daniel",
+    "name": "Dawit Haile",
+    "phone": "0911223344",
+    "address": null,
+    "area": "Table #2",
+    "orderType": "dine-in",
+    "tableNumber": "2",
+    "paymentMethod": "telebirr",
+    "items": [
+      {
+        "id": 1,
+        "name": "Genfo",
+        "category": "Breakfast",
+        "price": 300,
+        "vegetarian": false,
+        "image": "/images/dishes/genfo.jpg",
+        "description": "Traditional thick barley and wheat porridge served hot with a well of spiced clarified butter (niter kibe) and fiery berbere.",
+        "available": true,
+        "quantity": 1
+      }
+    ],
+    "deliveryFee": 0,
+    "subtotal": 300,
+    "total": 300,
+    "status": "Preparing",
+    "createdAt": "2026-10-14T16:42:39.099Z"
+  },
+  {
+    "id": "ORD-1791996760927",
+    "userId": "staff",
+    "name": "staff",
+    "phone": "+251942997107",
+    "address": null,
+    "area": "Table #1",
+    "orderType": "dine-in",
+    "tableNumber": "1",
+    "paymentMethod": "telebirr",
+    "items": [
+      {
+        "id": 1,
+        "name": "Genfo",
+        "category": "Breakfast",
+        "price": 240,
+        "vegetarian": false,
+        "image": "/images/dishes/genfo.jpg",
+        "quantity": 6
+      },
+      {
+        "id": 11,
+        "name": "Test",
+        "category": "Breakfast",
+        "price": 450,
+        "vegetarian": false,
+        "available": true,
+        "image": "/images/dishes/genfo.jpg",
+        "description": "This food added for testing purpose",
+        "quantity": 1
+      }
+    ],
+    "deliveryFee": 0,
+    "subtotal": 1890,
+    "total": 1890,
+    "status": "Preparing",
+    "createdAt": "2026-10-14T16:52:40.927Z"
+  },
+  {
+    "id": "ORD-1791996892051",
+    "userId": "Sarina",
+    "name": "Sarina",
+    "phone": "0942997107",
+    "address": "CMC",
+    "area": "CMC",
+    "orderType": "delivery",
+    "tableNumber": null,
+    "paymentMethod": "telebirr",
+    "items": [
+      {
+        "id": 2,
+        "name": "Chechebsa",
+        "category": "Breakfast",
+        "price": 220,
+        "vegetarian": false,
+        "image": "/images/dishes/chechebsa.jpg",
+        "description": "Torn pieces of freshly baked flatbread pan-fried in seasoned berbere and spiced butter, served with cooling fresh yogurt.",
+        "available": true,
+        "quantity": 3
+      },
+      {
+        "id": 3,
+        "name": "Shiro Wot",
+        "category": "Lunch",
+        "price": 180,
+        "vegetarian": true,
+        "image": "/images/dishes/shiro-wot.jpg",
+        "description": "Velvety spiced chickpea and split pea flour stew, slow-cooked in a traditional clay pot and served bubbling hot with teff injera.",
+        "available": true,
+        "quantity": 4
+      }
+    ],
+    "deliveryFee": 90,
+    "subtotal": 1380,
+    "total": 1470,
+    "status": "Preparing",
+    "createdAt": "2026-10-14T16:54:52.051Z"
   }
 ]

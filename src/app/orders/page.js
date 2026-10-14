@@ -285,11 +285,22 @@ export default async function OrdersPage({ searchParams }) {
                           </div>
                         </td>
 
-                        {/* Area */}
+                        {/* Area or Table Badge */}
                         <td className="px-5 py-4 align-middle hidden sm:table-cell text-stone-700 dark:text-stone-300">
-                          <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700">
-                            📍 {order.area || 'Addis Ababa'}
-                          </span>
+                          {order.isTableOrder || order.tableNumber ? (
+                            <span className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/70 text-amber-900 dark:text-amber-300 border border-amber-300 dark:border-amber-800">
+                              <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                              Table #{order.tableNumber}
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700">
+                              <svg className="w-3 h-3 text-stone-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                <circle cx="12" cy="10" r="3" />
+                              </svg>
+                              <span>{order.area || 'Addis Ababa'}</span>
+                            </span>
+                          )}
                         </td>
 
                         {/* Status chip */}
