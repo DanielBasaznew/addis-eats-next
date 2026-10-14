@@ -82,8 +82,9 @@ export default function ThemeToggle({ className = '', showLabel = false, size = 
       )}
 
       {showLabel && (
-        <span className="text-[11px] font-medium opacity-60">
-          {isDark ? '☀️ Active' : '🌙 Active'}
+        <span className="inline-flex items-center gap-1.5 text-[11px] font-medium opacity-60">
+          <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+          Active
         </span>
       )}
     </button>

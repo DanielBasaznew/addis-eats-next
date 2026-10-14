@@ -56,8 +56,11 @@ export default async function TrackPage({ params }) {
     return (
       <main className="mx-auto max-w-xl px-4 py-16 text-center">
         <div className="p-8 sm:p-12 rounded-3xl bg-white dark:bg-stone-900 border border-stone-200/90 dark:border-stone-800 shadow-sm">
-          <div className="w-14 h-14 mx-auto rounded-2xl bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center text-2xl mb-4 border border-rose-200 dark:border-rose-900/60 font-bold">
-            🔒
+          <div className="w-14 h-14 mx-auto rounded-2xl bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center mb-4 border border-rose-200 dark:border-rose-900/60">
+            <svg className="w-7 h-7 text-rose-600 dark:text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
           </div>
           <h1 className="text-2xl font-bold text-stone-900 dark:text-stone-100 tracking-tight mb-2">
             Order Access Restricted
@@ -121,8 +124,12 @@ export default async function TrackPage({ params }) {
               <dt className="text-xs font-semibold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
                 Kitchen Origin
               </dt>
-              <dd className="font-bold text-stone-900 dark:text-stone-100 mt-1 text-base">
-                🏪 Bole Kitchen
+              <dd className="font-bold text-stone-900 dark:text-stone-100 mt-1 text-base flex items-center gap-1.5">
+                <svg className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                  <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                <span>Bole Kitchen</span>
               </dd>
             </div>
 
@@ -130,8 +137,12 @@ export default async function TrackPage({ params }) {
               <dt className="text-xs font-semibold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
                 Destination
               </dt>
-              <dd className="font-bold text-stone-900 dark:text-stone-100 mt-1 text-base">
-                📍 {order.area || 'Addis Ababa'}
+              <dd className="font-bold text-stone-900 dark:text-stone-100 mt-1 text-base flex items-center gap-1.5">
+                <svg className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+                <span>{order.area || 'Addis Ababa'}</span>
               </dd>
             </div>
 

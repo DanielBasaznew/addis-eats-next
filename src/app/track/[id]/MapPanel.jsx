@@ -21,7 +21,11 @@ class MapErrorBoundary extends Component {
           className="flex h-[340px] sm:h-[400px] w-full items-center justify-center rounded-2xl border border-dashed border-stone-300 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/40 p-6 text-center text-sm text-stone-600 dark:text-stone-400"
         >
           <div>
-            <div className="text-3xl mb-2">🗺️</div>
+            <svg className="w-9 h-9 mx-auto mb-2 text-stone-400 dark:text-stone-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21" />
+              <line x1="9" x2="9" y1="3" y2="18" />
+              <line x1="15" x2="15" y1="6" y2="21" />
+            </svg>
             <p className="font-semibold text-stone-800 dark:text-stone-200">
               Interactive map view currently unavailable.
             </p>
@@ -46,7 +50,9 @@ const DeliveryMap = dynamic(() => import('./DeliveryMap'), {
       role="status"
     >
       <div className="text-center text-stone-400 dark:text-stone-500">
-        <div className="inline-block animate-spin text-xl mb-2">⏳</div>
+        <svg className="w-6 h-6 mx-auto mb-2 text-amber-500 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+        </svg>
         <p className="text-xs font-medium">Initializing Addis Ababa delivery map...</p>
       </div>
     </div>

@@ -242,7 +242,14 @@ export default function Navbar({ initialSession = null }) {
                 onClick={() => setIsOpen(false)}
                 className="flex items-center justify-between px-4 py-3 rounded-xl text-base font-semibold text-stone-800 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors no-underline"
               >
-                <span>🍽️ Menu</span>
+                <span className="flex items-center gap-3">
+                  <svg className="w-5 h-5 text-amber-600 dark:text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" />
+                    <path d="M7 2v20" />
+                    <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" />
+                  </svg>
+                  <span>Menu</span>
+                </span>
                 <span className="text-stone-400 dark:text-stone-500 text-xs font-normal">Explore dishes &rarr;</span>
               </Link>
               <Link
@@ -250,7 +257,12 @@ export default function Navbar({ initialSession = null }) {
                 onClick={() => setIsOpen(false)}
                 className="flex items-center justify-between px-4 py-3 rounded-xl text-base font-semibold text-stone-800 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors no-underline"
               >
-                <span>❤️ Favorites</span>
+                <span className="flex items-center gap-3">
+                  <svg className="w-5 h-5 text-rose-500 fill-rose-500/20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                  </svg>
+                  <span>Favorites</span>
+                </span>
                 <span className="text-stone-400 dark:text-stone-500 text-xs font-normal">Saved meals &rarr;</span>
               </Link>
               <Link
@@ -258,7 +270,15 @@ export default function Navbar({ initialSession = null }) {
                 onClick={() => setIsOpen(false)}
                 className="flex items-center justify-between px-4 py-3 rounded-xl text-base font-semibold text-stone-800 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors no-underline"
               >
-                <span>📦 Orders</span>
+                <span className="flex items-center gap-3">
+                  <svg className="w-5 h-5 text-amber-600 dark:text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="m7.5 4.27 9 5.15" />
+                    <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+                    <path d="m3.3 7 8.7 5 8.7-5" />
+                    <path d="M12 22V12" />
+                  </svg>
+                  <span>Orders</span>
+                </span>
                 <span className="text-stone-400 dark:text-stone-500 text-xs font-normal">Track status &rarr;</span>
               </Link>
               <Link
@@ -266,7 +286,14 @@ export default function Navbar({ initialSession = null }) {
                 onClick={() => setIsOpen(false)}
                 className="flex items-center justify-between px-4 py-3 rounded-xl text-base font-semibold text-amber-950 dark:text-amber-200 bg-amber-50 dark:bg-amber-950/50 hover:bg-amber-100 dark:hover:bg-amber-900/50 transition-colors no-underline border border-amber-200/40 dark:border-amber-800/50"
               >
-                <span>🛒 View Cart</span>
+                <span className="flex items-center gap-3">
+                  <svg className="w-5 h-5 text-amber-700 dark:text-amber-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <circle cx="8" cy="21" r="1" />
+                    <circle cx="19" cy="21" r="1" />
+                    <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+                  </svg>
+                  <span>View Cart</span>
+                </span>
                 <span className="px-2 py-0.5 rounded-full bg-amber-900 dark:bg-amber-500 text-white dark:text-stone-950 text-xs font-bold">
                   {totalCartCount} items
                 </span>
@@ -288,7 +315,13 @@ export default function Navbar({ initialSession = null }) {
                     onClick={() => setIsOpen(false)}
                     className="flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-semibold text-amber-950 dark:text-amber-200 hover:bg-amber-100/60 dark:hover:bg-amber-900/40 transition-colors no-underline"
                   >
-                    <span>👨‍🍳 Kitchen Board</span>
+                    <span className="flex items-center gap-2.5">
+                      <svg className="w-4 h-4 text-amber-700 dark:text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M6 13.8a4.4 4.4 0 0 1-2.8-4.2C3.2 7 5 5 7.4 5.2A5 5 0 0 1 12 2a5 5 0 0 1 4.6 3.2c2.4-.2 4.2 1.8 4.2 4.4a4.4 4.4 0 0 1-2.8 4.2" />
+                        <path d="M6 17h12v4H6z" />
+                      </svg>
+                      <span>Kitchen Board</span>
+                    </span>
                     <span className="text-stone-400 dark:text-stone-500 text-xs">&rarr;</span>
                   </Link>
                   <Link
@@ -296,7 +329,13 @@ export default function Navbar({ initialSession = null }) {
                     onClick={() => setIsOpen(false)}
                     className="flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-semibold text-amber-950 dark:text-amber-200 hover:bg-amber-100/60 dark:hover:bg-amber-900/40 transition-colors no-underline"
                   >
-                    <span>📊 Analytics Dashboard</span>
+                    <span className="flex items-center gap-2.5">
+                      <svg className="w-4 h-4 text-amber-700 dark:text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M3 3v18h18" />
+                        <path d="m19 9-5 5-4-4-3 3" />
+                      </svg>
+                      <span>Analytics Dashboard</span>
+                    </span>
                     <span className="text-stone-400 dark:text-stone-500 text-xs">&rarr;</span>
                   </Link>
                   <Link
@@ -304,7 +343,13 @@ export default function Navbar({ initialSession = null }) {
                     onClick={() => setIsOpen(false)}
                     className="flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-semibold text-amber-950 dark:text-amber-200 hover:bg-amber-100/60 dark:hover:bg-amber-900/40 transition-colors no-underline"
                   >
-                    <span>⚙️ Admin Catalog</span>
+                    <span className="flex items-center gap-2.5">
+                      <svg className="w-4 h-4 text-amber-700 dark:text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <circle cx="12" cy="12" r="3" />
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                      </svg>
+                      <span>Admin Catalog</span>
+                    </span>
                     <span className="text-stone-400 dark:text-stone-500 text-xs">&rarr;</span>
                   </Link>
                 </div>

@@ -118,9 +118,58 @@
   }
 }
 
+@keyframes textBeam {
+  0% {
+    background-position: 180% 0;
+  }
+  100% {
+    background-position: -180% 0;
+  }
+}
+
+@keyframes emberFlare {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(0.97);
+    filter: blur(22px);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.04);
+    filter: blur(30px);
+  }
+}
+
+@keyframes floatParticle {
+  0%, 100% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(-12px) translateX(6px) scale(1.25);
+    opacity: 0.95;
+  }
+}
+
+.animate-text-beam {
+  background-size: 260% 100%;
+  animation: textBeam 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: background-position;
+}
+
+.animate-ember-flare {
+  animation: emberFlare 3.8s ease-in-out infinite;
+  will-change: opacity, transform, filter;
+}
+
+.animate-particle {
+  animation: floatParticle 4.5s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
 .animate-text-shimmer {
   background-size: 200% auto;
-  animation: shimmerText 6s ease-in-out infinite;
+  animation: shimmerText 5s ease-in-out infinite;
 }
 
 .animate-float-slow {
@@ -162,6 +211,9 @@
 /* Accessibility: Respect users with vestibular preferences */
 @media (prefers-reduced-motion: reduce) {
   .animate-text-shimmer,
+  .animate-text-beam,
+  .animate-ember-flare,
+  .animate-particle,
   .animate-float-slow,
   .animate-float-delayed,
   .animate-spin-slow,

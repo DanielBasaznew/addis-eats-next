@@ -102,11 +102,52 @@ export default function HomePage() {
               Fresh Everyday • Addis Ababa Heritage
             </div>
 
-            {/* Marketing Headline with Shimmering Animated Font */}
-            <h1 className="animate-hero-fade-2 text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white leading-[1.12] mb-5">
-              Taste the{' '}
-              <span className="relative inline-block bg-gradient-to-r from-amber-400 via-amber-100 via-orange-300 to-amber-400 bg-clip-text text-transparent animate-text-shimmer bg-[length:200%_auto] drop-shadow-[0_2px_14px_rgba(245,158,11,0.3)]">
-                Soul of Ethiopian Cuisine.
+            {/* High-Impact Attention-Capturing Marketing Headline */}
+            <h1 className="animate-hero-fade-2 text-4xl sm:text-5xl md:text-6xl lg:text-[4.15rem] font-extrabold tracking-tight leading-[1.1] mb-6">
+              <span className="block text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-stone-300 mb-1.5 opacity-90">
+                Taste the
+              </span>
+              <span className="relative inline-block">
+                {/* Pulsing Ember Bloom Halo behind the headline */}
+                <span
+                  className="absolute -inset-3 bg-gradient-to-r from-amber-600/35 via-orange-500/40 to-amber-500/35 rounded-3xl blur-2xl animate-ember-flare pointer-events-none -z-10"
+                  aria-hidden="true"
+                />
+
+                {/* Floating ambient spice spark */}
+                <span
+                  className="absolute -top-3 right-3 w-2 h-2 rounded-full bg-amber-300 shadow-[0_0_10px_#fde047] animate-particle pointer-events-none hidden sm:block"
+                  aria-hidden="true"
+                />
+
+                {/* High-Contrast Golden Light Beam Sweep */}
+                <span className="relative z-10 inline-block bg-gradient-to-r from-amber-400 via-amber-100 via-yellow-200 via-orange-400 to-amber-400 bg-[length:260%_100%] bg-clip-text text-transparent animate-text-beam font-black drop-shadow-[0_4px_28px_rgba(245,158,11,0.55)]">
+                  Soul of Ethiopian Cuisine.
+                </span>
+
+                {/* Radiant Curved Golden Accent Flourish */}
+                <svg
+                  className="absolute -bottom-2 sm:-bottom-2.5 left-0 w-full max-w-sm sm:max-w-md h-2.5 pointer-events-none overflow-visible"
+                  viewBox="0 0 280 10"
+                  fill="none"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M2 7C45 2.5 140 1 278 5.5"
+                    stroke="url(#hero-gold-glow)"
+                    strokeWidth="3.5"
+                    strokeLinecap="round"
+                  />
+                  <defs>
+                    <linearGradient id="hero-gold-glow" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.2" />
+                      <stop offset="40%" stopColor="#fef08a" stopOpacity="0.95" />
+                      <stop offset="70%" stopColor="#f59e0b" stopOpacity="0.8" />
+                      <stop offset="100%" stopColor="#ea580c" stopOpacity="0.3" />
+                    </linearGradient>
+                  </defs>
+                </svg>
               </span>
             </h1>
 
@@ -137,7 +178,17 @@ export default function HomePage() {
             {/* Micro Highlights Badges with Hover Glow */}
             <div className="grid grid-cols-3 gap-3 sm:gap-4 pt-5 border-t border-amber-900/40 text-stone-300">
               <div className="p-2.5 sm:p-3 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-amber-500/30 hover:bg-white/[0.06] transition-all duration-200">
-                <span className="block text-xl sm:text-2xl font-extrabold text-amber-400">4.9 ★</span>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xl sm:text-2xl font-extrabold text-amber-400">4.9</span>
+                  <svg
+                    className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 fill-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                </div>
                 <span className="text-xs text-stone-400">1,200+ Reviews</span>
               </div>
               <div className="p-2.5 sm:p-3 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-amber-500/30 hover:bg-white/[0.06] transition-all duration-200">
@@ -182,8 +233,21 @@ export default function HomePage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-transparent to-black/25 pointer-events-none" />
 
                 {/* Floating Glass Pill: Platter Details */}
-                <div className="absolute bottom-3.5 right-3.5 px-3.5 py-1.5 rounded-xl bg-stone-900/85 backdrop-blur-md border border-white/15 text-white flex items-center gap-2 shadow-lg">
-                  <span className="text-sm">🍲</span>
+                <div className="absolute bottom-3.5 right-3.5 px-3.5 py-1.5 rounded-xl bg-stone-900/85 backdrop-blur-md border border-white/15 text-white flex items-center gap-2.5 shadow-lg">
+                  <svg
+                    className="w-4 h-4 text-amber-400 shrink-0"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M12 2v2M8 4v2M16 4v2" />
+                    <path d="M3 13c0 3.9 4 7 9 7s9-3.1 9-7H3z" />
+                    <path d="M2 13h20" />
+                  </svg>
                   <div>
                     <p className="text-[11px] font-bold leading-tight">Authentic Mesob Platter</p>
                     <p className="text-[9px] text-amber-300 font-medium">Clay-Pot Slow Simmered</p>
@@ -196,7 +260,14 @@ export default function HomePage() {
             <div className="absolute top-2 -right-1 sm:top-3 sm:-right-3 z-20 animate-float-slow pointer-events-none select-none">
               <div className="w-18 h-18 sm:w-22 sm:h-22 rounded-full bg-gradient-to-br from-amber-300 via-amber-500 to-amber-700 p-0.5 shadow-2xl flex items-center justify-center transform rotate-6">
                 <div className="w-full h-full rounded-full bg-stone-950/90 border border-amber-300/40 flex flex-col items-center justify-center text-center p-1">
-                  <span className="text-amber-400 text-xs">✨</span>
+                  <svg
+                    className="w-3.5 h-3.5 text-amber-400 mb-0.5"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path d="M12 2l2.3 5.4 5.7-1.8-2.6 5.3 5.1 3-5.1 3 2.6 5.3-5.7-1.8L12 22l-2.3-5.4-5.7 1.8 2.6-5.3-5.1-3 5.1-3-2.6-5.3 5.7 1.8L12 2z" />
+                  </svg>
                   <span className="text-[10px] sm:text-[11px] font-extrabold text-white leading-tight uppercase tracking-wider">
                     100% Teff
                   </span>
@@ -220,8 +291,16 @@ export default function HomePage() {
                   />
                 </div>
                 <div>
-                  <div className="flex items-center gap-1 text-[11px] font-bold text-amber-300 leading-tight">
-                    <span>🔥 Sizzling Tibs</span>
+                  <div className="flex items-center gap-1.5 text-[11px] font-bold text-amber-300 leading-tight">
+                    <svg
+                      className="w-3.5 h-3.5 text-orange-400 shrink-0"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path d="M12 23c-4.97 0-9-3.8-9-8.5C3 9.4 7.2 4.2 11.2 1.3a1 1 0 0 1 1.6.8c-.1 2.2.8 4.2 2.2 5.6 1.8-2 2.5-4 2.5-4s4 4.5 4 8.8c0 4.7-4.03 8.5-9.5 8.5z" />
+                    </svg>
+                    <span>Sizzling Tibs</span>
                   </div>
                   <p className="text-[9px] sm:text-[10px] text-stone-300 font-medium">Clay-Pot Sautéed</p>
                 </div>

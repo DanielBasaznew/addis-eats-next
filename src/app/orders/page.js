@@ -139,8 +139,13 @@ export default async function OrdersPage({ searchParams }) {
           aria-labelledby="empty-orders-heading"
           className="rounded-3xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 p-8 sm:p-12 text-center shadow-xs"
         >
-          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-amber-50 dark:bg-amber-950/60 text-amber-900 dark:text-amber-300 flex items-center justify-center font-bold text-2xl border border-amber-200/60 dark:border-amber-800/60">
-            📦
+          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-amber-50 dark:bg-amber-950/60 text-amber-900 dark:text-amber-300 flex items-center justify-center font-bold border border-amber-200/60 dark:border-amber-800/60">
+            <svg className="w-8 h-8 text-amber-700 dark:text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="m7.5 4.27 9 5.15" />
+              <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+              <path d="m3.3 7 8.7 5 8.7-5" />
+              <path d="M12 22V12" />
+            </svg>
           </div>
           <h2 id="empty-orders-heading" className="text-xl sm:text-2xl font-extrabold text-stone-900 dark:text-stone-100 mb-2">
             No orders placed yet
