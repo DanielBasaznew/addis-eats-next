@@ -1,12 +1,16 @@
 import { revalidatePath } from 'next/cache';
+import { cookies } from 'next/headers';
 import {
   getDishes,
+  applyAvailabilityToDishes,
   createDish,
   updateDish,
   deleteDish,
 } from '@/lib/dishes';
 import { dishSchema } from '@/lib/schema';
 import { getSession } from '@/lib/session';
+
+export const dynamic = 'force-dynamic';
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
@@ -17,7 +21,19 @@ export async function GET(request) {
 
   const pageSize = 3;
 
-  const dishes = await getDishes();
+  const cookieStore = await cookies();
+  const availabilityCookie = cookieStore.get('dish_availability')?.value;
+  let availabilityMap = {};
+  if (availabilityCookie) {
+    try {
+      availabilityMap = JSON.parse(availabilityCookie);
+    } catch {
+      // Ignore JSON parse error
+    }
+  }
+
+  const rawDishes = await getDishes();
+  const dishes = applyAvailabilityToDishes(rawDishes, availabilityMap);
 
   const filteredDishes = query
     ? dishes.filter(

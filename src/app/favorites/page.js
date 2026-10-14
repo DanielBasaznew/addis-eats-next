@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { getSession } from '@/lib/session';
 import { getFavoriteIds, syncFavoritesFromList } from '@/lib/favorites';
-import { getDishes } from '@/lib/dishes';
+import { getDishes, applyAvailabilityToDishes } from '@/lib/dishes';
 import DishCard from '@/components/DishCard';
 
 export const dynamic = 'force-dynamic';
@@ -35,8 +35,19 @@ export default async function FavoritesPage() {
     }
   }
 
+  let availabilityMap = {};
+  const availabilityCookie = cookieStore.get('dish_availability')?.value;
+  if (availabilityCookie) {
+    try {
+      availabilityMap = JSON.parse(availabilityCookie);
+    } catch {
+      // Ignore JSON parse error
+    }
+  }
+
   const favoriteSet = getFavoriteIds(session.id);
-  const allDishes = await getDishes();
+  const rawDishes = await getDishes();
+  const allDishes = applyAvailabilityToDishes(rawDishes, availabilityMap);
   const favoriteDishes = allDishes.filter((dish) => favoriteSet.has(Number(dish.id)));
 
   return (

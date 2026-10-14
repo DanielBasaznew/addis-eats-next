@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import { cookies } from 'next/headers';
 import { getSession } from '@/lib/session';
-import { getDishes } from '@/lib/dishes';
+import { getDishes, applyAvailabilityToDishes } from '@/lib/dishes';
 import AdminDishManager from '@/components/AdminDishManager';
 
 export const dynamic = 'force-dynamic';
@@ -54,7 +55,19 @@ export default async function AdminPage() {
     );
   }
 
-  const dishes = await getDishes();
+  const cookieStore = await cookies();
+  const availabilityCookie = cookieStore.get('dish_availability')?.value;
+  let availabilityMap = {};
+  if (availabilityCookie) {
+    try {
+      availabilityMap = JSON.parse(availabilityCookie);
+    } catch {
+      // Ignore JSON parse error
+    }
+  }
+
+  const rawDishes = await getDishes();
+  const dishes = applyAvailabilityToDishes(rawDishes, availabilityMap);
 
   return (
     <main className="w-full max-w-7xl mx-auto px-3 sm:px-6 py-6 sm:py-8">

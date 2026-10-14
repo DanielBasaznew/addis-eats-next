@@ -16,7 +16,8 @@
     "price": 220,
     "vegetarian": false,
     "image": "/images/dishes/chechebsa.jpg",
-    "description": "Torn pieces of freshly baked flatbread pan-fried in seasoned berbere and spiced butter, served with cooling fresh yogurt."
+    "description": "Torn pieces of freshly baked flatbread pan-fried in seasoned berbere and spiced butter, served with cooling fresh yogurt.",
+    "available": false
   },
   {
     "id": 3,

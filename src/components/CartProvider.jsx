@@ -42,6 +42,11 @@ export function CartProvider({ children }) {
   }, [cart]);
 
   const addToCart = useCallback((dish) => {
+    if (!dish) return;
+    if (dish.available === false) {
+      console.warn(`"${dish.name}" is sold out and cannot be added to cart.`);
+      return;
+    }
     setCart((prev) => {
       const existing = prev.find((item) => item.id === dish.id);
       if (existing) {

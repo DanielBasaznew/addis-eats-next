@@ -16,6 +16,7 @@ import {
   updateDish as updateDishInStore,
   deleteDish as deleteDishInStore,
   toggleDishAvailability as toggleDishAvailabilityInStore,
+  pushRemoteDishAvailability,
 } from '@/lib/dishes';
 import {
   toggleFavorite as toggleFavoriteInStore,
@@ -605,21 +606,49 @@ export async function toggleDishAvailability(dishIdInput, maybeInjectedSession) 
     };
   }
 
+  const isAvailable = updatedDish.available !== false;
+
+  // Persist availability override in cookie for cross-container and instant client sync
+  try {
+    const cookieStore = await cookies();
+    let availabilityOverrides = {};
+    const existingCookie = cookieStore.get('dish_availability')?.value;
+    if (existingCookie) {
+      try {
+        availabilityOverrides = JSON.parse(existingCookie);
+      } catch {}
+    }
+    availabilityOverrides[String(dishId)] = isAvailable;
+
+    cookieStore.set('dish_availability', JSON.stringify(availabilityOverrides), {
+      path: '/',
+      httpOnly: false, // Available to client-side JS for instant UI reactivity
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 30, // 30 days
+    });
+  } catch {
+    // Safe no-op if cookies cannot be modified
+  }
+
+  // Cross-browser & cross-container sync for Vercel serverless
+  pushRemoteDishAvailability(dishId, isAvailable).catch(() => {});
+
   try {
     revalidatePath('/menu');
     revalidatePath('/admin');
+    revalidatePath('/favorites');
     revalidatePath(`/menu/${encodeURIComponent(updatedDish.name)}`);
     revalidatePath('/api/dishes');
   } catch {
     // Safe no-op outside Next.js request context
   }
 
-  const statusText = updatedDish.available !== false ? 'Available' : 'Sold Out';
+  const statusText = isAvailable ? 'Available' : 'Sold Out';
   return {
     success: true,
     authorized: true,
     dish: updatedDish,
-    available: updatedDish.available !== false,
+    available: isAvailable,
     message: `"${updatedDish.name}" is now marked as ${statusText}.`,
   };
 }

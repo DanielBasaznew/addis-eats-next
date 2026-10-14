@@ -64,6 +64,22 @@ export default function AdminDishManager({ initialDishes = [], session = null })
       prev.map((d) => (d.id === dish.id ? { ...d, available: nextAvailable } : d))
     );
 
+    // Immediate client-side cookie & event broadcast
+    if (typeof window !== 'undefined') {
+      try {
+        const match = document.cookie.match(/dish_availability=([^;]+)/);
+        const map = match ? JSON.parse(decodeURIComponent(match[1])) : {};
+        map[String(dish.id)] = nextAvailable;
+        document.cookie = `dish_availability=${encodeURIComponent(JSON.stringify(map))}; path=/; max-age=2592000; SameSite=Lax`;
+        localStorage.setItem('dish_availability', JSON.stringify(map));
+      } catch {}
+      window.dispatchEvent(
+        new CustomEvent('dish-availability-changed', {
+          detail: { dishId: dish.id, available: nextAvailable },
+        })
+      );
+    }
+
     startTransition(async () => {
       try {
         const res = await toggleDishAvailability(dish.id);
@@ -77,6 +93,20 @@ export default function AdminDishManager({ initialDishes = [], session = null })
           setDishes((prev) =>
             prev.map((d) => (d.id === dish.id ? { ...d, available: !nextAvailable } : d))
           );
+          if (typeof window !== 'undefined') {
+            try {
+              const match = document.cookie.match(/dish_availability=([^;]+)/);
+              const map = match ? JSON.parse(decodeURIComponent(match[1])) : {};
+              map[String(dish.id)] = !nextAvailable;
+              document.cookie = `dish_availability=${encodeURIComponent(JSON.stringify(map))}; path=/; max-age=2592000; SameSite=Lax`;
+              localStorage.setItem('dish_availability', JSON.stringify(map));
+            } catch {}
+            window.dispatchEvent(
+              new CustomEvent('dish-availability-changed', {
+                detail: { dishId: dish.id, available: !nextAvailable },
+              })
+            );
+          }
           setNotice({
             type: 'error',
             message: res.error || 'Failed to toggle availability.',
@@ -87,6 +117,20 @@ export default function AdminDishManager({ initialDishes = [], session = null })
         setDishes((prev) =>
           prev.map((d) => (d.id === dish.id ? { ...d, available: !nextAvailable } : d))
         );
+        if (typeof window !== 'undefined') {
+          try {
+            const match = document.cookie.match(/dish_availability=([^;]+)/);
+            const map = match ? JSON.parse(decodeURIComponent(match[1])) : {};
+            map[String(dish.id)] = !nextAvailable;
+            document.cookie = `dish_availability=${encodeURIComponent(JSON.stringify(map))}; path=/; max-age=2592000; SameSite=Lax`;
+            localStorage.setItem('dish_availability', JSON.stringify(map));
+          } catch {}
+          window.dispatchEvent(
+            new CustomEvent('dish-availability-changed', {
+              detail: { dishId: dish.id, available: !nextAvailable },
+            })
+          );
+        }
         setNotice({
           type: 'error',
           message: 'Network error updating availability.',

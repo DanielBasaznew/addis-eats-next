@@ -1,18 +1,58 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useCart } from './CartProvider';
 
 export default function AddToCartButton({ dish, compact = false, className = '' }) {
   const { addToCart } = useCart();
   const [added, setAdded] = useState(false);
-  const isAvailable = dish?.available !== false;
+  const [isAvailable, setIsAvailable] = useState(() => dish?.available !== false);
+
+  // Keep state synchronized with dish prop
+  useEffect(() => {
+    setIsAvailable(dish?.available !== false);
+  }, [dish?.available]);
+
+  // Read latest client-side cookie & listen to live availability broadcast
+  useEffect(() => {
+    if (!dish?.id) return;
+
+    function syncFromClientStore() {
+      try {
+        const match = document.cookie.match(/dish_availability=([^;]+)/);
+        if (match) {
+          const map = JSON.parse(decodeURIComponent(match[1]));
+          if (map[String(dish.id)] !== undefined) {
+            setIsAvailable(Boolean(map[String(dish.id)]));
+          }
+        }
+      } catch {}
+    }
+
+    syncFromClientStore();
+
+    function onAvailabilityChanged(event) {
+      if (event?.detail?.dishId && String(event.detail.dishId) === String(dish.id)) {
+        setIsAvailable(Boolean(event.detail.available));
+      } else if (!event?.detail?.dishId) {
+        syncFromClientStore();
+      }
+    }
+
+    window.addEventListener('dish-availability-changed', onAvailabilityChanged);
+    window.addEventListener('storage', syncFromClientStore);
+
+    return () => {
+      window.removeEventListener('dish-availability-changed', onAvailabilityChanged);
+      window.removeEventListener('storage', syncFromClientStore);
+    };
+  }, [dish?.id]);
 
   const handleAdd = (e) => {
     e.preventDefault();
     e.stopPropagation();
     if (!isAvailable) return;
-    addToCart(dish);
+    addToCart({ ...dish, available: isAvailable });
     setAdded(true);
     setTimeout(() => setAdded(false), 1500);
   };

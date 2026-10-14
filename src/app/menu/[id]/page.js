@@ -8,6 +8,9 @@ import { getDishes, getDishBySlugOrId } from '@/lib/dishes';
 import { getSession } from '@/lib/session';
 import { isDishFavorite, syncFavoritesFromList } from '@/lib/favorites';
 
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+
 export async function generateStaticParams() {
   const dishes = await getDishes();
   return dishes.map((dish) => ({
@@ -99,16 +102,30 @@ function createMenuItemJsonLd(dish) {
 
 export default async function DishDetailPage({ params }) {
   const { id } = await params;
-  const dish = await getDishBySlugOrId(id);
+  let dish = await getDishBySlugOrId(id);
 
   if (!dish) {
     notFound();
   }
 
+  const cookieStore = await cookies();
+  const availabilityCookie = cookieStore.get('dish_availability')?.value;
+  if (availabilityCookie) {
+    try {
+      const map = JSON.parse(availabilityCookie);
+      if (map[String(dish.id)] !== undefined) {
+        dish = { ...dish, available: Boolean(map[String(dish.id)]) };
+      }
+    } catch {
+      // Ignore JSON parse error
+    }
+  }
+
+  const isAvailable = dish.available !== false;
+
   const session = await getSession();
   let isFavorite = false;
   if (session) {
-    const cookieStore = await cookies();
     const cookieVal = cookieStore.get(`favorites_${session.id}`)?.value;
     if (cookieVal) {
       try {
@@ -147,8 +164,15 @@ export default async function DishDetailPage({ params }) {
               height={384}
               sizes="(max-width: 896px) 100vw, 896px"
               priority
-              className="w-full h-72 sm:h-96 object-cover rounded-2xl"
+              className={`w-full h-72 sm:h-96 object-cover rounded-2xl ${
+                !isAvailable ? 'filter grayscale-[30%] opacity-85' : ''
+              }`}
             />
+          )}
+          {!isAvailable && (
+            <div className="absolute top-4 left-4 z-10 px-3.5 py-1.5 rounded-full bg-stone-900/90 text-amber-300 text-xs font-extrabold uppercase tracking-wider border border-amber-500/40 backdrop-blur-md shadow-md">
+              Sold Out
+            </div>
           )}
           <div className="absolute top-4 right-4 z-10">
             <FavoriteButton
@@ -178,8 +202,13 @@ export default async function DishDetailPage({ params }) {
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-4 mb-6">
-          <h1 className="m-0 text-3xl sm:text-4xl font-extrabold text-stone-900 dark:text-stone-100 tracking-tight">
-            {dish.name}
+          <h1 className="m-0 text-3xl sm:text-4xl font-extrabold text-stone-900 dark:text-stone-100 tracking-tight flex items-center gap-3">
+            <span>{dish.name}</span>
+            {!isAvailable && (
+              <span className="text-xs px-2.5 py-1 rounded-full font-bold uppercase tracking-wider bg-rose-100 dark:bg-rose-950/80 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-800">
+                Sold Out
+              </span>
+            )}
           </h1>
           <div className="inline-flex items-baseline gap-1 px-4 py-2 rounded-2xl bg-amber-50 dark:bg-amber-950/60 border border-amber-200/70 dark:border-amber-800/60 self-start sm:self-auto">
             <span className="text-2xl sm:text-3xl font-extrabold text-amber-950 dark:text-amber-300">

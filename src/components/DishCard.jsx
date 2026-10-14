@@ -1,10 +1,52 @@
-import { memo } from 'react';
+'use client';
+
+import { memo, useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import FavoriteButton from '@/components/FavoriteButton';
 import AddToCartButton from '@/components/AddToCartButton';
 
 function DishCard({ dish, priority = false, isFavorite = false }) {
+  const [isAvailable, setIsAvailable] = useState(() => dish?.available !== false);
+
+  useEffect(() => {
+    setIsAvailable(dish?.available !== false);
+  }, [dish?.available]);
+
+  useEffect(() => {
+    if (!dish?.id) return;
+
+    function syncAvailability() {
+      try {
+        const match = document.cookie.match(/dish_availability=([^;]+)/);
+        if (match) {
+          const map = JSON.parse(decodeURIComponent(match[1]));
+          if (map[String(dish.id)] !== undefined) {
+            setIsAvailable(Boolean(map[String(dish.id)]));
+          }
+        }
+      } catch {}
+    }
+
+    syncAvailability();
+
+    function onAvailabilityChanged(e) {
+      if (e?.detail?.dishId && String(e.detail.dishId) === String(dish.id)) {
+        setIsAvailable(Boolean(e.detail.available));
+      } else if (!e?.detail?.dishId) {
+        syncAvailability();
+      }
+    }
+
+    window.addEventListener('dish-availability-changed', onAvailabilityChanged);
+    window.addEventListener('storage', syncAvailability);
+
+    return () => {
+      window.removeEventListener('dish-availability-changed', onAvailabilityChanged);
+      window.removeEventListener('storage', syncAvailability);
+    };
+  }, [dish?.id]);
+
   if (!dish) return null;
 
   return (
@@ -23,7 +65,7 @@ function DishCard({ dish, priority = false, isFavorite = false }) {
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 384px"
               priority={priority}
               className={`object-cover rounded-xl group-hover:scale-102 transition-transform duration-300 ${
-                dish.available === false ? 'filter grayscale-[30%] opacity-85' : ''
+                !isAvailable ? 'filter grayscale-[30%] opacity-85' : ''
               }`}
             />
           ) : (
@@ -37,7 +79,7 @@ function DishCard({ dish, priority = false, isFavorite = false }) {
               <span className="text-xs font-medium">Addis Eats Kitchen</span>
             </div>
           )}
-          {dish.available === false && (
+          {!isAvailable && (
             <div className="absolute top-2.5 left-2.5 z-10 px-2.5 py-1 rounded-full bg-stone-900/90 text-amber-300 text-[10px] font-extrabold uppercase tracking-wider border border-amber-500/40 backdrop-blur-md shadow-xs">
               Sold Out
             </div>
@@ -100,7 +142,7 @@ function DishCard({ dish, priority = false, isFavorite = false }) {
           </span>
         </Link>
 
-        <AddToCartButton dish={dish} compact />
+        <AddToCartButton dish={{ ...dish, available: isAvailable }} compact />
       </div>
     </article>
   );

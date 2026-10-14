@@ -1,61 +1,183 @@
-import fs from 'node:fs/promises';
+import fs from 'node:fs';
 import path from 'node:path';
+import os from 'node:os';
 import { removeDishFromAllFavorites } from './favorites.js';
 
-const DISHES_FILE = path.join(process.cwd(), 'public', 'dishes.json');
+const PUBLIC_DISHES_FILE = path.join(process.cwd(), 'public', 'dishes.json');
+const TMP_DISHES_FILE = path.join(os.tmpdir(), 'addis_dishes.json');
+const SYNC_DISHES_OBJECT_ID = 'ff808181a09d98f701a13b0526496024';
 
 const globalForDishes = globalThis;
+let lastTmpDishesMtime = 0;
 
 /**
- * Read dishes from disk into memory.
+ * Read dishes from disk into memory. Checks /tmp first (persists on Vercel),
+ * then falls back to public/dishes.json.
  */
-async function loadDishesFromDisk() {
+function loadDishesFromDisk() {
   try {
-    const fileContents = await fs.readFile(DISHES_FILE, 'utf-8');
-    const parsed = JSON.parse(fileContents);
-    return Array.isArray(parsed) ? parsed : [];
+    if (fs.existsSync(TMP_DISHES_FILE)) {
+      const fileContents = fs.readFileSync(TMP_DISHES_FILE, 'utf-8');
+      const parsed = JSON.parse(fileContents);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    }
+  } catch {
+    // Ignore tmp read errors
+  }
+
+  try {
+    if (fs.existsSync(PUBLIC_DISHES_FILE)) {
+      const fileContents = fs.readFileSync(PUBLIC_DISHES_FILE, 'utf-8');
+      const parsed = JSON.parse(fileContents);
+      if (Array.isArray(parsed)) {
+        return parsed;
+      }
+    }
   } catch (error) {
     console.error('Error loading dishes.json:', error);
-    return [];
   }
+  return [];
 }
 
 /**
- * Persist dishes from memory to disk.
+ * Persist dishes from memory to disk (/tmp on Vercel and public/dishes.json locally).
  */
-async function saveDishesToDisk(dishesList) {
+function saveDishesToDisk(dishesList) {
+  const serialized = JSON.stringify(dishesList, null, 2);
+
+  // 1. Write to /tmp (always writable in Vercel Serverless environment)
   try {
-    await fs.writeFile(DISHES_FILE, JSON.stringify(dishesList, null, 2), 'utf-8');
-    return true;
+    fs.writeFileSync(TMP_DISHES_FILE, serialized, 'utf-8');
+    const stat = fs.statSync(TMP_DISHES_FILE);
+    lastTmpDishesMtime = stat.mtimeMs;
   } catch (error) {
-    console.error('Error saving dishes.json:', error);
-    return false;
+    console.error('Error saving dishes to tmp:', error);
   }
+
+  // 2. Also write to public/dishes.json for local dev persistence
+  try {
+    fs.writeFileSync(PUBLIC_DISHES_FILE, serialized, 'utf-8');
+  } catch {
+    // Expected EROFS on Vercel serverless read-only filesystem
+  }
+
+  return true;
 }
 
 /**
- * Initialize in-memory cache if not already populated.
+ * Initialize in-memory cache if not already populated or if /tmp was updated by another process.
  */
-async function ensureDishesLoaded() {
-  if (!globalForDishes.__addis_dishes__) {
-    const list = await loadDishesFromDisk();
-    globalForDishes.__addis_dishes__ = list;
+function ensureDishesLoaded() {
+  let needsReload = !globalForDishes.__addis_dishes__;
+
+  if (fs.existsSync(TMP_DISHES_FILE)) {
+    try {
+      const stat = fs.statSync(TMP_DISHES_FILE);
+      if (stat.mtimeMs > lastTmpDishesMtime) {
+        lastTmpDishesMtime = stat.mtimeMs;
+        needsReload = true;
+      }
+    } catch {
+      // Ignore stat error
+    }
+  }
+
+  if (needsReload) {
+    globalForDishes.__addis_dishes__ = loadDishesFromDisk();
   }
   return globalForDishes.__addis_dishes__;
+}
+
+/**
+ * Apply availability overrides map { [dishId]: boolean } to dishes list.
+ */
+export function applyAvailabilityToDishes(dishesList, availabilityMap) {
+  if (!Array.isArray(dishesList)) return [];
+  if (!availabilityMap || typeof availabilityMap !== 'object') return dishesList;
+
+  return dishesList.map((dish) => {
+    const key = String(dish.id);
+    if (availabilityMap[key] !== undefined) {
+      return {
+        ...dish,
+        available: Boolean(availabilityMap[key]),
+      };
+    }
+    return dish;
+  });
+}
+
+/**
+ * Mutate in-memory dishes cache with availability overrides.
+ */
+export function syncDishAvailabilityOverrides(overrides) {
+  if (!overrides || typeof overrides !== 'object') return;
+  const dishes = ensureDishesLoaded();
+  for (const [id, available] of Object.entries(overrides)) {
+    const dish = dishes.find((d) => String(d.id) === String(id));
+    if (dish) {
+      dish.available = Boolean(available);
+    }
+  }
+  saveDishesToDisk(dishes);
+}
+
+/**
+ * Fetch remote availability overrides for cross-container / cross-browser sync on Vercel.
+ */
+export async function fetchRemoteDishAvailability() {
+  try {
+    const res = await fetch(`https://api.restful-api.dev/objects/${SYNC_DISHES_OBJECT_ID}`, {
+      cache: 'no-store',
+    });
+    if (res.ok) {
+      const json = await res.json();
+      if (json?.data && typeof json.data === 'object') {
+        syncDishAvailabilityOverrides(json.data);
+        return json.data;
+      }
+    }
+  } catch {
+    // Safe no-op on network issues
+  }
+  return null;
+}
+
+/**
+ * Broadcast dish availability change to remote store so isolated serverless containers synchronize.
+ */
+export async function pushRemoteDishAvailability(dishId, available) {
+  try {
+    const current = (await fetchRemoteDishAvailability()) || {};
+    current[String(dishId)] = Boolean(available);
+    await fetch(`https://api.restful-api.dev/objects/${SYNC_DISHES_OBJECT_ID}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: 'addis_eats_dish_availability_sync',
+        data: current,
+      }),
+      cache: 'no-store',
+    });
+  } catch {
+    // Safe no-op on network issues
+  }
 }
 
 /**
  * Retrieve all dishes.
  */
 export async function getDishes() {
-  return await ensureDishesLoaded();
+  return ensureDishesLoaded();
 }
 
 /**
  * Retrieve a dish by ID.
  */
 export async function getDishById(id) {
-  const dishes = await ensureDishesLoaded();
+  const dishes = ensureDishesLoaded();
   return dishes.find((item) => String(item.id) === String(id)) || null;
 }
 

@@ -1,11 +1,12 @@
 import DishCard from '@/components/DishCard';
 import FilterShell from '@/components/FilterShell';
-import { getDishes } from '@/lib/dishes';
+import { getDishes, applyAvailabilityToDishes } from '@/lib/dishes';
 import { getSession } from '@/lib/session';
 import { cookies } from 'next/headers';
 import { getFavoriteIds, syncFavoritesFromList } from '@/lib/favorites';
 
-export const revalidate = 3600;
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
 
 export const metadata = {
   title: 'Menu',
@@ -33,9 +34,10 @@ export const metadata = {
 
 export default async function MenuPage() {
   const session = await getSession();
+  const cookieStore = await cookies();
+
   let userFavoriteIds = new Set();
   if (session) {
-    const cookieStore = await cookies();
     const cookieVal = cookieStore.get(`favorites_${session.id}`)?.value;
     if (cookieVal) {
       try {
@@ -48,7 +50,19 @@ export default async function MenuPage() {
     userFavoriteIds = getFavoriteIds(session.id);
   }
 
-  const dishes = await getDishes();
+  // Hydrate dish availability overrides from cookie
+  let availabilityMap = {};
+  const availabilityCookie = cookieStore.get('dish_availability')?.value;
+  if (availabilityCookie) {
+    try {
+      availabilityMap = JSON.parse(availabilityCookie);
+    } catch {
+      // Ignore JSON parse error
+    }
+  }
+
+  const rawDishes = await getDishes();
+  const dishes = applyAvailabilityToDishes(rawDishes, availabilityMap);
   const categories = ['All', ...new Set(dishes.map((dish) => dish.category))];
 
   return (
